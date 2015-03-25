@@ -3,6 +3,8 @@
 #' Create a ggplot2 scatterplot with marginal density plots (default) or 
 #' histograms, or add the marginal plots to an existing scatterplot.
 #'  
+#' @note The \code{grid} and \code{gridExtra} packages area required for this
+#' function.
 #' @param p A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
 #' not provided, then all of \code{data}, \code{x}, and \code{y} must be
 #' provided.
@@ -14,7 +16,11 @@
 #' provided and the \code{y} aesthetic is set in the main plot.
 #' @param type What type of marginal plot to show. One of: [density, histogram].
 #' @param margins Along Which margins to show the plots. One of: [both, x, y].
-#' @param size Integer describing the relative size of the marginal plots
+#' @param size Integer describing the relative size of the marginal plots.
+#' @param marginCol The colour to use for the outline of the marginal density/
+#' histogram.
+#' @param marginFill The colour to use for the fill of the marginal histogram
+#' (not used when \code{type} is "density")
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
 #' @param plot Boolean. If FALSE, then suppress the plotting side-effect.
@@ -49,10 +55,31 @@
 #' }
 #' @export
 ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
-                       size = 5, plot = TRUE) {
+                       size = 5, plot = TRUE, marginCol = "black",
+                       marginFill = "grey") {
+
+  # Make sure the required packages are installed
+  reqs <- c("grid", "gridExtra")
+  invisible(
+    lapply(reqs, function(req) {
+      if (!requireNamespace(req, quietly = TRUE)) {
+        stop(sprintf("`%s` package is required for this function to work. Please install it.", req),
+             call. = FALSE)
+      }
+    })
+  )  
+  
+  # NOTE: This ugly hack is here because of a bug in gridExtra which calls
+  # a ggplot2 function directly instead of namespacing it.  The bug is fixed
+  # in the gridExtra GitHub version, but not on CRAN. Hopefully gridExtra
+  # will submit the fix to CRAN and I can remove this ugliness.
+  # https://github.com/baptiste/gridextra/issues/5
+  if (!"package:ggplot2" %in% search()) {
+    suppressPackageStartupMessages(attachNamespace("ggplot2"))
+    on.exit(detach("package:ggplot2"))
+  }
   
   # Try to infer values for parameters that are missing from the input scatterplot
-  
   if (missing(p)) {
     if (missing(data) | missing(x) | missing(y)) {
       stop("`data`, `x`, and `y` must be provided if `p` is not provided",
@@ -96,9 +123,10 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
   textsize <- p$theme$text$size
 
   if (type == "density") {
-    marginPlot <- ggplot2::geom_line(stat = "density")
+    #marginPlot <- ggplot2::geom_density(fill = marginFill, col = marginCol)
+    marginPlot <- ggplot2::geom_line(stat = "density", col = marginCol)
   } else if (type == "histogram") {
-    marginPlot <- ggplot2::geom_bar()
+    marginPlot <- ggplot2::geom_bar(fill = marginFill, col = marginCol)
   } else {
     stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
   }
@@ -118,7 +146,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
     top <-
       ggplot2::ggplot(data, ggplot2::aes_string(x)) +
       marginPlot +
-      ggplot2::scale_y_continuous(breaks = c(0), labels = function(x) ylabel) +
+      ggplot2::scale_y_continuous(breaks = 0.1, labels = ylabel) +
       ggplot2::theme(
         text = ggplot2::element_text(size = textsize, color = "transparent"),
         line = ggplot2::element_blank(),
@@ -126,7 +154,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
         axis.text = ggplot2::element_text(color = "transparent"),
         axis.title.x = ggplot2::element_blank(),
         axis.text.x = ggplot2::element_blank(),
-        plot.margin = grid::unit(c(0, 0, 0, 0), "mm")) +
+        plot.margin = grid::unit(c(0, 0, -1, 0), "lines")) +
       ggplot2::ylab(p$labels$y) +
       ggplot2::scale_x_continuous(limits = pb$panel$x_scales[[1]]$range$range)
   }
@@ -144,7 +172,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
         axis.text = ggplot2::element_text(color = "transparent"),
         axis.title.y = ggplot2::element_blank(),
         axis.text.y = ggplot2::element_blank(),
-        plot.margin = grid::unit(c(0, 0, 0, 0), "mm")) +
+        plot.margin = grid::unit(c(0, 0, 0, -1), "lines")) +
       ggplot2::ylab(p$labels$x) +
       ggplot2::scale_x_continuous(limits = pb$panel$y_scales[[1]]$range$range) +
       ggplot2::ggtitle(p$labels$title)
