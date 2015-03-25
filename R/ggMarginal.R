@@ -16,13 +16,13 @@
 #' provided and the \code{y} aesthetic is set in the main plot.
 #' @param type What type of marginal plot to show. One of: [density, histogram].
 #' @param margins Along Which margins to show the plots. One of: [both, x, y].
-#' @param size Integer describing the relative size of the marginal plots.
-#' @param marginCol The colour to use for the outline of the marginal density/
-#' histogram.
-#' @param marginFill The colour to use for the fill of the marginal histogram
-#' (not used when \code{type} is "density")
+#' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
+#' @param marginCol The colour to use for the outline of the marginal 
+#' density/histogram.
+#' @param marginFill The colour to use for the fill of the marginal histogram
+#' (not used when \code{type} is "density")
 #' @param plot Boolean. If FALSE, then suppress the plotting side-effect.
 #' @return A \code{gridExtra} grob object containing the main scatterplot
 #' and the marginal density plots/histograms.
@@ -157,6 +157,18 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
         plot.margin = grid::unit(c(0, 0, -1, 0), "lines")) +
       ggplot2::ylab(p$labels$y) +
       ggplot2::scale_x_continuous(limits = pb$panel$x_scales[[1]]$range$range)
+    
+    # If we are showing a marginal plot above the main plot, then transfer the
+    # plot title to be above the marginal plot
+    # TODO(daattali) This doesn't quite work right because the title is taking
+    # a lot of vertical real estate from the short marginal plot. It needs to
+    # go above the marginal plot without affecting its height.
+    if (FALSE) {
+      if (!is.null(pb$plot$labels$title)) {
+        top <- top + ggplot2::ggtitle(pb$plot$labels$title)
+        p <- p + ggplot2::ggtitle("")
+      }
+    }
   }
 
   # Create the vertical margin plot

@@ -5,7 +5,7 @@
 \title{Add marginal density/histogram to ggplot2 scatterplots}
 \usage{
 ggMarginal(p, data, x, y, type = "density", margins = "both", size = 5,
-  plot = TRUE)
+  plot = TRUE, marginCol = "black", marginFill = "grey")
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
@@ -30,6 +30,12 @@ compared to the main plot. A size of 5 means that the main plot is 5x wider
 and 5x taller than the marginal plots.}
 
 \item{plot}{Boolean. If FALSE, then suppress the plotting side-effect.}
+
+\item{marginCol}{The colour to use for the outline of the marginal
+density/histogram.}
+
+\item{marginFill}{The colour to use for the fill of the marginal histogram
+(not used when \code{type} is "density")}
 }
 \value{
 A \code{gridExtra} grob object containing the main scatterplot
@@ -38,6 +44,10 @@ and the marginal density plots/histograms.
 \description{
 Create a ggplot2 scatterplot with marginal density plots (default) or
 histograms, or add the marginal plots to an existing scatterplot.
+}
+\note{
+The \code{grid} and \code{gridExtra} packages area required for this
+function.
 }
 \examples{
 if (requireNamespace("ggplot2", quietly = TRUE)) {
