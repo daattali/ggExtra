@@ -8,10 +8,63 @@ ggMarginal(p, data, x, y, type = "density", margins = "both", size = 5,
   plot = TRUE)
 }
 \arguments{
-\item{x}{Whether to apply th layer to the X axis.}
+\item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
+not provided, then all of \code{data}, \code{x}, and \code{y} must be
+provided.}
+
+\item{data}{The data.frame to use for creating the marginal plots. Optional
+if \code{p} is provided and the marginal plots are reflecting the same data.}
+
+\item{x}{The name of the variable along the x axis. Optional if \code{p} is
+provided and the \code{x} aesthetic is set in the main plot.}
+
+\item{y}{The name of the variable along the y axis. Optional if \code{p} is
+provided and the \code{y} aesthetic is set in the main plot.}
+
+\item{type}{What type of marginal plot to show. One of: [density, histogram].}
+
+\item{margins}{Along Which margins to show the plots. One of: [both, x, y].}
+
+\item{size}{Integer describing the relative size of the marginal plots
+compared to the main plot. A size of 5 means that the main plot is 5x wider
+and 5x taller than the marginal plots.}
+
+\item{plot}{Boolean. If FALSE, then suppress the plotting side-effect.}
+}
+\value{
+A \code{gridExtra} grob object containing the main scatterplot
+and the marginal density plots/histograms.
 }
 \description{
-Create a ggplot2 scatterplot with marginal density plots/histograms or add
-the marginal plots to an existing scatterplot.
+Create a ggplot2 scatterplot with marginal density plots (default) or
+histograms, or add the marginal plots to an existing scatterplot.
+}
+\examples{
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  if (requireNamespace("gridExtra", quietly = TRUE)) {
+    if (requireNamespace("grid", quietly = TRUE)) {
+      p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+      ggMarginal(p)
+
+      set.seed(30)
+      df <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
+      p2 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+      ggMarginal(p2)
+      ggMarginal(p2, type = "histogram")
+      ggMarginal(p2, margins = "x")
+      ggMarginal(p2, size = 2)
+      p2 <- p2 + ggplot2::ggtitle("Random data") + ggplot2::theme_bw(30)
+      ggMarginal(p2)
+
+      ggMarginal(data = df, x = "x", y = "y")
+
+      set.seed(30)
+      df2 <- data.frame(x = c(rnorm(250, 50, 10), rnorm(250, 100, 10)),
+                        y = runif(500, 0, 50))
+      p3 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
+      ggMarginal(p3)
+    }
+  }
+}
 }
 
