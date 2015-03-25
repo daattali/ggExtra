@@ -1,3 +1,3 @@
 # ggExtra
 
-Functions and themes that enhance ggplot2
+A collection of useful functions and layers to enhance ggplot2.
