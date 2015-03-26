@@ -1,4 +1,4 @@
-#' Plot count data with ggplot
+#' Plot count data with ggplot2
 #'
 #' Create a bar plot of count (frequency) data that is stored in a data.frame
 #' or table.
@@ -26,7 +26,8 @@ plotCount <- function(x) {
 
 	stopifnot(
 		ncol(x) == 2,
-		is.integer(x[, 2]),
+		is.numeric(x[, 2]),
+		all.equal(as.integer(x[, 2]), x[, 2]),
 		length(x[, 1]) == length(unique(x[, 1]))
 	)
 
