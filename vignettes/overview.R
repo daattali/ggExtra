@@ -38,7 +38,8 @@ p2 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
 p2 + removeGrid()
 
 ## ----rotateTextX---------------------------------------------------------
-df3 <- data.frame(x = paste("Num", 1:20, sep = "_"), y = 1:20)
+df3 <- data.frame(x = paste("Letter", LETTERS, sep = "_"),
+                  y = seq_along(LETTERS))
 p3 <- ggplot2::ggplot(df3, ggplot2::aes(x, y)) + ggplot2::geom_point()
 p3 + rotateTextX()
 
