@@ -28,7 +28,7 @@ Installation
 downloaded easily using `devtools`.
 
     # install.packages("devtools")
-    devtools::install_github("daattali/rsalad")
+    devtools::install_github("daattali/ggExtra")
 
 Usage
 -----
@@ -141,7 +141,7 @@ that and ensures the labels are horizontally centered relative to the
 tick line.
 
     df3 <- data.frame(x = paste("Num", 1:20, sep = "_"), y = 1:20)
-    p3 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+    p3 <- ggplot2::ggplot(df3, ggplot2::aes(x, y)) + ggplot2::geom_point()
     p3 + rotateTextX()
 
 <img src="overview_files/figure-markdown_strict/rotateTextX-1.png" title="" alt="" style="display: block; margin: auto;" />
