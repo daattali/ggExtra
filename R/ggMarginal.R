@@ -146,7 +146,6 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
     top <-
       ggplot2::ggplot(data, ggplot2::aes_string(x)) +
       marginPlot +
-      ggplot2::scale_y_continuous(breaks = 0.1, labels = ylabel) +
       ggplot2::theme(
         text = ggplot2::element_text(size = textsize, color = "transparent"),
         line = ggplot2::element_blank(),
@@ -157,6 +156,14 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
         plot.margin = grid::unit(c(0, 0, -1, 0), "lines")) +
       ggplot2::ylab(p$labels$y) +
       ggplot2::scale_x_continuous(limits = pb$panel$x_scales[[1]]$range$range)
+    
+    # Add the longest y axis label to the top plot and ensure it's at a y value
+    # that is on the plot (this is why I build the top plot, to know the y values)
+    pbTop <- ggplot2::ggplot_build(top)
+    top <-
+      top +
+      ggplot2::scale_y_continuous(breaks = mean(pbTop$panel$y_scales[[1]]$range$range),
+                                  labels = ylabel)
     
     # If we are showing a marginal plot above the main plot, then transfer the
     # plot title to be above the marginal plot
