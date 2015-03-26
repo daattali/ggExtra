@@ -23,9 +23,12 @@
 #' density/histogram.
 #' @param marginFill The colour to use for the fill of the marginal histogram
 #' (not used when \code{type} is "density")
-#' @param plot Boolean. If FALSE, then suppress the plotting side-effect.
-#' @return A \code{gridExtra} grob object containing the main scatterplot
-#' and the marginal density plots/histograms.
+#' @return NULL. The function uses \code{gridExtra::grid.arrange}, which
+#' returns NULL. This means that the function has to show the plot as a
+#' side-effect and the plot cannot be saved in an object until later. It might be possible
+#' to use \code{gridExtra::arrangeGrob} to save the object for later, but I'm
+#' running into bugs with that as well, see
+#' \url{http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object}
 #' @examples
 #' if (requireNamespace("ggplot2", quietly = TRUE)) {
 #'   if (requireNamespace("gridExtra", quietly = TRUE)) {
@@ -55,8 +58,7 @@
 #' }
 #' @export
 ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
-                       size = 5, plot = TRUE, marginCol = "black",
-                       marginFill = "grey") {
+                       size = 5, marginCol = "black", marginFill = "grey") {
 
   # Make sure the required packages are installed
   reqs <- c("grid", "gridExtra")
@@ -78,7 +80,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
     suppressPackageStartupMessages(attachNamespace("ggplot2"))
     on.exit(detach("package:ggplot2"))
   }
-  
+
   # Try to infer values for parameters that are missing from the input scatterplot
   if (missing(p)) {
     if (missing(data) | missing(x) | missing(y)) {
@@ -201,7 +203,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
   ncol <- 2
   nrow <- 2
   if (margins == "both") {
-    empty <- grid::grid.rect(gp = grid::gpar(col = "transparent"))
+    empty <- grid::grid.rect(gp = grid::gpar(col = "transparent"), draw = FALSE)
     plots <- list(top, empty, p, right)
   } else if (margins == "x") {
     plots <- list(top, p)
@@ -214,16 +216,9 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
   gridArgs <- c(plots, ncol = ncol, nrow = nrow,
                 widths = list(c(size, 1)), heights = list(c(1, size)))
 
-  # Need to use a different function depending on whether a plotting side-effect
-  # is wanted
   # NOTE: the reason I put ggplot2 as a Depends instead of an Imports in the
   # DESCRIPTION is because of a bug in gridExtra. https://groups.google.com/forum/#!topic/ggplot2/v-iyImjGOuY
-  if (plot) {
-    plottingFx <- gridExtra::grid.arrange
-  } else {
-    plottingFx <- gridExtra::arrangeGrob
-  }
-  
+
   # Build the grid of plots
-  do.call(plottingFx, gridArgs)
+  do.call(gridExtra::grid.arrange, gridArgs)
 }
