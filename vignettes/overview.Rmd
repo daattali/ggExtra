@@ -12,6 +12,8 @@ vignette: >
 ```{r setup, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
                       fig.height = 4, fig.keep = "last", fig.align = "center")
+# Encode the images into the document to make it self-contained
+knitr::opts_knit$set(upload.fun = knitr::image_uri)
 ```
 
 # Overview
