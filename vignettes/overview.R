@@ -1,0 +1,49 @@
+## ----setup, echo = FALSE, message = FALSE--------------------------------
+knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
+                      fig.height = 4, fig.keep = "last")
+
+## ------------------------------------------------------------------------
+suppressPackageStartupMessages({
+  library("ggExtra")
+  library("ggplot2")
+})
+
+## ------------------------------------------------------------------------
+set.seed(30)
+df1 <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
+(p1 <- ggplot(df1, aes(x, y)) + geom_point() + theme_bw())
+
+## ------------------------------------------------------------------------
+ggMarginal(p1)
+
+## ------------------------------------------------------------------------
+ggMarginal(p1 + theme_bw(30) + ylab("Two\nlines"))
+
+## ------------------------------------------------------------------------
+ggMarginal(p1, type = "histogram")
+
+## ------------------------------------------------------------------------
+ggMarginal(p1, margins = "x", size = 2, type = "histogram",
+           marginCol = "blue", marginFill = "orange")
+
+## ------------------------------------------------------------------------
+ggMarginal(data = mtcars, x = "wt", y = "mpg")
+
+## ------------------------------------------------------------------------
+df2 <- data.frame(x = 1:50, y = 1:50)
+p2 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
+p2 + removeGrid()
+
+## ------------------------------------------------------------------------
+df3 <- data.frame(x = paste("Num", 1:20, sep = "_"), y = 1:20)
+p3 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+p3 + rotateTextX()
+
+## ------------------------------------------------------------------------
+plotCount(table(infert$education))
+
+## ------------------------------------------------------------------------
+df4 <- data.frame("vehicle" = c("bicycle", "car", "unicycle", "Boeing747"),
+                  "NumWheels" = c(2, 4, 1, 16))
+plotCount(df4) + removeGridX()
+
