@@ -1,5 +1,5 @@
-Overview
-========
+ggExtra
+=======
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 
@@ -16,6 +16,10 @@ function for adding marginal densities, so I created one.
 
 Other functions include: `removeGrid` (and two variants), `rotateTextX`,
 `plotCount`.
+
+*Note: you might notice that there are no unit tests in this package. I
+don't know of a good way to perform tests on plots, if you have a nice
+simple solution please do let me know.*
 
 Installation
 ------------

@@ -1,11 +1,11 @@
-<!-- To create this README, I run
+<!-- To create this README, I run devtools::build_vignettes(), then
 render("vignettes/overview.Rmd", output_format = "md_document"),
 copy the contents of vignettes/overview.md here, replace all image paths
-(vignettes/vignettes/overview_files to vignettes/vignettes/vignettes/overview_files), change the
-title from Overview to the package's name, and add the TravisCI status -->
+(overview_files to vignettes/overview_files),
+and add the TravisCI status -->
 
 ggExtra
-========
+=======
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 
@@ -22,6 +22,10 @@ function for adding marginal densities, so I created one.
 
 Other functions include: `removeGrid` (and two variants), `rotateTextX`,
 `plotCount`.
+
+*Note: you might notice that there are no unit tests in this package. I
+don't know of a good way to perform tests on plots, if you have a nice
+simple solution please do let me know.*
 
 Installation
 ------------
