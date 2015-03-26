@@ -1,6 +1,6 @@
 ## ----setup, echo = FALSE, message = FALSE--------------------------------
 knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
-                      fig.height = 4, fig.keep = "last")
+                      fig.height = 4, fig.keep = "last", fig.align = "center")
 
 ## ------------------------------------------------------------------------
 suppressPackageStartupMessages({

@@ -37,7 +37,8 @@ functions work.
       library("ggplot2")
     })
 
-### `ggMarginal` - Add marginal density/histogram to ggplot2 scatterplots
+`ggMarginal` - Add marginal density/histogram to ggplot2 scatterplots
+---------------------------------------------------------------------
 
 You need to have the `grid` and `gridExtra` packages installed for this
 function.
@@ -56,13 +57,13 @@ distributed, and plot a simple ggplot2 scatterplot.
     df1 <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
     (p1 <- ggplot(df1, aes(x, y)) + geom_point() + theme_bw())
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-2-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 Ok, now let's add marginal density plots.
 
     ggMarginal(p1)
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-3-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 That was easy. Notice how the syntax is not following the standard
 ggplot2 syntax - you don't "add" a ggMarginal layer with
@@ -74,7 +75,7 @@ Let's make the text a bit larger to make it easier to see.
 
     ggMarginal(p1 + theme_bw(30) + ylab("Two\nlines"))
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-4-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 Notice how the marginal plots occupy the correct space, and even when
 the main plot's points are pushed to the right because of larger text or
@@ -84,7 +85,7 @@ You can also show histograms instead.
 
     ggMarginal(p1, type = "histogram")
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-5-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 There are several more parameters, here is an example with a few more
 being used.
@@ -92,7 +93,7 @@ being used.
     ggMarginal(p1, margins = "x", size = 2, type = "histogram",
                marginCol = "blue", marginFill = "orange")
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-6-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 You don't have to supply a ggplot2 scatterplot, you can also just tell
 ggMarginal what dataset and variables to use, but of course this way you
@@ -101,14 +102,15 @@ text/font/theme/etc).
 
     ggMarginal(data = mtcars, x = "wt", y = "mpg")
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-7-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 `size = 2` means that the main scatterplot should occupy twice as much
 height/width as the margin plots (default is 5).
 
 For more information, see `?ggExtra::ggMarginal`.
 
-### `removeGrid` - Remove grid lines from ggplot2
+`removeGrid` - Remove grid lines from ggplot2
+---------------------------------------------
 
 This is just a convenience function to save a bit of typing and
 memorization. Minor grid lines are always removed, and the major x or y
@@ -122,11 +124,12 @@ grid lines can be removed as well (default is to remove both).
     p2 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
     p2 + removeGrid()
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-8-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 For more information, see `?ggExtra::removeGrid`.
 
-### `rotateTextX` - Rotate x axis labels
+`rotateTextX` - Rotate x axis labels
+------------------------------------
 
 Often times it is useful to rotate the x axis labels to be vertical if
 there are too many labels and they overlap. This function accomplishes
@@ -137,11 +140,12 @@ tick line.
     p3 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
     p3 + rotateTextX()
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-9-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 For more information, see `?ggExtra::rotateTextX`.
 
-### `plotCount` - Plot count data with ggplot2
+`plotCount` - Plot count data with ggplot2
+------------------------------------------
 
 This is a convenience function to quickly plot a bar plot of count
 (frequency) data. The input must be either a frequency table (obtained
@@ -150,12 +154,12 @@ column contains the values and the second column contains the counts.
 
     plotCount(table(infert$education))
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-10-1.png" title="" alt="" style="display: block; margin: auto;" />
 
     df4 <- data.frame("vehicle" = c("bicycle", "car", "unicycle", "Boeing747"),
                       "NumWheels" = c(2, 4, 1, 16))
     plotCount(df4) + removeGridX()
 
-![](overview_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+<img src="overview_files/figure-markdown_strict/unnamed-chunk-11-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 For more information, see `?ggExtra::plotCount`.

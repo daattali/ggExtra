@@ -11,7 +11,7 @@ vignette: >
   
 ```{r setup, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
-                      fig.height = 4, fig.keep = "last")
+                      fig.height = 4, fig.keep = "last", fig.align = "center")
 ```
 
 # Overview
@@ -53,7 +53,7 @@ suppressPackageStartupMessages({
 })
 ```
 
-### `ggMarginal` - Add marginal density/histogram to ggplot2 scatterplots
+## `ggMarginal` - Add marginal density/histogram to ggplot2 scatterplots
 
 You need to have the `grid` and `gridExtra` packages installed for this
 function.  
@@ -122,7 +122,7 @@ as the margin plots (default is 5).
 
 For more information, see `?ggExtra::ggMarginal`.
 
-### `removeGrid` - Remove grid lines from ggplot2
+## `removeGrid` - Remove grid lines from ggplot2
 
 This is just a convenience function to save a bit of typing and memorization.
 Minor grid lines are always removed, and the major x or y grid lines can be
@@ -139,7 +139,7 @@ p2 + removeGrid()
 
 For more information, see `?ggExtra::removeGrid`.
 
-### `rotateTextX` - Rotate x axis labels
+## `rotateTextX` - Rotate x axis labels
 
 Often times it is useful to rotate the x axis labels to be vertical if there are
 too many labels and they overlap. This function accomplishes that and ensures
@@ -153,7 +153,7 @@ p3 + rotateTextX()
 
 For more information, see `?ggExtra::rotateTextX`.
 
-### `plotCount` - Plot count data with ggplot2
+## `plotCount` - Plot count data with ggplot2
 
 This is a convenience function to quickly plot a bar plot of count (frequency)
 data.  The input must be either a frequency table (obtained with `base::table`)
