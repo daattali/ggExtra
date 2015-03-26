@@ -7,6 +7,8 @@ and add the TravisCI status -->
 ggExtra
 =======
 
+[![Build Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
+
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 
 Most functions/layers are quite simple but are useful because they are
