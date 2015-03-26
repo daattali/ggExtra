@@ -1,5 +1,5 @@
 Package: ggExtra
-Title: Collection of functions and layers to enhance ggplot2
+Title: Collection of Functions and Layers to Enhance ggplot2
 Version: 0.1.0
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
