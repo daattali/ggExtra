@@ -36,19 +36,17 @@ density/histogram.}
 (not used when \code{type} is "density")}
 }
 \value{
-NULL. The function uses \code{gridExtra::grid.arrange}, which
-returns NULL. This means that the function has to show the plot as a
-side-effect and the plot cannot be saved in an object until later. It might be possible
-to use \code{gridExtra::arrangeGrob} to save the object for later, but I'm
-running into bugs with that as well, see
-\url{http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object}
+An object of class ggExtraPlot. This extra class gets added onto
+a ggplot2 object in order for the \code{print} generic to easily work with
+this object. This means that the return value from this function can be
+printed or saved for later.
 }
 \description{
 Create a ggplot2 scatterplot with marginal density plots (default) or
 histograms, or add the marginal plots to an existing scatterplot.
 }
 \note{
-The \code{grid} and \code{gridExtra} packages area required for this
+The \code{grid} and \code{gridExtra} packages are required for this
 function.
 }
 \examples{

@@ -111,6 +111,16 @@ text/font/theme/etc).
 `size = 2` means that the main scatterplot should occupy twice as much
 height/width as the margin plots (default is 5).
 
+Last but not least - you can also save the output from `ggMarginal` and
+display it later. (I know that sounds trivial, but this was not an easy
+problem to solve - [see this
+discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
+
+    p <- ggMarginal(p1)
+    p
+
+<img src="overview_files/figure-markdown_strict/ggmarginal-save-1.png" title="" alt="" style="display: block; margin: auto;" />
+
 For more information, see `?ggExtra::ggMarginal`.
 
 `removeGrid` - Remove grid lines from ggplot2

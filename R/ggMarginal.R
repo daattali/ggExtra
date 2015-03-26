@@ -3,7 +3,7 @@
 #' Create a ggplot2 scatterplot with marginal density plots (default) or 
 #' histograms, or add the marginal plots to an existing scatterplot.
 #'  
-#' @note The \code{grid} and \code{gridExtra} packages area required for this
+#' @note The \code{grid} and \code{gridExtra} packages are required for this
 #' function.
 #' @param p A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
 #' not provided, then all of \code{data}, \code{x}, and \code{y} must be
@@ -23,12 +23,10 @@
 #' density/histogram.
 #' @param marginFill The colour to use for the fill of the marginal histogram
 #' (not used when \code{type} is "density")
-#' @return NULL. The function uses \code{gridExtra::grid.arrange}, which
-#' returns NULL. This means that the function has to show the plot as a
-#' side-effect and the plot cannot be saved in an object until later. It might be possible
-#' to use \code{gridExtra::arrangeGrob} to save the object for later, but I'm
-#' running into bugs with that as well, see
-#' \url{http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object}
+#' @return An object of class ggExtraPlot. This extra class gets added onto
+#' a ggplot2 object in order for the \code{print} generic to easily work with
+#' this object. This means that the return value from this function can be
+#' printed or saved for later.
 #' @examples
 #' if (requireNamespace("ggplot2", quietly = TRUE)) {
 #'   if (requireNamespace("gridExtra", quietly = TRUE)) {
@@ -71,16 +69,6 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
     })
   )  
   
-  # NOTE: This ugly hack is here because of a bug in gridExtra which calls
-  # a ggplot2 function directly instead of namespacing it.  The bug is fixed
-  # in the gridExtra GitHub version, but not on CRAN. Hopefully gridExtra
-  # will submit the fix to CRAN and I can remove this ugliness.
-  # https://github.com/baptiste/gridextra/issues/5
-  if (!"package:ggplot2" %in% search()) {
-    suppressPackageStartupMessages(attachNamespace("ggplot2"))
-    on.exit(detach("package:ggplot2"))
-  }
-
   # Try to infer values for parameters that are missing from the input scatterplot
   if (missing(p)) {
     if (missing(data) | missing(x) | missing(y)) {
@@ -216,9 +204,41 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
   gridArgs <- c(plots, ncol = ncol, nrow = nrow,
                 widths = list(c(size, 1)), heights = list(c(1, size)))
 
-  # NOTE: the reason I put ggplot2 as a Depends instead of an Imports in the
-  # DESCRIPTION is because of a bug in gridExtra. https://groups.google.com/forum/#!topic/ggplot2/v-iyImjGOuY
-
+  # NOTE: This ugly hack is here because of a bug in gridExtra which calls
+  # a ggplot2 function directly instead of namespacing it.  The bug is fixed
+  # in the gridExtra GitHub version, but not on CRAN. Hopefully gridExtra
+  # will submit the fix to CRAN and I can remove this ugliness.
+  # https://github.com/baptiste/gridextra/issues/5
+  if (!"package:ggplot2" %in% search()) {
+    suppressPackageStartupMessages(attachNamespace("ggplot2"))
+    on.exit(detach("package:ggplot2"))
+  }
+  
+  # NOTE: I had use arrangeGrob instead of grid.arrange because the latter does
+  # not allow saving the object, it only works as a side-effect and returns NULL.
+  # There were still problems with arrangeGrob - if gridExtra isn't loaded, I
+  # would get "No layers in plot" error. I noticed that calling grid::grid.draw 
+  # fixes this error. In order to allow the user to save the object and print it
+  # later, I define an S3 print methods for this object that will call grid.draw
+  # More info: http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object
+  
   # Build the grid of plots
-  do.call(gridExtra::grid.arrange, gridArgs)
+  plot <- do.call(gridExtra::arrangeGrob, gridArgs)
+  class(plot) <- c("ggExtraPlot", class(plot))
+  plot
+}
+
+#' Print a ggExtraPlot object
+#' 
+#' \code{ggExtraPlot} objects are created from \code{ggMarginal}. This is the S3
+#' generic print method to print the result of the scatterplot with its marginal
+#' plots.
+#' 
+#' @param x ggExtraPlot object.
+#' @param ... ignored
+#' @seealso \code{\link{ggMarginal}}
+#' @export
+print.ggExtraPlot <- function(x, ...) {
+  grid::grid.newpage()
+  grid::grid.draw(x)
 }

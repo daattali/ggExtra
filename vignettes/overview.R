@@ -32,6 +32,10 @@ ggMarginal(p1, margins = "x", size = 2, type = "histogram",
 ## ----ggmarginal-manual---------------------------------------------------
 ggMarginal(data = mtcars, x = "wt", y = "mpg")
 
+## ----ggmarginal-save-----------------------------------------------------
+p <- ggMarginal(p1)
+p
+
 ## ----removeGrid----------------------------------------------------------
 df2 <- data.frame(x = 1:50, y = 1:50)
 p2 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
