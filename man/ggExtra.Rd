@@ -6,6 +6,6 @@
 \alias{ggExtra-package}
 \title{ggExtra}
 \description{
-A collection of useful functions and layers to enhance ggplot2.
+Collection of functions and layers to enhance ggplot2.
 }
 

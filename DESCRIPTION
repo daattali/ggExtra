@@ -1,10 +1,10 @@
 Package: ggExtra
-Title: Extra functions and layers for ggplot2
+Title: Collection of functions and layers to enhance ggplot2
 Version: 0.1.0
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
     )
-Description: A collection of useful functions and layers to enhance ggplot2.
+Description: Collection of functions and layers to enhance ggplot2.
 URL: https://github.com/daattali/ggExtra
 Depends:
     R (>= 3.1.0)

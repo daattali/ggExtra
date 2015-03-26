@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotCount.R
 \name{plotCount}
 \alias{plotCount}
-\title{Plot count data with ggplot}
+\title{Plot count data with ggplot2}
 \usage{
 plotCount(x)
 }
