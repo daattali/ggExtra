@@ -17,7 +17,7 @@ File 'LICENSE':
   COPYRIGHT HOLDER: Dean Attali
 
 ## Reviewer comments
-2015-03-25: (I think the HTML comment is because the daattali@gmail.com email was inside `<>` tags)
+2015-03-25 Prof Brian Ripley: (I think the HTML comment is because the daattali@gmail.com email was inside `<>` tags)
 > And reading the CRAN policies did not work: you are required not to send HTML!
 
 > Your checks missed
@@ -28,4 +28,5 @@ File 'LICENSE':
 
 > ‘Collection of Functions and Layers to Enhance ggplot2’
 
-2015-03-26:
+2015-03-26 Uwe Ligges:
+> Thanks, on CRAN now.
