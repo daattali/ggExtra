@@ -41,11 +41,18 @@ solution please do let me know.*
 
 ## Installation
 
-`ggExtra` is currently only available through GitHub and can be downloaded
-easily using `devtools`.
+`ggExtra` is available through both CRAN and GitHub.
+
+To install the CRAN version:
 
 ```
-# install.packages("devtools")
+install.packages("ggExtra")
+```
+
+To install the latest developmental version from GitHub:
+
+```
+install.packages("devtools")
 devtools::install_github("daattali/ggExtra")
 ```
 
