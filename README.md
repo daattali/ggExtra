@@ -25,6 +25,8 @@ function for adding marginal densities, so I created one.
 Other functions include: `removeGrid` (and two variants), `rotateTextX`,
 `plotCount`.
 
+This is an instructional document, but I wrote [a blog post](http://deanattali.com/2015/03/29/ggExtra-r-package/) about the reasoning behind and development of this package.
+
 *Note: you might notice that there are no unit tests in this package. I
 don't know of a good way to perform tests on plots, if you have a nice
 simple solution please do let me know.*
