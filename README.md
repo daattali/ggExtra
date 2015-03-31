@@ -4,7 +4,7 @@ copy the contents of vignettes/overview.md here, replace all image paths
 (overview_files to vignettes/overview_files),
 and add the TravisCI status -->
 
-ggExtra
+ggExtra - Adding marginal histograms to ggplot2, and more ggplot2 enhancements
 =======
 
 [![Build Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
