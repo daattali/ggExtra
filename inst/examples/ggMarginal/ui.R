@@ -12,7 +12,9 @@ shinyUI(fluidPage(
         a("ggExtra::ggMarginal()", href = "https://github.com/daattali/ggExtra"),
         "by",
         a("Dean Attali", href = "http://deanattali.com")
-      )
+      ),
+      h4("Source code for this app is",
+         a("on GitHub", href = "https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal"))
     )
   ),
   
