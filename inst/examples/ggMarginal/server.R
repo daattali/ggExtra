@@ -48,6 +48,23 @@ shinyServer(function(input, output, session) {
                 colnames(dataset), colnames(dataset)[2])
   })
   
+  # there's a bug with sliderInput where if you scroll all the way
+  # to the left and exit the window, it returns NA and breaks Shiny
+  fontSize <- reactive({
+    if (is.null(input$font_size)) {
+      0
+    } else {
+      input$font_size
+    }
+  })
+  size <- reactive({
+    if (is.null(input$size)) {
+      1
+    } else {
+      input$size
+    }
+  })  
+  
   output$plot <- renderPlot({
     dataset <- datasetInput()
     
@@ -58,22 +75,50 @@ shinyServer(function(input, output, session) {
       return(NULL)
     }
     
+
+    # when the plot changes, change the code as well
+    text("code", code())
+    
     p <-
       ggplot(dataset, aes_string(input$x_var, input$y_var)) +
       geom_point() +
-      theme_bw(input$font_size)
+      theme_bw(fontSize())
     
     if (input$show_marginal) {
       p <- ggExtra::ggMarginal(
         p,
         type = input$type,
         margins = input$margins,
-        size = input$size,
+        size = size(),
         marginCol = input$marginCol,
         marginFill = input$marginFill)
     }
     
     p
+  })
+  
+  # the code to reproduce the plot
+  code <- reactive({
+    code <- sprintf(paste0(
+      "p <- ggplot(`%s`, aes_string('%s', '%s')) +\n",
+      "  geom_point() + theme_bw(%s)\n\n"),
+      input$dataset, input$x_var, input$y_var, fontSize()
+    )
+    if (input$show_marginal) {
+      code <- paste0(code, sprintf(paste0(
+        "ggExtra::ggMarginal(\n",
+        "  p,\n",
+        "  type = '%s',\n",
+        "  margins = '%s',\n",
+        "  size = %s,\n",
+        "  marginCol = '%s',\n",
+        "  marginFill = '%s'\n",
+        ")"),
+        input$type, input$margins, size(), input$marginCol,
+        input$marginFill))
+    } else {
+      code <- paste0(code, "p")
+    }
   })
   
   # hide the loading message

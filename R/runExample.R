@@ -15,10 +15,9 @@
 runExample <- function() {
   appDir <- system.file("examples", "ggMarginal", package = "ggExtra")
   if (appDir == "") {
-    stop("Could not find example directory. Try re-installing `ggExtra`.", call. = FALSE)
+    stop("Could not find example directory. Try re-installing `ggExtra`.",
+         call. = FALSE)
   }
   
   shiny::runApp(appDir, display.mode = "normal")
-  
-  invisible(NULL)
 }

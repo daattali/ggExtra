@@ -47,7 +47,8 @@ shinyUI(fluidPage(
     )),
     
     column(6,
-      plotOutput("plot")
+      plotOutput("plot"),
+      pre(id = "code")
     )
   )
 ))

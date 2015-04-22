@@ -47,3 +47,10 @@ body {
 #plot img {
   outline: 1px solid #999999;
 }
+
+#code {
+  margin-top: 15px;
+  background: #FEFEFE;
+  padding: 10px;
+  border: 1px solid #999;
+}
