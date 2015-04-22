@@ -14,7 +14,7 @@
 #' provided and the \code{x} aesthetic is set in the main plot.
 #' @param y The name of the variable along the y axis. Optional if \code{p} is
 #' provided and the \code{y} aesthetic is set in the main plot.
-#' @param type What type of marginal plot to show. One of: [density, histogram].
+#' @param type What type of marginal plot to show. One of: [density, histogram, boxplot].
 #' @param margins Along Which margins to show the plots. One of: [both, x, y].
 #' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
@@ -118,8 +118,26 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
     marginPlot <- ggplot2::geom_line(stat = "density", col = marginCol)
   } else if (type == "histogram") {
     marginPlot <- ggplot2::geom_bar(fill = marginFill, col = marginCol)
+  } else if (type == "boxplot") {
+    marginPlot <- ggplot2::geom_boxplot(fill = marginFill, col = marginCol)
   } else {
     stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
+  }
+  
+  mainPlot <- function(margin) {
+    if (margin == "x") {
+      if (type == "boxplot") {
+        ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + coord_flip()
+      } else {
+        ggplot2::ggplot(data, ggplot2::aes_string(x))
+      }
+    } else {
+      if (type == "boxplot") {
+        ggplot2::ggplot(data, ggplot2::aes_string(y, x))
+      } else {
+        ggplot2::ggplot(data, ggplot2::aes_string(y)) + coord_flip()
+      }
+    }
   }
 
   # Create the horizontal margin plot
@@ -134,8 +152,9 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
   # - Use the same axis titles as the main plot, to ensure the same space is taken
   # - Use the same axis range as the main plot
   if (margins != "y") {
+    
     top <-
-      ggplot2::ggplot(data, ggplot2::aes_string(x)) +
+      mainPlot("x") +
       marginPlot +
       ggplot2::theme(
         text = ggplot2::element_text(size = textsize, color = "transparent"),
@@ -172,8 +191,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
   # Create the vertical margin plot
   if (margins != "x") {
     right <-
-      ggplot2::ggplot(data, ggplot2::aes_string(y)) +
-      ggplot2::coord_flip() +
+      mainPlot("y") +
       marginPlot +
       ggplot2::theme(
         text = ggplot2::element_text(size = textsize, color = "transparent"),
