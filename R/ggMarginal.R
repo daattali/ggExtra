@@ -124,10 +124,12 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
     stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
   }
   
+  # this big mess is because boxplot for some reason requires both x and y
+  # to be set but histogram/density error out if both are set
   mainPlot <- function(margin) {
     if (margin == "x") {
       if (type == "boxplot") {
-        ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + coord_flip()
+        ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + ggplot2::coord_flip()
       } else {
         ggplot2::ggplot(data, ggplot2::aes_string(x))
       }
@@ -135,7 +137,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
       if (type == "boxplot") {
         ggplot2::ggplot(data, ggplot2::aes_string(y, x))
       } else {
-        ggplot2::ggplot(data, ggplot2::aes_string(y)) + coord_flip()
+        ggplot2::ggplot(data, ggplot2::aes_string(y)) + ggplot2::coord_flip()
       }
     }
   }
