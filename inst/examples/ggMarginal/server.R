@@ -18,11 +18,7 @@ datasets <- list(
 shinyServer(function(input, output, session) {
   # show/hide the marginal plots settings
   observe({
-    if (input$show_marginal) {
-      show("marginal-settings", TRUE, "slide", 0.3)
-    } else {
-      hide("marginal-settings", TRUE, "slide", 0.3)
-    }
+    toggle("marginal-settings", TRUE, "slide", 0.3, input$show_marginal)
   })
   
   output$dataset_select <- renderUI({
