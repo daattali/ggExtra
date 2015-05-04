@@ -54,7 +54,7 @@
 #'     }
 #'   }
 #' }
-#' @seealso \href{http://daattali.com:3838/ggExtra-ggMarginal-demo/}{Demo Shiny app}
+#' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
 ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
                        size = 5, marginCol = "black", marginFill = "grey") {

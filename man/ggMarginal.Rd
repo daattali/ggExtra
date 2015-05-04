@@ -78,6 +78,6 @@ if (requireNamespace("ggplot2", quietly = TRUE)) {
 }
 }
 \seealso{
-\href{http://daattali.com:3838/ggExtra-ggMarginal-demo/}{Demo Shiny app}
+\href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 }
 

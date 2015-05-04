@@ -22,7 +22,7 @@ StackOverflow posts, but every answer had messy code that was specific
 for the dataset in question. I wasn't able to find a simple drop-in
 function for adding marginal densities, so I created one. A demo of
 `ggMarginal` is [available
-online](http://daattali.com:3838/ggExtra-ggMarginal-demo/) as a Shiny
+online](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) as a Shiny
 app.
 
 Other functions include: `removeGrid` (and two variants), `rotateTextX`,
