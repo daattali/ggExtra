@@ -23,6 +23,11 @@
 #' density/histogram.
 #' @param marginFill The colour to use for the fill of the marginal histogram
 #' (not used when \code{type} is "density")
+#' @param ... Extra parameters to pass to ggplot2's \code{geom_line} (if
+#' \code{type == 'density'}) or \code{geom_bar} (if \code{type == 'histogram'}).
+#' For example, \code{binwidth} can be used for histograms. One caveat is that 
+#' currently both x and y margin plots will use the same parameters and there
+#' is no way to selectively add parameters to only one of the marginal plots. 
 #' @return An object of class ggExtraPlot. This extra class gets added onto
 #' a ggplot2 object in order for the \code{print} generic to easily work with
 #' this object. This means that the return value from this function can be
@@ -57,7 +62,8 @@
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
 ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
-                       size = 5, marginCol = "black", marginFill = "grey") {
+                       size = 5, marginCol = "black", marginFill = "grey",
+                       ...) {
 
   # Make sure the required packages are installed
   reqs <- c("grid", "gridExtra")
@@ -114,10 +120,10 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
   textsize <- p$theme$text$size
 
   if (type == "density") {
-    #marginPlot <- ggplot2::geom_density(fill = marginFill, col = marginCol)
-    marginPlot <- ggplot2::geom_line(stat = "density", col = marginCol)
+    #marginPlot <- ggplot2::geom_density(fill = marginFill, col = marginCol, ...)
+    marginPlot <- ggplot2::geom_line(stat = "density", col = marginCol, ...)
   } else if (type == "histogram") {
-    marginPlot <- ggplot2::geom_bar(fill = marginFill, col = marginCol)
+    marginPlot <- ggplot2::geom_bar(fill = marginFill, col = marginCol, ...)
   } else {
     stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
   }
