@@ -152,14 +152,14 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
         axis.text.x = ggplot2::element_blank(),
         plot.margin = grid::unit(c(0, 0, -1, 0), "lines")) +
       ggplot2::ylab(p$labels$y) +
-      ggplot2::scale_x_continuous(limits = pb$panel$x_scales[[1]]$range$range)
+      ggplot2::scale_x_continuous(limits = get_limits(pb, "x"))
     
     # Add the longest y axis label to the top plot and ensure it's at a y value
     # that is on the plot (this is why I build the top plot, to know the y values)
     pbTop <- ggplot2::ggplot_build(top)
     top <-
       top +
-      ggplot2::scale_y_continuous(breaks = mean(pbTop$panel$y_scales[[1]]$range$range),
+      ggplot2::scale_y_continuous(breaks = mean(get_limits(pbTop, "y")),
                                   labels = ylabel)
     
     # If we are showing a marginal plot above the main plot, then transfer the
@@ -190,7 +190,7 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
         axis.text.y = ggplot2::element_blank(),
         plot.margin = grid::unit(c(0, 0, 0, -1), "lines")) +
       ggplot2::ylab(p$labels$x) +
-      ggplot2::scale_x_continuous(limits = pb$panel$y_scales[[1]]$range$range) +
+      ggplot2::scale_x_continuous(limits = get_limits(pb, "y")) +
       ggplot2::ggtitle(p$labels$title)
   }
 
@@ -248,4 +248,23 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
 print.ggExtraPlot <- function(x, ...) {
   grid::grid.newpage()
   grid::grid.draw(x)
+}
+
+# Get the axis range of the x or y axis of the given ggplot build object
+# This is needed so that if the range of the plot is manually changed, the
+# marginal plots will use the same range
+get_limits <- function(pb, axis) {
+  if (axis == "x") {
+    scales <- pb$panel$x_scales[[1]]
+  } else if (axis == "y") {
+    scales <- pb$panel$y_scales[[1]]
+  } else {
+    stop("Invalid `axis` parameter (only x and y are supported)", call. = FALSE)
+  }
+  
+  range <- scales$limits
+  if (is.null(range)) {
+    range <- scales$range$range
+  }
+  range
 }
