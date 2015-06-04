@@ -8,6 +8,8 @@ ggExtra - Adding marginal histograms to ggplot2, and more ggplot2 enhancements
 =======
 
 [![Build Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
+[![Number of downloads](http://cranlogs.r-pkg.org/badges/ggExtra?color=brightgreen)](http://cran.r-project.org/web/packages/ggExtra/index.html)
+[![CRAN version](http://www.r-pkg.org/badges/version/ggExtra)](http://cran.r-project.org/web/packages/ggExtra/index.html)
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 
