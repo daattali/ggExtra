@@ -1,4 +1,2 @@
 language: r
 sudo: true
-r_github_packages: 
- - daattali/shinyjs
