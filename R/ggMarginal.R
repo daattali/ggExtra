@@ -19,9 +19,9 @@
 #' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
-#' @param marginCol The colour to use for the outline of the marginal 
+#' @param col The colour to use for the outline of the marginal 
 #' density/histogram.
-#' @param marginFill The colour to use for the fill of the marginal histogram
+#' @param fill The colour to use for the fill of the marginal histogram
 #' (not used when \code{type} is "density")
 #' @param ... Extra parameters to pass to ggplot2's \code{geom_line} (if
 #' \code{type == 'density'}) or \code{geom_bar} (if \code{type == 'histogram'}).
@@ -61,8 +61,9 @@
 #' }
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
-ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
-                       size = 5, marginCol = "black", marginFill = "grey",
+ggMarginal <- function(p, data, x, y, type = c("density", "histogram"),
+                       margins = c("both", "x", "y"), size = 5,
+                       marginCol = "black", marginFill = "grey",
                        ...) {
 
   # Make sure the required packages are installed
@@ -75,6 +76,9 @@ ggMarginal <- function(p, data, x, y, type = "density", margins = "both",
       }
     })
   )  
+  
+  type <- match.arg(type)
+  margins <- match.arg(margins)
   
   # Try to infer values for parameters that are missing from the input scatterplot
   if (missing(p)) {
