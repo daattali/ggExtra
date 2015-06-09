@@ -1,7 +1,7 @@
 <!-- To create this README, I run devtools::build_vignettes(), then
 rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document"),
 copy the contents of vignettes/overview.md here, replace all image paths
-(vignettes/overview_files to vignettes/vignettes/overview_files),
+(overview_files to vignettes/overview_files),
 and add the TravisCI status -->
 
 ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
@@ -13,9 +13,10 @@ ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 The main function is `ggMarginal`, which can be used to add marginal
-histograms/boxplots/density plots to ggplot2 plots. You can view a [live
-interactive demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to
-see part of its capabilities.
+histograms/boxplots/density plots to ggplot2 scatterplots. You can view
+a [live interactive
+demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to see part of
+its capabilities.
 
 Most other functions/layers are quite simple but are useful because they
 are fairly common ggplot2 operations that are a bit verbose.
@@ -113,6 +114,11 @@ and `fill` in the following example.
 
 <img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-params-1.png" title="" alt="" style="display: block; margin: auto;" />
 
+In the above example, `size = 2` means that the main scatterplot should
+occupy twice as much height/width as the margin plots (default is 5).
+The `col` and `fill` parameters are simply passed to the ggplot layer
+for both margin plots.
+
 If you want to specify some parameter for only one of the marginal
 plots, you can use the `xparams` or `yparams` parameters, like this:
 
@@ -129,13 +135,8 @@ text/font/theme/etc).
 
 <img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-manual-1.png" title="" alt="" style="display: block; margin: auto;" />
 
-`size = 2` means that the main scatterplot should occupy twice as much
-height/width as the margin plots (default is 5).
-
-It's also possible to pass extra parameters
-
 Last but not least - you can also save the output from `ggMarginal` and
-display it later. (I know that sounds trivial, but this was not an easy
+display it later. (This may sound trivial, but it was not an easy
 problem to solve - [see this
 discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
 

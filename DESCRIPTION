@@ -6,7 +6,7 @@ Authors@R: c(
     )
 Description: Collection of functions and layers to enhance ggplot2. The main
     function is ggMarginal, which can be used to add marginal
-    histograms/boxplots/density plots to ggplot2 plots.
+    histograms/boxplots/density plots to ggplot2 scatterplots.
 URL: https://github.com/daattali/ggExtra
 Depends:
     R (>= 3.1.0)

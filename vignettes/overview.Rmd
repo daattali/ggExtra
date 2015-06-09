@@ -19,7 +19,7 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
 
 # ggExtra
 
-`ggExtra` is a collection of functions and layers to enhance ggplot2. The main function is `ggMarginal`, which can be used to add marginal histograms/boxplots/density plots to ggplot2 plots. You can view a 
+`ggExtra` is a collection of functions and layers to enhance ggplot2. The main function is `ggMarginal`, which can be used to add marginal histograms/boxplots/density plots to ggplot2 scatterplots. You can view a 
 [live interactive demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/)
 to see part of its capabilities.
 
@@ -116,6 +116,8 @@ ggMarginal(p1, margins = "x", size = 2, type = "histogram",
            col = "blue", fill = "orange")
 ```
 
+In the above example, `size = 2` means that the main scatterplot should occupy twice as much height/width as the margin plots (default is 5). The `col` and `fill` parameters are simply passed to the ggplot layer for both margin plots.
+
 If you want to specify some parameter for only one of the marginal plots, you can use the `xparams` or `yparams` parameters, like this:
 
 ```{r ggmarginal-extraparams}
@@ -130,13 +132,8 @@ to customize the main plot (change text/font/theme/etc).
 ggMarginal(data = mtcars, x = "wt", y = "mpg")
 ```
 
-`size = 2` means that the main scatterplot should occupy twice as much height/width
-as the margin plots (default is 5).
-
-It's also possible to pass extra parameters
-
 Last but not least - you can also save the output from `ggMarginal` and display
-it later. (I know that sounds trivial, but this was not an easy problem to solve
+it later. (This may sound trivial, but it was not an easy problem to solve
 - [see this discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
 
 ```{r ggmarginal-save}
