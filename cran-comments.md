@@ -17,7 +17,8 @@ File 'LICENSE':
   COPYRIGHT HOLDER: Dean Attali
 
 ## Reviewer comments
-2015-03-25 Prof Brian Ripley: (I think the HTML comment is because the daattali@gmail.com email was inside `<>` tags)
+2015-03-25 Prof Brian Ripley: (I think the HTML comment is because the daattali@gmail.com email was inside `<>` tags)  
+
 > And reading the CRAN policies did not work: you are required not to send HTML!
 
 > Your checks missed
@@ -42,6 +43,8 @@ File 'LICENSE':
 * ubuntu 12.04 (on travis-ci), R 3.1.3
 
 ## Submission comments:
+
+2015-06-08
 
 Tested on Windows and 7 and Ubuntu 12.04.  There were no ERRORs or WARNINGs and 2 NOTEs:
 1. Non-standard file/directory found at top level:
@@ -74,3 +77,61 @@ Comments about notes:
 Thanks
 
 ## Reviewer comments
+
+2015-06-09 Kurt Hornik
+
+Is this your own web site?  I see that   
+
+$ curl -I -L http://daattali.com/shiny/   
+HTTP/1.1 200 OK   
+Server: nginx   
+Date: Tue, 09 Jun 2015 14:37:35 GMT   
+Content-Type: text/html; charset=UTF-8   
+Content-Length: 2981   
+Connection: keep-alive   
+Accept-Ranges: bytes   
+ETag: "2981-1431826214000"   
+Cache-Control: public, max-age=0   
+Last-Modified: Sun, 17 May 2015 01:30:14 GMT   
+   
+but   
+   
+$ curl -I -L http://daattali.com/shiny/ggExtra-ggMarginal-demo/   
+HTTP/1.1 404 Not Found   
+Server: nginx   
+Date: Tue, 09 Jun 2015 14:37:12 GMT   
+Content-Type: text/html; charset=UTF-8   
+Content-Length: 18   
+Connection: keep-alive   
+x-ua-compatible: IE=edge,chrome=1   
+   
+   
+We also see   
+   
+Possibly mis-spelled words in DESCRIPTION:   
+  ggMarginal (9:17)   
+  ggplot (2:35, 2:53, 8:60, 10:42)   
+   
+The Title field should be in title case, current version then in title case:   
+‘Add Marginal Histograms to ggplot2, and More ggplot2 Enhancements’   
+‘Add Marginal Histograms to Ggplot2, and More ggplot2 Enhancements’   
+   
+You need to put single quotes around ggplot2 in the title and   
+description, and write ggMarginal()   
+   
+Best
+
+# Version 0.1.5.2
+# Round 2
+
+## Test environments
+
+* local Windows 7, R 3.1.3
+* ubuntu 12.04 (on travis-ci), R 3.1.3
+
+## Submission comments:
+
+2015-06-09
+
+Fixed from previous submission: added single quotes around 'ggplot' and added brackets after 'ggMarginal()`.  
+Still getting the "Found the following (possibly) invalid URLs:" NOTE for shiny apps, I'm not sure how to fix my shiny server configuration. I will try to look into that in the future. Reply from previous submission comment: yes, it is my own site
