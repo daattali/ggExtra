@@ -19,14 +19,26 @@
 #' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
+#' name for \code{xparams} and \code{yparams}
 #' @param ... Extra parameters to pass to the marginal plots. Any parameter that
 #' \code{geom_line()}, \code{geom_bar()}, or \code{geom_boxplot()} accept
 #' can be used. For example, \code{colour = "red"} can be used for any marginal plot type,
 #' and \code{binwidth = 10} can be used for histograms.
+#' @param xparams List of extra parameters to use only for the marginal plot along
+#' the x axis.
+#' @param yparams List of extra parameters to use only for the marginal plot along
+#' the y axis.
 #' @return An object of class ggExtraPlot. This extra class gets added onto
 #' a ggplot2 object in order for the \code{print} generic to easily work with
 #' this object. This means that the return value from this function can be
 #' printed or saved for later.
+#' @note Since the \code{size} parameter is used by \code{ggMarginal}, if you want
+#' to pass a size to the marginal plots, you cannot
+#' use the \code{...} parameter. Instead, you must pass \code{size} to
+#' both \code{xparams} and \code{yparams}. For example,
+#' \code{ggMarginal(p, size = 2)} will change the size of the main vs marginal plot,
+#' while \code{ggMarginal(p, xparams = list(size=2), yparams = list(size=2))}
+#' will make the density plot outline thicker.
 #' @examples
 #' if (requireNamespace("ggplot2", quietly = TRUE)) {
 #'   if (requireNamespace("gridExtra", quietly = TRUE)) {
@@ -42,6 +54,7 @@
 #'       ggMarginal(p2, margins = "x")
 #'       ggMarginal(p2, size = 2)
 #'       ggMarginal(p2, colour = "red")
+#'       ggMarginal(p2, colour = "red", xparams = list(colour = "blue", size = 3))
 #'       p2 <- p2 + ggplot2::ggtitle("Random data") + ggplot2::theme_bw(30)
 #'       ggMarginal(p2)
 #'       
@@ -59,7 +72,7 @@
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
-                       ...) {
+                       ..., xparams, yparams) {
 
   # Make sure the required packages are installed
   reqs <- c("grid", "gridExtra")
@@ -83,6 +96,16 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   }
   if (is.null(extraParams[['fill']])) {
     extraParams[['fill']] <- "grey"
+  }
+  if (missing(xparams)) {
+    xparams <- list()
+  } else {
+    xparams <- as.list(xparams)
+  }
+  if (missing(yparams)) {
+    yparams <- list()
+  } else {
+    yparams <- as.list(yparams)
   }
   
   # Try to infer values for parameters that are missing from the input scatterplot
@@ -132,7 +155,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   marginPlot <- function(margin) {
     if (margin == "x") {
       if (type == "boxplot") {
-        plot <- ggplot2::ggplot(data, ggplot2::aes_string(x, x)) + coord_flip()
+        plot <- ggplot2::ggplot(data, ggplot2::aes_string(x, x)) + ggplot2::coord_flip()
       } else {
         plot <- ggplot2::ggplot(data, ggplot2::aes_string(x))
       }
@@ -140,10 +163,21 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       if (type == "boxplot") {
         plot <- ggplot2::ggplot(data, ggplot2::aes_string(y, y))
       } else {
-        plot <- ggplot2::ggplot(data, ggplot2::aes_string(y)) + coord_flip()
+        plot <- ggplot2::ggplot(data, ggplot2::aes_string(y)) + ggplot2::coord_flip()
       }
     } else {
       stop(sprintf("`margin` = `%s` is not supported", margin), call. = FALSE)
+    }
+    
+    # add custom parameters specific to each marginal plot
+    # merge the parameters in an order that ensures that
+    # marginal plot params overwrite general params
+    if (margin == "x") {
+      extraParams <- append(xparams, extraParams)
+      extraParams <- extraParams[!duplicated(names(extraParams))]
+    } else if (margin == "y") {
+      extraParams <- append(yparams, extraParams)
+      extraParams <- extraParams[!duplicated(names(extraParams))]
     }
     
     if (type == "density") {
