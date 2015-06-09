@@ -35,15 +35,15 @@ shinyUI(fluidPage(
       checkboxInput("show_marginal", "Show marginal plots", TRUE),
       
       div(id = "marginal-settings",
-        selectInput("type", NULL, c("density", "histogram")),
+        selectInput("type", NULL, c("density", "histogram", "boxplot")),
         selectInput("margins", "Which margins?", c("both", "x", "y")),
         sliderInput("size",
                     "Size ratio of main plot:marginal plots",
                     1, 5, 5, 0.5),
-        selectInput("marginCol", "Marginal plot colour", colours(), "black"),
+        selectInput("col", "Marginal plot colour", colours(), "black"),
         conditionalPanel(
-          condition = "input.type == 'histogram'",
-          selectInput("marginFill", "Marginal plot fill colour", colours(), "grey")
+          condition = "input.type != 'density'",
+          selectInput("fill", "Marginal plot fill colour", colours(), "grey")
         )
       )      
     )),

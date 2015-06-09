@@ -14,20 +14,15 @@
 #' provided and the \code{x} aesthetic is set in the main plot.
 #' @param y The name of the variable along the y axis. Optional if \code{p} is
 #' provided and the \code{y} aesthetic is set in the main plot.
-#' @param type What type of marginal plot to show. One of: [density, histogram].
+#' @param type What type of marginal plot to show. One of: [density, histogram, boxplot].
 #' @param margins Along Which margins to show the plots. One of: [both, x, y].
 #' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
-#' @param col The colour to use for the outline of the marginal 
-#' density/histogram.
-#' @param fill The colour to use for the fill of the marginal histogram
-#' (not used when \code{type} is "density")
-#' @param ... Extra parameters to pass to ggplot2's \code{geom_line} (if
-#' \code{type == 'density'}) or \code{geom_bar} (if \code{type == 'histogram'}).
-#' For example, \code{binwidth} can be used for histograms. One caveat is that 
-#' currently both x and y margin plots will use the same parameters and there
-#' is no way to selectively add parameters to only one of the marginal plots. 
+#' @param ... Extra parameters to pass to the marginal plots. Any parameter that
+#' \code{geom_line()}, \code{geom_bar()}, or \code{geom_boxplot()} accept
+#' can be used. For example, \code{colour = "red"} can be used for any marginal plot type,
+#' and \code{binwidth = 10} can be used for histograms.
 #' @return An object of class ggExtraPlot. This extra class gets added onto
 #' a ggplot2 object in order for the \code{print} generic to easily work with
 #' this object. This means that the return value from this function can be
@@ -46,6 +41,7 @@
 #'       ggMarginal(p2, type = "histogram")
 #'       ggMarginal(p2, margins = "x")
 #'       ggMarginal(p2, size = 2)
+#'       ggMarginal(p2, colour = "red")
 #'       p2 <- p2 + ggplot2::ggtitle("Random data") + ggplot2::theme_bw(30)
 #'       ggMarginal(p2)
 #'       
@@ -61,9 +57,8 @@
 #' }
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
-ggMarginal <- function(p, data, x, y, type = c("density", "histogram"),
+ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
-                       marginCol = "black", marginFill = "grey",
                        ...) {
 
   # Make sure the required packages are installed
@@ -77,8 +72,18 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram"),
     })
   )  
   
+  # figure out all the default parameters
   type <- match.arg(type)
   margins <- match.arg(margins)
+  extraParams <- list(...)
+  if (is.null(extraParams[['colour']]) &&
+      is.null(extraParams[['color']]) &&
+      is.null(extraParams[['col']])) {
+    extraParams[['colour']] <- "black"
+  }
+  if (is.null(extraParams[['fill']])) {
+    extraParams[['fill']] <- "grey"
+  }
   
   # Try to infer values for parameters that are missing from the input scatterplot
   if (missing(p)) {
@@ -123,15 +128,38 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram"),
 
   textsize <- p$theme$text$size
 
-  if (type == "density") {
-    #marginPlot <- ggplot2::geom_density(fill = marginFill, col = marginCol, ...)
-    marginPlot <- ggplot2::geom_line(stat = "density", col = marginCol, ...)
-  } else if (type == "histogram") {
-    marginPlot <- ggplot2::geom_bar(fill = marginFill, col = marginCol, ...)
-  } else {
-    stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
-  }
-
+  # get the common code for both maginal (x and y) plots
+  marginPlot <- function(margin) {
+    if (margin == "x") {
+      if (type == "boxplot") {
+        plot <- ggplot2::ggplot(data, ggplot2::aes_string(x, x)) + coord_flip()
+      } else {
+        plot <- ggplot2::ggplot(data, ggplot2::aes_string(x))
+      }
+    } else if (margin == "y") {
+      if (type == "boxplot") {
+        plot <- ggplot2::ggplot(data, ggplot2::aes_string(y, y))
+      } else {
+        plot <- ggplot2::ggplot(data, ggplot2::aes_string(y)) + coord_flip()
+      }
+    } else {
+      stop(sprintf("`margin` = `%s` is not supported", margin), call. = FALSE)
+    }
+    
+    if (type == "density") {
+      extraParams[['stat']] <- "density"
+      layer <- do.call(ggplot2::geom_line, extraParams)
+    } else if (type == "histogram") {
+      layer <- do.call(ggplot2::geom_bar, extraParams)
+    } else if (type == "boxplot") {
+      layer <- do.call(ggplot2::geom_boxplot, extraParams)
+    } else {
+      stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
+    }
+    
+    plot + layer
+  }  
+  
   # Create the horizontal margin plot
   # In order to ensure the marginal plots line up nicely with the main plot,
   # several things are done:
@@ -145,8 +173,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram"),
   # - Use the same axis range as the main plot
   if (margins != "y") {
     top <-
-      ggplot2::ggplot(data, ggplot2::aes_string(x)) +
-      marginPlot +
+      marginPlot("x") + 
       ggplot2::theme(
         text = ggplot2::element_text(size = textsize, color = "transparent"),
         line = ggplot2::element_blank(),
@@ -182,9 +209,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram"),
   # Create the vertical margin plot
   if (margins != "x") {
     right <-
-      ggplot2::ggplot(data, ggplot2::aes_string(y)) +
-      ggplot2::coord_flip() +
-      marginPlot +
+      marginPlot("y") + 
       ggplot2::theme(
         text = ggplot2::element_text(size = textsize, color = "transparent"),
         line = ggplot2::element_blank(),

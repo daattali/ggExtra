@@ -4,8 +4,8 @@
 \alias{ggMarginal}
 \title{Add marginal density/histogram to ggplot2 scatterplots}
 \usage{
-ggMarginal(p, data, x, y, type = "density", margins = "both", size = 5,
-  marginCol = "black", marginFill = "grey", ...)
+ggMarginal(p, data, x, y, type = c("density", "histogram"),
+  margins = c("both", "x", "y"), size = 5, ...)
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
@@ -29,17 +29,9 @@ provided and the \code{y} aesthetic is set in the main plot.}
 compared to the main plot. A size of 5 means that the main plot is 5x wider
 and 5x taller than the marginal plots.}
 
-\item{marginCol}{The colour to use for the outline of the marginal
-density/histogram.}
-
-\item{marginFill}{The colour to use for the fill of the marginal histogram
-(not used when \code{type} is "density")}
-
-\item{...}{Extra parameters to pass to ggplot2's \code{geom_line} (if
-\code{type == 'density'}) or \code{geom_bar} (if \code{type == 'histogram'}).
-For example, \code{binwidth} can be used for histograms. One caveat is that
-currently both x and y margin plots will use the same parameters and there
-is no way to selectively add parameters to only one of the marginal plots.}
+\item{...}{Extra parameters to pass to the marginal plots. Any parameter that
+\code{geom_line} or \code{geom_bar} uses can be used.
+For example, \code{binwidth = 10} can be used for histograms.}
 }
 \value{
 An object of class ggExtraPlot. This extra class gets added onto

@@ -125,7 +125,7 @@ There are several more parameters, here is an example with a few more being used
 
 ```{r ggmarginal-params}
 ggMarginal(p1, margins = "x", size = 2, type = "histogram",
-           marginCol = "blue", marginFill = "orange")
+           col = "blue", fill = "orange")
 ```
 
 You don't have to supply a ggplot2 scatterplot, you can also just tell ggMarginal
