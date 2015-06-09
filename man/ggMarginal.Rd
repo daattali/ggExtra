@@ -23,7 +23,7 @@ provided and the \code{y} aesthetic is set in the main plot.}
 
 \item{type}{What type of marginal plot to show. One of: [density, histogram, boxplot].}
 
-\item{margins}{Along Which margins to show the plots. One of: [both, x, y].}
+\item{margins}{Along which margins to show the plots. One of: [both, x, y].}
 
 \item{size}{Integer describing the relative size of the marginal plots
 compared to the main plot. A size of 5 means that the main plot is 5x wider

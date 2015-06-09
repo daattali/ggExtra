@@ -15,7 +15,7 @@
 #' @param y The name of the variable along the y axis. Optional if \code{p} is
 #' provided and the \code{y} aesthetic is set in the main plot.
 #' @param type What type of marginal plot to show. One of: [density, histogram, boxplot].
-#' @param margins Along Which margins to show the plots. One of: [both, x, y].
+#' @param margins Along which margins to show the plots. One of: [both, x, y].
 #' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
