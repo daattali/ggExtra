@@ -1,10 +1,10 @@
 <!-- To create this README, I run devtools::build_vignettes(), then
 rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document"),
 copy the contents of vignettes/overview.md here, replace all image paths
-(overview_files to vignettes/overview_files),
+(vignettes/overview_files to vignettes/vignettes/overview_files),
 and add the TravisCI status -->
 
-ggExtra - Adding marginal histograms to ggplot2, and more ggplot2 enhancements
+ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
 =======
 
 [![Build Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
@@ -12,23 +12,13 @@ ggExtra - Adding marginal histograms to ggplot2, and more ggplot2 enhancements
 [![CRAN version](http://www.r-pkg.org/badges/version/ggExtra)](http://cran.r-project.org/web/packages/ggExtra/index.html)
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
+The main function is `ggMarginal`, which can be used to add marginal
+histograms/boxplots/density plots to ggplot2 plots. You can view a [live
+interactive demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to
+see part of its capabilities.
 
-Most functions/layers are quite simple but are useful because they are
-fairly common ggplot2 operations that are a bit verbose. After repeating
-the same small bits of ggplot2 code dozens of times, I realized it was
-time to package them :)
-
-The `ggMarginal` function is more complex. After intensive Googling for
-ways to add marginal density plots to ggplot2, I did find a few lengthy
-StackOverflow posts, but every answer had messy code that was specific
-for the dataset in question. I wasn't able to find a simple drop-in
-function for adding marginal densities, so I created one. A demo of
-`ggMarginal` is [available
-online](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) as a Shiny
-app.
-
-Other functions include: `removeGrid` (and two variants), `rotateTextX`,
-`plotCount`.
+Most other functions/layers are quite simple but are useful because they
+are fairly common ggplot2 operations that are a bit verbose.
 
 This is an instructional document, but I also wrote [a blog
 post](http://deanattali.com/2015/03/29/ggExtra-r-package/) about the
@@ -63,17 +53,17 @@ functions work.
       library("ggplot2")
     })
 
-`ggMarginal` - Add marginal density/histogram to ggplot2 scatterplots
----------------------------------------------------------------------
+`ggMarginal` - Add marginal histograms/boxplots/density plots to ggplot2 scatterplots
+-------------------------------------------------------------------------------------
 
 You need to have the `grid` and `gridExtra` packages installed for this
 function.
 
 This function is meant to work as an easy drop-in solution for adding
-marginal density plots of histograms to a ggplot2 scatterplot. You can
-either pass it a ready ggplot2 scatterplot and it will add the marginal
-plots, or you can just tell it what dataset and variables to use and it
-will generate the scatterplot plus the marginal plots.
+marginal density plots/histograms/boxplots to a ggplot2 scatterplot. You
+can either pass it a ready ggplot2 scatterplot and it will add the
+marginal plots, or you can just tell it what dataset and variables to
+use and it will generate the scatterplot plus the marginal plots.
 
 As a simple first example, let's create a dataset with 500 points where
 the x values are normally distributed and the y values are uniformly
@@ -114,12 +104,21 @@ You can also show histograms instead.
 <img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-hist-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 There are several more parameters, here is an example with a few more
-being used.
+being used. Note that you can use any parameters that the `geom_XXX`
+layers accept, and they will be passed to those layers, such as `col`
+and `fill` in the following example.
 
     ggMarginal(p1, margins = "x", size = 2, type = "histogram",
-               marginCol = "blue", marginFill = "orange")
+               col = "blue", fill = "orange")
 
 <img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-params-1.png" title="" alt="" style="display: block; margin: auto;" />
+
+If you want to specify some parameter for only one of the marginal
+plots, you can use the `xparams` or `yparams` parameters, like this:
+
+    ggMarginal(p1, type = "histogram", xparams = list(binwidth = 1, fill = "orange"))
+
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-extraparams-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 You don't have to supply a ggplot2 scatterplot, you can also just tell
 ggMarginal what dataset and variables to use, but of course this way you
@@ -132,6 +131,8 @@ text/font/theme/etc).
 
 `size = 2` means that the main scatterplot should occupy twice as much
 height/width as the margin plots (default is 5).
+
+It's also possible to pass extra parameters
 
 Last but not least - you can also save the output from `ggMarginal` and
 display it later. (I know that sounds trivial, but this was not an easy

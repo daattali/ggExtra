@@ -1,10 +1,12 @@
 Package: ggExtra
-Title: Collection of Functions and Layers to Enhance ggplot2
+Title: Add Marginal Histograms to ggplot2, and More ggplot2 Enhancements
 Version: 0.1.5
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
     )
-Description: Collection of functions and layers to enhance ggplot2.
+Description: Collection of functions and layers to enhance ggplot2. The main
+    function is ggMarginal, which can be used to add marginal
+    histograms/boxplots/density plots to ggplot2 plots.
 URL: https://github.com/daattali/ggExtra
 Depends:
     R (>= 3.1.0)

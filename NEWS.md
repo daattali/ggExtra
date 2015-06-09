@@ -1,3 +1,16 @@
+# ggExtra 0.1.5
+
+2015-06-08
+
+- ggMarginal: add support for boxplots  
+- ggMarginal: add `...` parameter that allows you to pass any arguments to the
+corresponding ggplot2 geom layer  
+- ggMarginal: add `xparams` and `yparams` parameters to pass any arguments
+to only the x/y marginal plot
+- **BREAKING CHANGE**: ggMarginal: `marginCol` and `marginFill` params have been
+removed since `colour` and `fill` can be provided as regular params thanks
+to the `...` parameter
+
 # ggExtra 0.1.1
 
 2015-04-21
