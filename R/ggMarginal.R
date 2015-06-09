@@ -19,7 +19,6 @@
 #' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
-#' name for \code{xparams} and \code{yparams}
 #' @param ... Extra parameters to pass to the marginal plots. Any parameter that
 #' \code{geom_line()}, \code{geom_bar()}, or \code{geom_boxplot()} accept
 #' can be used. For example, \code{colour = "red"} can be used for any marginal plot type,

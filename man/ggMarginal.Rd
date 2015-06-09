@@ -27,8 +27,7 @@ provided and the \code{y} aesthetic is set in the main plot.}
 
 \item{size}{Integer describing the relative size of the marginal plots
 compared to the main plot. A size of 5 means that the main plot is 5x wider
-and 5x taller than the marginal plots.
-name for \code{xparams} and \code{yparams}}
+and 5x taller than the marginal plots.}
 
 \item{...}{Extra parameters to pass to the marginal plots. Any parameter that
 \code{geom_line()}, \code{geom_bar()}, or \code{geom_boxplot()} accept
