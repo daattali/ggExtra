@@ -135,3 +135,9 @@ Best
 
 Fixed from previous submission: added single quotes around 'ggplot' and added brackets after 'ggMarginal()`.  
 Still getting the "Found the following (possibly) invalid URLs:" NOTE for shiny apps, I'm not sure how to fix my shiny server configuration. I will try to look into that in the future. Reply from previous submission comment: yes, it is my own site
+
+## Reviewer comments
+
+2015-06-10 Kurt Hornik
+
+Ok, thanks, on CRAN now.
