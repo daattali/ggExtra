@@ -1,3 +1,9 @@
+# ggExtra 0.1.6
+
+2015-06-26
+
+- added `...` parameter to `plotCount` after a request to add a way to colour the bars
+
 # ggExtra 0.1.5
 
 2015-06-08

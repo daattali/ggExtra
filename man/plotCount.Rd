@@ -4,10 +4,14 @@
 \alias{plotCount}
 \title{Plot count data with ggplot2}
 \usage{
-plotCount(x)
+plotCount(x, ...)
 }
 \arguments{
 \item{x}{A data.frame or table. See 'Details' for more information.}
+
+\item{...}{Extra parameters to pass to the barplot. Any parameter that
+\code{geom_bar()} accepts can be used. For example, \code{fill = "red"} can
+be used fto make the bars red.}
 }
 \value{
 A ggplot2 object that can be have more layers added onto it.

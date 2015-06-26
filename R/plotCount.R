@@ -15,6 +15,9 @@
 #' frequencies to each value.  
 #'
 #' @param x A data.frame or table. See 'Details' for more information.
+#' @param ... Extra parameters to pass to the barplot. Any parameter that
+#' \code{geom_bar()} accepts can be used. For example, \code{fill = "red"} can
+#' be used fto make the bars red.
 #' @return A ggplot2 object that can be have more layers added onto it.
 #' @examples
 #' if (requireNamespace("ggplot2", quietly = TRUE)) {
@@ -24,7 +27,7 @@
 #'   plotCount(df) + removeGridX()
 #' }
 #' @export
-plotCount <- function(x) {
+plotCount <- function(x, ...) {
 	x <- data.frame(x)
 
 	stopifnot(
@@ -37,7 +40,7 @@ plotCount <- function(x) {
 	p <-
 		ggplot2::ggplot(x) +
 		ggplot2::aes_string(colnames(x)[1], colnames(x)[2]) +
-		ggplot2::geom_bar(stat = "identity")
+		ggplot2::geom_bar(stat = "identity", ...)
 
 	p
 }
