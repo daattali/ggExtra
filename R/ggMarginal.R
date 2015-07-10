@@ -145,9 +145,6 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Decompose the original ggplot2 object to grab all sorts of information from it
   pb <- ggplot2::ggplot_build(p)
   
-  ylabels <- pb$panel$ranges[[1]]$y.labels
-  ylabel <- ylabels[which.max(nchar(ylabels))]
-
   textsize <- p$theme$text$size
 
   # get the common code for both maginal (x and y) plots
@@ -193,6 +190,47 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     plot + layer
   }  
   
+  # Copy the scale transformation from the original plot (reverse/log/limits/etc)
+  # We have to do a bit of a trick on the marginal plot that's flipped by
+  # taking the original x/y scale and manually changing it to the other axis
+  get_scale <- function(margin) {
+    if (margin == "x") {
+      if (type == "boxplot") {
+        scale <- pb$panel$x_scales[[1]]
+        scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
+      } else {
+        scale <- pb$panel$x_scales[[1]]
+      }
+    } else if (margin == "y") { 
+      if (type == "boxplot") {
+        scale <- pb$panel$y_scales[[1]]
+      } else {
+        scale <- pb$panel$y_scales[[1]]
+        scale$aesthetics <- gsub("^y", "x", scale$aesthetics)
+      }
+    }
+    scale
+  }
+  
+  # Get the axis range of the x or y axis of the given ggplot build object
+  # This is needed so that if the range of the plot is manually changed, the
+  # marginal plots will use the same range
+  get_limits <- function(pb, margin) {
+    if (margin == "x") {
+      scales <- pb$panel$x_scales[[1]]
+    } else if (margin == "y") {
+      scales <- pb$panel$y_scales[[1]]
+    } else {
+      stop("Invalid `margin` parameter (only x and y are supported)", call. = FALSE)
+    }
+    
+    range <- scales$limits
+    if (is.null(range)) {
+      range <- scales$range$range
+    }
+    range
+  }  
+  
   # Create the horizontal margin plot
   # In order to ensure the marginal plots line up nicely with the main plot,
   # several things are done:
@@ -216,15 +254,25 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
         axis.text.x = ggplot2::element_blank(),
         plot.margin = grid::unit(c(0, 0, -1, 0), "lines")) +
       ggplot2::ylab(p$labels$y) +
-      ggplot2::scale_x_continuous(limits = get_limits(pb, "x"))
+      get_scale("x")
     
     # Add the longest y axis label to the top plot and ensure it's at a y value
     # that is on the plot (this is why I build the top plot, to know the y values)
     pbTop <- ggplot2::ggplot_build(top)
-    top <-
-      top +
-      ggplot2::scale_y_continuous(breaks = mean(get_limits(pbTop, "y")),
-                                  labels = ylabel)
+    ylabels <- pb$panel$ranges[[1]]$y.labels
+    ylabel <- ylabels[which.max(nchar(ylabels))]      
+    if (type == "boxplot") {
+      top <-
+        top +
+        ggplot2::scale_x_continuous(breaks = mean(get_limits(pbTop, "x")),
+                                    labels = ylabel)      
+    } else {
+      top <-
+        top +
+        ggplot2::scale_y_continuous(breaks = mean(get_limits(pbTop, "y")),
+                                    labels = ylabel)      
+    }
+
     
     # If we are showing a marginal plot above the main plot, then transfer the
     # plot title to be above the marginal plot
@@ -252,7 +300,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
         axis.text.y = ggplot2::element_blank(),
         plot.margin = grid::unit(c(0, 0, 0, -1), "lines")) +
       ggplot2::ylab(p$labels$x) +
-      ggplot2::scale_x_continuous(limits = get_limits(pb, "y")) +
+      get_scale("y") +
       ggplot2::ggtitle(p$labels$title)
   }
 
@@ -315,23 +363,4 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 print.ggExtraPlot <- function(x, ...) {
   grid::grid.newpage()
   grid::grid.draw(x)
-}
-
-# Get the axis range of the x or y axis of the given ggplot build object
-# This is needed so that if the range of the plot is manually changed, the
-# marginal plots will use the same range
-get_limits <- function(pb, axis) {
-  if (axis == "x") {
-    scales <- pb$panel$x_scales[[1]]
-  } else if (axis == "y") {
-    scales <- pb$panel$y_scales[[1]]
-  } else {
-    stop("Invalid `axis` parameter (only x and y are supported)", call. = FALSE)
-  }
-  
-  range <- scales$limits
-  if (is.null(range)) {
-    range <- scales$range$range
-  }
-  range
 }

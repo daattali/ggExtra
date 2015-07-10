@@ -81,6 +81,18 @@ shinyServer(function(input, output, session) {
       geom_point() +
       theme_bw(fontSize())
     
+    # apply axis transformations to ensure marginal plots still work
+    if (input$xtrans == "log") {
+      p <- p + scale_x_log10()
+    } else if (input$xtrans == "reverse") {
+      p <- p + scale_x_reverse()
+    }
+    if (input$ytrans == "log") {
+      p <- p + scale_y_log10()
+    } else if (input$ytrans == "reverse") {
+      p <- p + scale_y_reverse()
+    }    
+    
     if (input$show_marginal) {
       p <- ggExtra::ggMarginal(
         p,

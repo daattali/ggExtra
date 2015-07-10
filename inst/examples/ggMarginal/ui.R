@@ -37,6 +37,14 @@ shinyUI(fluidPage(
       div(id = "marginal-settings",
         selectInput("type", NULL, c("density", "histogram", "boxplot")),
         selectInput("margins", "Which margins?", c("both", "x", "y")),
+        conditionalPanel(
+          condition = "input.margins != 'y'",
+          selectInput("xtrans", "X axis transformation", c("none", "log","reverse"))
+        ),
+        conditionalPanel(
+          condition = "input.margins != 'x'",
+          selectInput("ytrans", "Y axis transformation", c("none", "log","reverse"))
+        ),
         sliderInput("size",
                     "Size ratio of main plot:marginal plots",
                     1, 5, 5, 0.5),
