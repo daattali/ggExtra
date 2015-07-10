@@ -40,10 +40,10 @@ shinyUI(fluidPage(
         sliderInput("size",
                     "Size ratio of main plot:marginal plots",
                     1, 5, 5, 0.5),
-        selectInput("col", "Marginal plot colour", colours(), "black"),
+        shinyjs::colourInput("col", "Marginal plot colour", "red", showColour = "background"),
         conditionalPanel(
           condition = "input.type != 'density'",
-          selectInput("fill", "Marginal plot fill colour", colours(), "grey")
+          shinyjs::colourInput("fill", "Marginal plot fill colour", "orange", showColour = "background")
         )
       )      
     )),
