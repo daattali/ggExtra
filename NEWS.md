@@ -1,3 +1,9 @@
+# ggExtra 0.2.0
+
+2015-07-09
+
+- rewrote `ggMarginal` to support the new `gridExtra` package which has been completely rewritten after 2 years of inactivity
+
 # ggExtra 0.1.6
 
 2015-06-26

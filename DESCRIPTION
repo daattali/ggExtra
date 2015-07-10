@@ -1,6 +1,6 @@
 Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
-Version: 0.1.6
+Version: 0.2.0
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
     )
@@ -17,7 +17,7 @@ Suggests:
     gridExtra (>= 0.9.1),
     knitr (>= 1.7),
     shiny (>= 0.11.0),
-    shinyjs (>= 0.0.4.0)
+    shinyjs (>= 0.0.6.5)
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr

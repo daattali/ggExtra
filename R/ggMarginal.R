@@ -270,8 +270,13 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     nrow <- 1
   }
   # Determine all the arguments to build the grid (dimensions, plots, plot sizes)
-  gridArgs <- c(plots, ncol = ncol, nrow = nrow,
-                widths = list(c(size, 1)), heights = list(c(1, size)))
+  gridArgs <- c(plots, ncol = ncol, nrow = nrow)
+  if (margins != "x") {
+    gridArgs <- c(gridArgs, widths = list(grid::unit(c(size, 1), "null")))
+  }
+  if (margins != "y") {
+    gridArgs <- c(gridArgs, heights = list(grid::unit(c(1, size), "null")))
+  }
 
   # NOTE: This ugly hack is here because of a bug in gridExtra which calls
   # a ggplot2 function directly instead of namespacing it.  The bug is fixed
