@@ -141,3 +141,23 @@ Still getting the "Found the following (possibly) invalid URLs:" NOTE for shiny 
 2015-06-10 Kurt Hornik
 
 Ok, thanks, on CRAN now.
+
+---
+
+# Version 0.2.0
+# Round 1
+
+## Test environments
+
+* local Windows 7, R 3.2.0
+* ubuntu 12.04 (on travis-ci), R 3.2.0
+
+## Submission comments:
+
+2015-07-11
+
+Tested on Windows and 7 and Ubuntu 12.04. There were no ERRORs or WARNINGs and 2 NOTEs.
+
+Note 1 is about possibly invalid URLs. This is because I have a URL of a Shiny app, and Shiny Server doesn't currently support returning http headers. Note 2 said I should capitalize `ggplot2` to `Ggplot2`.
+
+## Reviewer comments:
