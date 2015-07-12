@@ -116,7 +116,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + ggplot2::geom_point()
   } else {
     if (missing(data)) {
-      if (is(p$data, "waiver")) {
+      if (methods::is(p$data, "waiver")) {
         stop("`data` must be provided if it is not part of the main ggplot object",
              call. = FALSE)
       }
