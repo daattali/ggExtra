@@ -203,3 +203,57 @@ ggMarginal: no visible
 Undefined global
   functions or variables:
   is
+
+## Reviewer comments:
+
+2015-07-12 Kurt Hornik
+
+```
+We now get
+
+* checking dependencies in R code ... WARNING
+'::' or ':::' import not declared from: ‘methods’
+
+Pls fix.  Also, what about
+
+Found the following (possibly) invalid URLs:
+  URL: http://daattali.com/shiny/ggExtra-ggMarginal-demo/
+    From: man/ggExtra.Rd
+          man/ggMarginal.Rd
+          man/runExample.Rd
+          inst/doc/overview.html
+    Status: 404
+    Message: Not Found
+
+
+???
+```
+
+# Round 3
+
+## Submission comments:
+
+2015-07-12
+
+```
+Fixed previous NOTE by adding 'methods' package to
+  DESCRIPTION. (Note was:
+* checking dependencies in R
+  code ... WARNING
+'::' or ':::' import not declared
+  from: ‘methods’)
+
+Previous submission also had
+  a comment about the "possible invalid URLs", which I
+  addressed in my first submission: The URLs are valid
+  URLs that point to Shiny apps on a Shiny Server.
+  Shiny Server doesn't currently support returning http
+  headers, hence the curl command fails. But the URLs
+  are fine.  Shiny Server is working on fixing that.
+```
+
+## Reviewer comments:
+
+2015-07-12 Uwe Ligges
+
+Thanks, on CRAN now.
