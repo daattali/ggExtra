@@ -161,3 +161,45 @@ Tested on Windows and 7 and Ubuntu 12.04. There were no ERRORs or WARNINGs and 2
 Note 1 is about possibly invalid URLs. This is because I have a URL of a Shiny app, and Shiny Server doesn't currently support returning http headers. Note 2 said I should capitalize `ggplot2` to `Ggplot2`.
 
 ## Reviewer comments:
+
+2015-07-11 Uwe Ligges
+
+```
+Thanks, we see:
+
+Found the following (possibly) invalid URLs:
+  URL: http://daattali.com/shiny/ggExtra-ggMarginal-demo/
+    From: man/ggExtra.Rd
+          man/ggMarginal.Rd
+          man/runExample.Rd
+          inst/doc/overview.html
+    Status: 404
+    Message: Not Found
+
+
+* checking R code for possible problems ... NOTE
+ggMarginal: no visible global function definition for 'is'
+Undefined global functions or variables:
+  is
+
+
+
+Please fix.
+
+Best,
+Uwe Ligges
+```
+
+# Round 2
+
+## Submission comments:
+
+2015-07-11
+
+Fixed previous comment: * checking R code for
+  possible problems ... NOTE
+ggMarginal: no visible
+  global function definition for 'is'
+Undefined global
+  functions or variables:
+  is
