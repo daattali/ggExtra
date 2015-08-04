@@ -41,10 +41,9 @@ the x axis.}
 the y axis.}
 }
 \value{
-An object of class ggExtraPlot. This extra class gets added onto
-a ggplot2 object in order for the \code{print} generic to easily work with
-this object. This means that the return value from this function can be
-printed or saved for later.
+An object of class \code{ggExtraPlot}. This object can be printed to show the
+plots or saved using any of the typical image-saving functions (for example, using
+\code{png()} or \code{pdf()}).
 }
 \description{
 Create a ggplot2 scatterplot with marginal density plots (default) or
