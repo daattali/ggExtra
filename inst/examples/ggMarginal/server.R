@@ -103,7 +103,7 @@ shinyServer(function(input, output, session) {
         fill = input$fill)
     }
     
-    print(p) # normally you don't have to explicitly `print`, this is a bug in shiny
+    p
   })
   
   # the code to reproduce the plot
