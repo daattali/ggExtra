@@ -1,3 +1,12 @@
+# ggExtra 0.2.1
+
+2015-08-04
+
+minor changes
+-  small updates to ggMarginal demo shiny app
+- small changes to ggMarginal documentation
+- small changes to package DESCRIPTION 
+
 # ggExtra 0.2.0
 
 2015-07-10
