@@ -8,8 +8,8 @@ shinyUI(fluidPage(
   
   fluidRow(id = "title-row",
     column(12,
-      h1("Demo of ggExtra::ggMarginal()",
-        a("(link)", href = "https://github.com/daattali/ggExtra")
+      h1("Demo of",
+         a("ggExtra::ggMarginal()", href = "https://github.com/daattali/ggExtra")
       ),
       h4("ggMarginal lets you add marginal plots to ggplot2 (finally!)"),
       h4(tags$i("Source code for this app is",
