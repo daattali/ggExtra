@@ -71,18 +71,6 @@
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams, yparams) {
-
-  # Make sure the required packages are installed
-  reqs <- c("grid", "gridExtra")
-  invisible(
-    lapply(reqs, function(req) {
-      if (!requireNamespace(req, quietly = TRUE)) {
-        stop(sprintf("`%s` package is required for this function to work. Please install it.", req),
-             call. = FALSE)
-      }
-    })
-  )  
-  
   # figure out all the default parameters
   type <- match.arg(type)
   margins <- match.arg(margins)
