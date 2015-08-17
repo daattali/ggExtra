@@ -38,34 +38,28 @@
 #' while \code{ggMarginal(p, xparams = list(size=2), yparams = list(size=2))}
 #' will make the density plot outline thicker.
 #' @examples
-#' if (requireNamespace("ggplot2", quietly = TRUE)) {
-#'   if (requireNamespace("gridExtra", quietly = TRUE)) {
-#'     if (requireNamespace("grid", quietly = TRUE)) {
-#'       p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
-#'       ggMarginal(p)
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+#' ggMarginal(p)
 #'       
-#'       set.seed(30)
-#'       df <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
-#'       p2 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
-#'       ggMarginal(p2)
-#'       ggMarginal(p2, type = "histogram")
-#'       ggMarginal(p2, margins = "x")
-#'       ggMarginal(p2, size = 2)
-#'       ggMarginal(p2, colour = "red")
-#'       ggMarginal(p2, colour = "red", xparams = list(colour = "blue", size = 3))
-#'       p2 <- p2 + ggplot2::ggtitle("Random data") + ggplot2::theme_bw(30)
-#'       ggMarginal(p2)
+#' set.seed(30)
+#' df <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
+#' p2 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+#' ggMarginal(p2)
+#' ggMarginal(p2, type = "histogram")
+#' ggMarginal(p2, margins = "x")
+#' ggMarginal(p2, size = 2)
+#' ggMarginal(p2, colour = "red")
+#' ggMarginal(p2, colour = "red", xparams = list(colour = "blue", size = 3))
+#' p2 <- p2 + ggplot2::ggtitle("Random data") + ggplot2::theme_bw(30)
+#' ggMarginal(p2)
 #'       
-#'       ggMarginal(data = df, x = "x", y = "y")
+#' ggMarginal(data = df, x = "x", y = "y")
 #'       
-#'       set.seed(30)
-#'       df2 <- data.frame(x = c(rnorm(250, 50, 10), rnorm(250, 100, 10)),
-#'                         y = runif(500, 0, 50))
-#'       p3 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
-#'       ggMarginal(p3)
-#'     }
-#'   }
-#' }
+#' set.seed(30)
+#' df2 <- data.frame(x = c(rnorm(250, 50, 10), rnorm(250, 100, 10)),
+#'                   y = runif(500, 0, 50))
+#' p3 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
+#' ggMarginal(p3)
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),

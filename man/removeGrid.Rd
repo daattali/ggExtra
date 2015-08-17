@@ -35,12 +35,10 @@ Minor grid lines are always removed.
 \code{removeGridY} is a shortcut for \code{removeGrid(x = FALSE, y = TRUE)}
 }
 \examples{
-if (requireNamespace("ggplot2", quietly = TRUE)) {
-  df <- data.frame(x = 1:50, y = 1:50)
-  p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
-  p + removeGrid()
-  p + removeGrid(y = FALSE)
-  p + removeGridX()
-}
+df <- data.frame(x = 1:50, y = 1:50)
+p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+p + removeGrid()
+p + removeGrid(y = FALSE)
+p + removeGridX()
 }
 

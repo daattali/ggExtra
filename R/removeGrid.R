@@ -16,13 +16,11 @@
 #' @param y Whether to remove grid lines from the y axis.
 #' @return A ggplot2 layer that can be added to an existing ggplot2 object.
 #' @examples
-#' if (requireNamespace("ggplot2", quietly = TRUE)) {
-#'   df <- data.frame(x = 1:50, y = 1:50)
-#'   p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
-#'   p + removeGrid()
-#'   p + removeGrid(y = FALSE)
-#'   p + removeGridX()
-#' }
+#' df <- data.frame(x = 1:50, y = 1:50)
+#' p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+#' p + removeGrid()
+#' p + removeGrid(y = FALSE)
+#' p + removeGridX()
 #' @name removeGrid
 NULL
 

@@ -9,12 +9,10 @@
 #'
 #' @return A ggplot2 layer that can be added to an existing ggplot2 object.
 #' @examples
-#' if (requireNamespace("ggplot2", quietly = TRUE)) {
-#'   df <- data.frame(x = paste("Letter", LETTERS, sep = "_"),
-#'                    y = seq_along(LETTERS))
-#'   p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
-#'   p + rotateTextX()
-#' }
+#' df <- data.frame(x = paste("Letter", LETTERS, sep = "_"),
+#'                  y = seq_along(LETTERS))
+#' p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+#' p + rotateTextX()
 #' @export
 rotateTextX <- function() {
   ggplot2::theme(

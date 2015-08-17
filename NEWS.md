@@ -1,9 +1,15 @@
+# ggExtra 0.2.2
+
+2015-08-17
+
+- simplify and remove some unneeded package checks since `grid` and `gridExtra` should be installed automatically
+
 # ggExtra 0.2.1
 
 2015-08-04
 
 minor changes
--  small updates to ggMarginal demo shiny app
+- small updates to ggMarginal demo shiny app
 - small changes to ggMarginal documentation
 - small changes to package DESCRIPTION 
 
