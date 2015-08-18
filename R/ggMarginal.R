@@ -341,6 +341,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 #' @param ... ignored
 #' @seealso \code{\link{ggMarginal}}
 #' @export
+#' @keywords internal
 print.ggExtraPlot <- function(x, ...) {
   grid::grid.newpage()
   grid::grid.draw(x)

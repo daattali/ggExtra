@@ -19,4 +19,5 @@ plots.
 \seealso{
 \code{\link{ggMarginal}}
 }
+\keyword{internal}
 
