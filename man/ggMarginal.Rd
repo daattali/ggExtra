@@ -84,6 +84,9 @@ df2 <- data.frame(x = c(rnorm(250, 50, 10), rnorm(250, 100, 10)),
                   y = runif(500, 0, 50))
 p3 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
 ggMarginal(p3)
+
+p4 <- ggplot2::ggplot(df2, ggplot2::aes(log(x), y - 500)) + ggplot2::geom_point()
+ggMarginal(p4)
 }
 \seealso{
 \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}

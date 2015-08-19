@@ -1,3 +1,9 @@
+# ggExtra 0.2.3
+
+2015-08-19
+
+- bug fix: ggMarginal now works when the original plot has expressions as the x/y variables. For example, calling ggMarginal on a plot that had `aes(x+10, log(y))` did not work before
+
 # ggExtra 0.2.2
 
 2015-08-17

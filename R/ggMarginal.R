@@ -60,6 +60,9 @@
 #'                   y = runif(500, 0, 50))
 #' p3 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
 #' ggMarginal(p3)
+#' 
+#' p4 <- ggplot2::ggplot(df2, ggplot2::aes(log(x), y - 500)) + ggplot2::geom_point()
+#' ggMarginal(p4)
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
@@ -95,6 +98,8 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
            call. = FALSE)
     }
     p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + ggplot2::geom_point()
+    x <- as.symbol(x)
+    y <- as.symbol(y)
   } else {
     if (missing(data)) {
       if (methods::is(p$data, "waiver")) {
@@ -108,17 +113,21 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
         stop("`x` must be provided if it is not an aesthetic of the main ggplot object",
              call. = FALSE)
       }
-      x <- as.character(p$mapping$x)
+      x <- p$mapping$x
     }
     if (margins != "x" && missing(y)) {
       if (is.null(p$mapping$y)) {
         stop("`y` must be provided if it is not an aesthetic of the main ggplot object",
              call. = FALSE)
       }
-      y <- as.character(p$mapping$y)
+      y <- p$mapping$y
     }
   }
-
+  
+  # rename the x and y variables just so it's easier to debug
+  if (!missing(x)) xvar <- x
+  if (!missing(y)) yvar <- y
+  
   # Remove all margin around plot so that it's easier to position the
   # density plots beside the main plot
   p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "mm"))
@@ -130,17 +139,24 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 
   # get the common code for both maginal (x and y) plots
   marginPlot <- function(margin) {
+    aest <- ggplot2::aes()
     if (margin == "x") {
       if (type == "boxplot") {
-        plot <- ggplot2::ggplot(data, ggplot2::aes_string(x, x)) + ggplot2::coord_flip()
+        aest[['x']] <- xvar
+        aest[['y']] <- xvar
+        plot <- ggplot2::ggplot(data, aest) + ggplot2::coord_flip()
       } else {
-        plot <- ggplot2::ggplot(data, ggplot2::aes_string(x))
+        aest[['x']] <- xvar
+        plot <- ggplot2::ggplot(data, aest)
       }
     } else if (margin == "y") {
       if (type == "boxplot") {
-        plot <- ggplot2::ggplot(data, ggplot2::aes_string(y, y))
+        aest[['x']] <- yvar
+        aest[['y']] <- yvar
+        plot <- ggplot2::ggplot(data, aest)
       } else {
-        plot <- ggplot2::ggplot(data, ggplot2::aes_string(y)) + ggplot2::coord_flip()
+        aest[['x']] <- yvar
+        plot <- ggplot2::ggplot(data, aest) + ggplot2::coord_flip()
       }
     } else {
       stop(sprintf("`margin` = `%s` is not supported", margin), call. = FALSE)
