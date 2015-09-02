@@ -105,13 +105,13 @@ the marginal plots automatically adjust.
 
 You can also show histograms instead.
 
-```{r ggmarginal-hist}
+```{r ggmarginal-hist, message=FALSE}
 ggMarginal(p1, type = "histogram")
 ```
 
 There are several more parameters, here is an example with a few more being used. Note that you can use any parameters that the `geom_XXX` layers accept, and they will be passed to those layers, such as `col` and `fill` in the following example.
 
-```{r ggmarginal-params}
+```{r ggmarginal-params, message=FALSE}
 ggMarginal(p1, margins = "x", size = 2, type = "histogram",
            col = "blue", fill = "orange")
 ```

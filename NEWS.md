@@ -1,3 +1,11 @@
+# ggExtra 0.3.0
+
+2015-09-02
+
+- significant internal refactoring of `ggMarginal` to make it work with new ggplot2 version (after version 1.0.1 ggplot2 had tons of breaking changes) (some parts of the function use different code depending on the version of ggplot2 installed, I hope this doesn't raise any bugs)
+- make `ggMarginal` a little more robust to many different theme options so that even if the main plot changes the tick mark lengths or x axis size or many different options, the marginal plots will still align properly
+- add more usage examples to `ggMarginal`
+
 # ggExtra 0.2.3
 
 2015-08-19
