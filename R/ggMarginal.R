@@ -20,7 +20,7 @@
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
 #' @param ... Extra parameters to pass to the marginal plots. Any parameter that
-#' \code{geom_line()}, \code{geom_bar()}, or \code{geom_boxplot()} accept
+#' \code{geom_line()}, \code{geom_histogram()}, or \code{geom_boxplot()} accept
 #' can be used. For example, \code{colour = "red"} can be used for any marginal plot type,
 #' and \code{binwidth = 10} can be used for histograms.
 #' @param xparams List of extra parameters to use only for the marginal plot along
@@ -80,6 +80,12 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   if (is.null(extraParams[['fill']])) {
     extraParams[['fill']] <- "grey"
   }
+  
+  # after ggplot2 v1.0.1, layers became strict about parameters
+  if (type == "density") {
+    extraParams[['fill']] <- NULL
+  }
+  
   if (missing(xparams)) {
     xparams <- list()
   } else {
@@ -177,7 +183,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       extraParams[['stat']] <- "density"
       layer <- do.call(ggplot2::geom_line, extraParams)
     } else if (type == "histogram") {
-      layer <- do.call(ggplot2::geom_bar, extraParams)
+      layer <- do.call(ggplot2::geom_histogram, extraParams)
     } else if (type == "boxplot") {
       layer <- do.call(ggplot2::geom_boxplot, extraParams)
     } else {
@@ -226,7 +232,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       range <- scales$range$range
     }
     range
-  }  
+  }
   
   # Create the horizontal margin plot
   # In order to ensure the marginal plots line up nicely with the main plot,
@@ -342,7 +348,9 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # More info: http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object
   
   # Build the grid of plots
-  plot <- do.call(gridExtra::arrangeGrob, gridArgs)
+  suppressMessages(
+    plot <- do.call(gridExtra::arrangeGrob, gridArgs)
+  )
   class(plot) <- c("ggExtraPlot", class(plot))
   plot
 }
