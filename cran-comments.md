@@ -257,3 +257,23 @@ Previous submission also had
 2015-07-12 Uwe Ligges
 
 Thanks, on CRAN now.
+
+---
+
+# Version 0.3.0
+# Round 1
+
+## Test environments
+
+* local Windows 7, R 3.2.0
+* ubuntu 12.04 (on travis-ci), R 3.2.0
+
+## Submission comments:
+
+2015-09-05
+
+Tested on Windows and 7 and Ubuntu 12.04. There were no ERRORs or WARNINGs and 2 NOTEs.
+
+Note 1 informed me who the maintainer and what the license is. Note 2 said I should capitalize ggplot2 to Ggplot2.
+
+## Reviewer comments:
