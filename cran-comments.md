@@ -310,3 +310,7 @@ Please fix.
 addressed previous comment: namespaced utils::packageVersion
 
 ## Reviewer comments:
+
+2015-09-06 Uwe Ligges
+
+Thanks, on CRAN now.
