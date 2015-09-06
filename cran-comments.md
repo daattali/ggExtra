@@ -261,6 +261,7 @@ Thanks, on CRAN now.
 ---
 
 # Version 0.3.0
+
 # Round 1
 
 ## Test environments
@@ -275,5 +276,37 @@ Thanks, on CRAN now.
 Tested on Windows and 7 and Ubuntu 12.04. There were no ERRORs or WARNINGs and 2 NOTEs.
 
 Note 1 informed me who the maintainer and what the license is. Note 2 said I should capitalize ggplot2 to Ggplot2.
+
+## Reviewer comments:
+
+2015-09-06 Uwe Ligges
+
+```
+Thanks, we see:
+
+* checking R code for possible problems ... NOTE
+ggMarginal : addMainTheme: no visible global function definition for
+  'packageVersion'
+Undefined global functions or variables:
+  packageVersion
+Consider adding
+  importFrom("utils", "packageVersion")
+to your NAMESPACE.
+
+Please fix.
+```
+
+# Round 2
+
+## Test environments
+
+* local Windows 7, R 3.2.2
+* ubuntu 12.04 (on travis-ci), R 3.2.2
+
+## Submission comments:
+
+2015-09-06
+
+addressed previous comment: namespaced utils::packageVersion
 
 ## Reviewer comments:
