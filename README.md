@@ -1,14 +1,10 @@
-<!-- To create this README, I run devtools::build_vignettes(), then
-rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document"),
-copy the contents of vignettes/overview.md here, replace all image paths
-(overview_files to vignettes/overview_files),
-and add the TravisCI status -->
-
 ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
-=======
+===========================================================================
 
-[![Build Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
-[![CRAN version](http://www.r-pkg.org/badges/version/ggExtra)](http://cran.r-project.org/web/packages/ggExtra/index.html)
+[![Build
+Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
+[![CRAN
+version](http://www.r-pkg.org/badges/version/ggExtra)](http://cran.r-project.org/web/packages/ggExtra/index.html)
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 The main function is `ggMarginal`, which can be used to add marginal
