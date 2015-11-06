@@ -395,32 +395,49 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     right <- addMainTheme(right, "y")
     right <- right +
       ggplot2::ylab(p$labels$x) +
-      getScale("y") +
-      ggplot2::ggtitle(p$labels$title)
+      getScale("y")
   }
 
-  # Build a 2x2 or 2x1 grid to arrange the plots  
+  # Build a 2x2 grid for the scatterplot with marginal plots,
+  # with an extra row for the title
   ncol <- 2
-  nrow <- 2
-  if (margins == "both") {
-    empty <- grid::grid.rect(gp = grid::gpar(col = "transparent"), draw = FALSE)
-    plots <- list(top, empty, p, right)
-  } else if (margins == "x") {
-    plots <- list(top, p)
-    ncol <- 1
-  } else if (margins == "y") {
-    plots <- list(p, right)
-    nrow <- 1
+  nrow <- 3
+  titleSize <- 1
+  rowSize <- 1
+  colSize <- 1
+
+  # Build the grid of grobs
+  empty <- grid::grid.rect(gp = grid::gpar(col = "transparent"), draw = FALSE)
+  if (!is.null(pb$plot$labels$title)) {
+    title <- grid::textGrob(
+      pb$plot$labels$title,
+      gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
+                      fontsize = 20)
+    )
+    p$labels$title <- NULL
+  } else {
+    title <- empty
+    titleSize <- 0
   }
+  
+  
+  if (margins == "both") {
+    plots <- list(title, empty, top, empty, p, right)
+  } else if (margins == "x") {
+    plots <- list(title, empty, top, empty, p, empty)
+    colSize <- 0
+  } else if (margins == "y") {
+    plots <- list(title, empty, empty, empty, p, right)
+    rowSize <- 0
+  }
+  
   # Determine all the arguments to build the grid (dimensions, plots, plot sizes)
   gridArgs <- c(plots, ncol = ncol, nrow = nrow)
-  if (margins != "x") {
-    gridArgs <- c(gridArgs, widths = list(grid::unit(c(size, 1), "null")))
-  }
-  if (margins != "y") {
-    gridArgs <- c(gridArgs, heights = list(grid::unit(c(1, size), "null")))
-  }
-
+  gridArgs <- c(gridArgs,
+                widths = list(grid::unit(c(size, colSize), "null")),
+                heights = list(grid::unit(c(titleSize, rowSize, size), "null"))
+              )
+  
   # NOTE: This ugly hack is here because of a bug in gridExtra which calls
   # a ggplot2 function directly instead of namespacing it.  The bug is fixed
   # in the gridExtra GitHub version, but not on CRAN. Hopefully gridExtra

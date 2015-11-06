@@ -2,7 +2,8 @@
 
 2015-11-05
 
-- Fixed bug where first and last bins of histograms were never showing
+- Fixed bug where first and last bins of histograms were never showing (#18)  
+- Finally tackled a long standing problem: if main plot has a title,  move the title on top of the marginal plots. An unwanted side effect of this is that the title font size will not be retained because the title is its own grob. (#3)
 
 # ggExtra 0.3.0
 
