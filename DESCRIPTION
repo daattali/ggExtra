@@ -19,6 +19,7 @@ Imports:
     utils
 Suggests:
     knitr (>= 1.7),
+    rmarkdown (>= 0.3.3),
     shiny (>= 0.11.0),
     shinyjs (>= 0.0.6.5)
 License: MIT + file LICENSE
