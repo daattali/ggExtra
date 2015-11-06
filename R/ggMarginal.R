@@ -184,13 +184,17 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       extraParams <- append(xparams, extraParams)
       extraParams <- extraParams[!duplicated(names(extraParams))]
       if (type == "histogram") {
-         extraParams$origin <- pb$panel$x_scales[[1]]$get_limits()[1]
+        if (!is.null(pb$panel$x_scales[[1]]$get_limits)) {
+          extraParams[['origin']] <- pb$panel$x_scales[[1]]$get_limits()[1]
+        }
       }
     } else if (margin == "y") {
       extraParams <- append(yparams, extraParams)
       extraParams <- extraParams[!duplicated(names(extraParams))]
       if (type == "histogram") {
-        extraParams$origin <- pb$panel$y_scales[[1]]$get_limits()[1]
+        if (!is.null(pb$panel$y_scales[[1]]$get_limits)) {
+          extraParams[['origin']] <- pb$panel$y_scales[[1]]$get_limits()[1]
+        }
       }      
     }
     
