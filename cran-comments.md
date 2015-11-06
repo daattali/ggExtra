@@ -314,3 +314,25 @@ addressed previous comment: namespaced utils::packageVersion
 2015-09-06 Uwe Ligges
 
 Thanks, on CRAN now.
+
+
+---
+
+# Version 0.3.1
+
+# Round 1
+
+## Test environments
+
+* local Windows 7, R 3.2.0
+* ubuntu 12.04 (on travis-ci), R 3.2.0
+
+## Submission comments:
+
+2015-11-05
+
+no ERRORs or WARNINGs. One NOTE informing me who the author is and telling me I should capitalize 'Ggplot2'
+
+## Reviewer comments:
+
+
