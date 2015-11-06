@@ -1,6 +1,6 @@
 Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
     )

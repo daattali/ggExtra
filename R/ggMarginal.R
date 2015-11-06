@@ -183,9 +183,15 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     if (margin == "x") {
       extraParams <- append(xparams, extraParams)
       extraParams <- extraParams[!duplicated(names(extraParams))]
+      if (type == "histogram") {
+         extraParams$origin <- pb$panel$x_scales[[1]]$get_limits()[1]
+      }
     } else if (margin == "y") {
       extraParams <- append(yparams, extraParams)
       extraParams <- extraParams[!duplicated(names(extraParams))]
+      if (type == "histogram") {
+        extraParams$origin <- pb$panel$y_scales[[1]]$get_limits()[1]
+      }      
     }
     
     if (type == "density") {
@@ -308,12 +314,14 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       if (type == "boxplot") {
         scale <- pb$panel$x_scales[[1]]
         scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
+        scale$limits <- pb$panel$x_scales[[1]]$get_limits()
       } else {
         scale <- pb$panel$x_scales[[1]]
       }
     } else if (margin == "y") { 
       if (type == "boxplot") {
         scale <- pb$panel$y_scales[[1]]
+        scale$limits <- pb$panel$y_scales[[1]]$get_limits()
       } else {
         scale <- pb$panel$y_scales[[1]]
         scale$aesthetics <- gsub("^y", "x", scale$aesthetics)
@@ -358,7 +366,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     top <- top +
       ggplot2::ylab(p$labels$y) +
       getScale("x")
-    
+  
     # Add the longest y axis label to the top plot and ensure it's at a y value
     # that is on the plot (this is why I build the top plot, to know the y values)
     pbTop <- ggplot2::ggplot_build(top)
@@ -386,7 +394,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       getScale("y") +
       ggplot2::ggtitle(p$labels$title)
   }
-  
+
   # Build a 2x2 or 2x1 grid to arrange the plots  
   ncol <- 2
   nrow <- 2
@@ -419,7 +427,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     on.exit(detach("package:ggplot2"))
   }
   
-  # NOTE: I had use arrangeGrob instead of grid.arrange because the latter does
+  # NOTE: I had to use arrangeGrob instead of grid.arrange because the latter does
   # not allow saving the object, it only works as a side-effect and returns NULL.
   # There were still problems with arrangeGrob - if gridExtra isn't loaded, I
   # would get "No layers in plot" error. I noticed that calling grid::grid.draw 
@@ -428,10 +436,10 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # More info: http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object
   
   # Build the grid of plots
-  suppressMessages(
+  suppressMessages(suppressWarnings(
     # use suppressMessages to ignore message about adding multiple scales
     plot <- do.call(gridExtra::arrangeGrob, gridArgs)
-  )
+  ))
   class(plot) <- c("ggExtraPlot", class(plot))
   plot
 }

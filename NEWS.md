@@ -1,3 +1,9 @@
+# ggExtra 0.3.1
+
+2015-11-05
+
+- Fixed bug where first and last bins of histograms were never showing
+
 # ggExtra 0.3.0
 
 2015-09-02
