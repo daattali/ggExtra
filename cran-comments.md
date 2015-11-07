@@ -370,3 +370,7 @@ Best
 addressed previous comment: changed URL of CRAN package to canonical form
 
 ## Reviewer comments:
+
+2015-11-06 Kurt Hornik
+
+Thanks, on CRAN now
