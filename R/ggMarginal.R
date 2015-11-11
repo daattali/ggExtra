@@ -216,6 +216,11 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # resemble each other more and look better beside each other, and also add
   # some common theme properties such as 0 margins and transparent text colour
   addMainTheme <- function(marginal, margin) {
+    try(
+      {marginal <- marginal + ggplot2::theme_void()},
+      silent = TRUE
+    )
+    
     if (utils::packageVersion("ggplot2") > "1.0.1") {
       # copy theme from main plot
       themeProps <- c("text",
