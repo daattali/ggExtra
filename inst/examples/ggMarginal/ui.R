@@ -9,12 +9,13 @@ shinyUI(fluidPage(
   fluidRow(id = "title-row",
     column(12,
       h1("Demo of",
-         a("ggExtra::ggMarginal()", href = "https://github.com/daattali/ggExtra")
+         em(a("ggMarginal()", href = "https://github.com/daattali/ggExtra"))
       ),
-      h4("ggMarginal lets you add marginal plots to ggplot2 (finally!)"),
-      h4(tags$i("Source code for this app is",
-         a("on GitHub", href = "https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal"),
-         HTML("&bull;"), "by", a("Dean Attali", href = "http://deanattali.com")))
+      h4(em("ggMarginal()"), "lets you add marginal plots to ggplot2 (finally!)"),
+      div("Created by", a("Dean Attali", href = "http://deanattali.com"),
+         HTML("&bull;"),
+         "Code", a("on GitHub", href = "https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal")
+      )
     )
   ),
   

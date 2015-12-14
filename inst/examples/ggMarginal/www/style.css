@@ -3,15 +3,14 @@ body {
 }
 
 #title-row {
-  background: #2D67A0;
+  background: #333;
   box-shadow: 0px 0px 10px 3px #BBBBCC;
   -moz-box-shadow: 0px 0px 10px 3px #BBBBCC;
 	-webkit-box-shadow: 0px 0px 10px 3px #BBBBCC;
   border-bottom: 1px solid #AAAAAA;
   text-align: center;
   color: #FDFDFD;
-  font-weight: bold;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 }
 
 #title-row a {
@@ -42,6 +41,7 @@ body {
 
 .settings .settings-title {
   text-align: center;
+  font-weight: bold;
 }
 
 #plot img {
