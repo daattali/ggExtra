@@ -20,7 +20,8 @@ Imports:
 Suggests:
     knitr (>= 1.7),
     shiny (>= 0.11.0),
-    shinyjs (>= 0.0.6.5)
+    shinyjs (>= 0.0.6.5),
+    rmarkdown
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 LazyData: true
