@@ -74,7 +74,7 @@ shinyServer(function(input, output, session) {
     
 
     # when the plot changes, change the code as well
-    text("code", code())
+    html("code", code())
     
     p <-
       ggplot(dataset, aes_string(input$x_var, input$y_var)) +
