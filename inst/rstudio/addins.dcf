@@ -1,0 +1,4 @@
+Name: ggplot2 Marginal Plots
+Description: Add marginal plots to ggplot2
+Binding: ggMarginalGadgetAddin 
+Interactive: true

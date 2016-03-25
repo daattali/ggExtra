@@ -1,0 +1,36 @@
+body {
+  background: white;
+}
+#plot {
+  position: absolute;
+  left: 40%;
+  z-index: 2;
+}
+#plot.recalculating {
+  z-index: -1;
+}
+.left-panel-area {
+  padding: 15px;
+  border-right: 1px solid #eee;
+  background: #fcfcfc;
+}
+#code {
+  background: none;
+  border: 0 none;
+}
+#error {
+  position: absolute;
+  z-index: 3;
+  color: #FF0000;
+  font-size: 1.2em;
+  left: 40%;
+  background: rgba(0,0,0,0.8);
+  padding: 10px;
+}
+#plot-spinner {
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  margin-top: -33px;
+  margin-left: -33px;
+}
