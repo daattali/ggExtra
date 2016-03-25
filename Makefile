@@ -15,6 +15,7 @@ README.md : vignettes/overview.Rmd
 	Rscript -e 'rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document")'
 #	echo "Correcting image paths"
 #	sed -i -- 's,../inst,inst,g' vignettes/overview.md
+	Rscript -e 'file <- gsub("\\.\\./inst", "inst", readLines("vignettes/overview.md")); writeLines(file, "vignettes/overview.md")'
 	Rscript -e 'file <- gsub("overview_files", "vignettes/overview_files", readLines("vignettes/overview.md")); writeLines(file, "vignettes/overview.md")'
 #	echo "Copying output to README.md"
 #	cp vignettes/overview.md README.md

@@ -1,3 +1,9 @@
+# ggExtra 0.4.0
+
+2016-03-25
+
+- Added an RStudio addin and gadget for creating ggplot2 marginal plots
+
 # ggExtra 0.3.3
 
 2015-12-14

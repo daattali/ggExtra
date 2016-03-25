@@ -1,11 +1,16 @@
 #' ggMarginal gadget
 #'
-#' 
+#' This gadget and addin allow you to select a ggplot2 plot and interactively 
+#' use \code{ggMarginal} to build marginal plots on top of your scatterplot.
 #'
-#' @param plot
-#' @note 
-#' embedded into code, use the addin from the RStudio Addins menu.
-#' @return 
+#' @param plot A ggplot2 scatterplot
+#' @note To use the RStudio addin, highlight the code for a plot in RStudio and
+#' select \emph{ggplot2 Marginal Plots} from the RStudio \emph{Addins} menu. This will
+#' embed the marginal plots code into your script. Alternatively, you can call
+#' \code{ggMarginalGadget()} with a ggplot2 plot, and the gadget will return
+#' a plot object.
+#' @return An object of class \code{ggExtraPlot}. This object can be printed to 
+#' show the marginal plots or saved using any of the typical image-saving functions
 #' @export
 #' @examples
 #' if (interactive()) {
@@ -70,7 +75,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
   
   ui <- miniPage(
     shinyjs::useShinyjs(),
-    shinyjs::inlineCSS(css),
+    tags$head(includeCSS(file.path(resourcePath, "css", "app.css"))),
     
     gadgetTitleBar(
       span(strong("Add marginal plots to ggplot2"),

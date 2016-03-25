@@ -180,12 +180,16 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     # add custom parameters specific to each marginal plot
     # merge the parameters in an order that ensures that
     # marginal plot params overwrite general params
+    originParamName <- "origin"
+    if (utils::packageVersion("ggplot2") >= "2.1.0") {
+      originParamName <- "boundary"
+    }
     if (margin == "x") {
       extraParams <- append(xparams, extraParams)
       extraParams <- extraParams[!duplicated(names(extraParams))]
       if (type == "histogram") {
         if (!is.null(pb$panel$x_scales[[1]]$get_limits)) {
-          extraParams[['origin']] <- pb$panel$x_scales[[1]]$get_limits()[1]
+          extraParams[[originParamName]] <- pb$panel$x_scales[[1]]$get_limits()[1]
         }
       }
     } else if (margin == "y") {
@@ -193,7 +197,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       extraParams <- extraParams[!duplicated(names(extraParams))]
       if (type == "histogram") {
         if (!is.null(pb$panel$y_scales[[1]]$get_limits)) {
-          extraParams[['origin']] <- pb$panel$y_scales[[1]]$get_limits()[1]
+          extraParams[[originParamName]] <- pb$panel$y_scales[[1]]$get_limits()[1]
         }
       }      
     }

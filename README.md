@@ -10,8 +10,8 @@ version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.or
 The main function is `ggMarginal`, which can be used to add marginal
 histograms/boxplots/density plots to ggplot2 scatterplots. You can view
 a [live interactive
-demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to see part of
-its capabilities.
+demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to see some of
+its functionality.
 
 Most other functions/layers are quite simple but are useful because they
 are fairly common ggplot2 operations that are a bit verbose.
@@ -19,10 +19,6 @@ are fairly common ggplot2 operations that are a bit verbose.
 This is an instructional document, but I also wrote [a blog
 post](http://deanattali.com/2015/03/29/ggExtra-r-package/) about the
 reasoning behind and development of this package.
-
-*Note: you might notice that there are no unit tests in this package. I
-don't know of a good way to perform tests on plots, if you have a nice
-simple solution please do let me know.*
 
 Installation
 ------------
@@ -33,10 +29,22 @@ To install the CRAN version:
 
     install.packages("ggExtra")
 
-To install the latest developmental version from GitHub:
+To install the latest development version from GitHub:
 
     install.packages("devtools")
     devtools::install_github("daattali/ggExtra")
+
+Marginal plots RStudio addin/gadget
+-----------------------------------
+
+`ggExtra` comes with an addin for `ggMarginal()`, which lets you
+interactively add marginal plots to a scatter plot. To use it, simply
+highlight the code for a ggplot2 plot in your script, and select
+*ggplot2 Marginal Plots* from the RStudio *Addins* menu. Alternatively,
+you can call the addin directly by calling `ggMarginalGadget(plot)` with
+a ggplot2 plot.
+
+![ggMarginal gadget screenshot](inst/img/ggmarginal-gadget.png)
 
 Usage
 -----

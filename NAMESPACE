@@ -2,9 +2,12 @@
 
 S3method(print,ggExtraPlot)
 export(ggMarginal)
+export(ggMarginalGadget)
 export(plotCount)
 export(removeGrid)
 export(removeGridX)
 export(removeGridY)
 export(rotateTextX)
 export(runExample)
+import(miniUI)
+import(shiny)
