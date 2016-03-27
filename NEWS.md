@@ -2,7 +2,7 @@
 
 2016-03-25
 
-- Added an RStudio addin and gadget for creating ggplot2 marginal plots
+- Added an RStudio addin and gadget for creating ggplot2 marginal plots (select *ggplot2 Marginal Plots* from the RStudio *Addins* menu, or call `ggExtra::ggMarginalGadget(plot)`)
 
 # ggExtra 0.3.3
 

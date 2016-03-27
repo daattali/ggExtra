@@ -24,7 +24,6 @@ Suggests:
     knitr (>= 1.7),
     rmarkdown,
     rstudioapi (>= 0.5)
-Remotes: daattali/shinyjs
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 LazyData: true
