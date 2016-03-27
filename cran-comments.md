@@ -374,3 +374,20 @@ addressed previous comment: changed URL of CRAN package to canonical form
 2015-11-06 Kurt Hornik
 
 Thanks, on CRAN now
+
+# Version 0.4.0
+
+# Round 1
+
+## Test environments
+
+* local Windows 7, R 3.2.4
+* ubuntu 12.04 (on travis-ci), R 3.2.4
+
+## Submission comments:
+
+2016-03-27
+
+Tested on Windows 7 and ubuntu 14.04; no errors, warnings, or notes. Submitting updated version in response to Hadley's testthat upcoming update
+
+## Reviewer comments
