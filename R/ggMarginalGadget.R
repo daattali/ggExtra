@@ -42,9 +42,21 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
          call. = FALSE)
   }
 
+  # Remove leading and trailing whitespace from input
   origPlot <- trimws(origPlot)
-  renamePlot <- !exists(origPlot)
-  if (renamePlot) {
+  
+  # If the given plot is a variable (object) holding a plot object, use that
+  # as the plot name
+  if (exists(origPlot)) {
+    plotname <- origPlot
+    baseCode <- ""
+  }
+  # If the given plot is not an object, it means it's probably actual code
+  # for generating a plot. So assign that code to a a new unique variable
+  else {
+    
+    # Find a unique variable to assign to this plot (make sure this variable
+    # name isn't already in use)
     plotnum <- 1
     while (TRUE) {
       plotname <- paste0("p", plotnum)
@@ -60,10 +72,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         stop("You did not provide a valid ggplot2 plot.", call. = FALSE)
       }
     )
-    baseCode <- paste0(plotname, " <- ", origPlot, "\n\n")
-  } else {
-    plotname <- origPlot
-    baseCode <- ""
+    baseCode <- paste0(plotname, " <- ", origPlot, "\n\n")    
   }
   
   if (!ggplot2::is.ggplot(get(plotname))) {
