@@ -391,3 +391,7 @@ Thanks, on CRAN now
 Tested on Windows 7 and ubuntu 14.04; no errors, warnings, or notes. Submitting updated version in response to Hadley's testthat upcoming update
 
 ## Reviewer comments
+
+2016-03-28 Kurt Hornik
+
+Thanks, on CRAN now
