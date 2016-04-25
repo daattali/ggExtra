@@ -20,6 +20,12 @@ This is an instructional document, but I also wrote [a blog
 post](http://deanattali.com/2015/03/29/ggExtra-r-package/) about the
 reasoning behind and development of this package.
 
+Note: it was brought to my attention that several years ago there was a
+different package called `ggExtra`, by Baptiste (the author of
+`gridExtra`). That old `ggExtra` package was deleted in 2011 (two years
+before I even knew what R is!), and this package has nothing to do with
+the old one.
+
 Installation
 ------------
 

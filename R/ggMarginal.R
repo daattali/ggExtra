@@ -446,17 +446,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
                 widths = list(grid::unit(c(size, colSize), "null")),
                 heights = list(grid::unit(c(titleSize, rowSize, size), "null"))
               )
-  
-  # NOTE: This ugly hack is here because of a bug in gridExtra which calls
-  # a ggplot2 function directly instead of namespacing it.  The bug is fixed
-  # in the gridExtra GitHub version, but not on CRAN. Hopefully gridExtra
-  # will submit the fix to CRAN and I can remove this ugliness.
-  # https://github.com/baptiste/gridextra/issues/5
-  if (!"package:ggplot2" %in% search()) {
-    suppressPackageStartupMessages(attachNamespace("ggplot2"))
-    on.exit(detach("package:ggplot2"))
-  }
-  
+
   # NOTE: I had to use arrangeGrob instead of grid.arrange because the latter does
   # not allow saving the object, it only works as a side-effect and returns NULL.
   # There were still problems with arrangeGrob - if gridExtra isn't loaded, I

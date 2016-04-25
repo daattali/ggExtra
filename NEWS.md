@@ -1,3 +1,9 @@
+# ggExtra 0.4.1
+
+2016-04-24
+
+- Remove hack required by old version of `gridExtra`
+
 # ggExtra 0.4.0
 
 2016-03-25
