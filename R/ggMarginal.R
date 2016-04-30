@@ -125,6 +125,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       }
       data <- p$data
     }
+    if (length(p$mapping) == 0) p$mapping <- p$layers[[1]]$mapping
     if (margins != "y" && missing(x)) {
       if (is.null(p$mapping$x)) {
         stop("`x` must be provided if it is not an aesthetic of the main ggplot object",
