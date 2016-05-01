@@ -1,3 +1,9 @@
+# ggExtra 0.4.2
+
+2016-04-30
+
+- ggMarginal addin now works on all screen resolutions (#24)
+
 # ggExtra 0.4.1
 
 2016-04-24
