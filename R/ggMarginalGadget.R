@@ -85,6 +85,10 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
   ui <- miniPage(
     shinyjs::useShinyjs(),
     tags$head(includeCSS(file.path(resourcePath, "css", "app.css"))),
+    tags$script("$(document).on('shiny:connected', function(event) {
+                   var height = $('#panels-area').height();
+                   Shiny.onInputChange('plotHeight', height);
+                 });"),
     
     gadgetTitleBar(
       span(strong("Add marginal plots to ggplot2"),
@@ -99,7 +103,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
       )
     ),
     
-    plotOutput("plot", width = "60%", height = "500px"),
+    plotOutput("plot", width = "60%", height = "auto"),
     img(id = "plot-spinner",
         src = file.path("ggm", "img", "ajax-loader.gif")),
     
@@ -108,6 +112,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         "Main options",
         icon = icon("cog"),
         miniContentPanel(
+          id = "panels-area",
           padding = 0,
           fillRow(
             flex = c(2, 3),
@@ -268,8 +273,9 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
     })
     
     output$plot <- renderPlot({
+      if (is.null(input$plotHeight)) return(NULL)
       values$plot
-    })
+    }, height = function() { if (is.null(input$plotHeight)) { 0 } else { input$plotHeight } })
     
     marginCode <- reactive({
       code <- ""
