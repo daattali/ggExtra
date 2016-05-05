@@ -449,12 +449,15 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   if (exists("lgnd_grob")) {
       nrow <- 4
       plots <- c(plots, list(lgnd_grob, empty))
+      c(titleSize, rowSize, size, size/5) -> z
+  } else {
+      c(titleSize, rowSize, size) -> z
   }
   # Determine all the arguments to build the grid (dimensions, plots, plot sizes)
   gridArgs <- c(plots, ncol = ncol, nrow = nrow)
   gridArgs <- c(gridArgs,
                 widths = list(grid::unit(c(size, colSize), "null")),
-                heights = list(grid::unit(c(titleSize, rowSize, size, size/5), "null"))
+                heights = list(grid::unit(z, "null"))
               )
 
   # NOTE: I had to use arrangeGrob instead of grid.arrange because the latter does
