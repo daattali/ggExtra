@@ -245,7 +245,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
      ggExtraPlot <- ggxtra_nottl
   }
   
-  # Add an S3 method for printing the ggExtra plot
+  # Aadd a class for S3 method dispatch for printing the ggExtra plot
   class(ggExtraPlot) <- c("ggExtraPlot", class(ggExtraPlot))
   ggExtraPlot
 }
