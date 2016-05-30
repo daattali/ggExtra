@@ -398,6 +398,14 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
                                     labels = ylabel)      
     }
   }
+  
+  # ggplotGrob(p) -> pGrob
+  # pGrob$layout -> pLay
+  # any(grepl(pattern = "guide-box", x = pLay$name)) -> hasLeg
+  # if (hasLeg) {
+  #     # legPos(pLay) -> z
+  #     browser()
+  # }
 
   # Create the vertical margin plot
   if (margins != "x") {

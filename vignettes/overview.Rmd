@@ -69,7 +69,7 @@ suppressPackageStartupMessages({
 
 ## `ggMarginal` - Add marginal histograms/boxplots/density plots to ggplot2 scatterplots
 
-You need to have the `grid` and `gridExtra` packages installed for this
+You need to have the `grid` and `gtable` packages installed for this
 function.  
 
 This function is meant to work as an easy drop-in solution for adding marginal
