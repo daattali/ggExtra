@@ -1,3 +1,7 @@
+# ggExtra 0.5 2016-05-29
+
+- ggMarginal now supports plots with legends (thanks to @crew102) (#23)
+
 # ggExtra 0.4.2
 
 2016-04-30
