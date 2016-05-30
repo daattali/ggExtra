@@ -125,6 +125,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
       }
       data <- p$data
     }
+    if (length(p$mapping) == 0) p$mapping <- p$layers[[1]]$mapping
     if (margins != "y" && missing(x)) {
       if (is.null(p$mapping$x)) {
         stop("`x` must be provided if it is not an aesthetic of the main ggplot object",
@@ -147,8 +148,14 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   
   # Remove all margin around plot so that it's easier to position the
   # density plots beside the main plot
-  p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"))
-
+  p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"),
+                          legend.direction = "horizontal")
+  # Grab the legend grob if there is one, then reset theme to show no legend
+  tabpb <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(p))
+  lgnd_ind <- which(sapply(tabpb$grobs, function(x) x$name) == "guide-box")
+  if (length(lgnd_ind) != 0) tabpb$grobs[[lgnd_ind]] -> lgnd_grob
+  p <- p + ggplot2::theme(legend.position = "none")
+  
   # Decompose the original ggplot2 object to grab all sorts of information from it
   pb <- ggplot2::ggplot_build(p)
 
@@ -429,7 +436,6 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     titleSize <- 0
   }
   
-  
   if (margins == "both") {
     plots <- list(title, empty, top, empty, p, right)
   } else if (margins == "x") {
@@ -440,11 +446,18 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     rowSize <- 0
   }
   
+  if (exists("lgnd_grob")) {
+      nrow <- 4
+      plots <- c(plots, list(lgnd_grob, empty))
+      c(titleSize, rowSize, size, size/5) -> z
+  } else {
+      c(titleSize, rowSize, size) -> z
+  }
   # Determine all the arguments to build the grid (dimensions, plots, plot sizes)
   gridArgs <- c(plots, ncol = ncol, nrow = nrow)
   gridArgs <- c(gridArgs,
                 widths = list(grid::unit(c(size, colSize), "null")),
-                heights = list(grid::unit(c(titleSize, rowSize, size), "null"))
+                heights = list(grid::unit(z, "null"))
               )
 
   # NOTE: I had to use arrangeGrob instead of grid.arrange because the latter does
