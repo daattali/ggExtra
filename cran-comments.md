@@ -395,3 +395,25 @@ Tested on Windows 7 and ubuntu 14.04; no errors, warnings, or notes. Submitting 
 2016-03-28 Kurt Hornik
 
 Thanks, on CRAN now
+
+# Version 0.5
+
+# Round 1
+
+## Test environments
+
+* local Windows 7, R 3.3.0
+
+## Submission comments:
+
+2016-05-29
+
+No errors, warnings, or notes
+
+## Reviewer comments
+
+2016-05-30 Uwe Ligges
+
+Thanks, on CRAN now.
+
+Thanks, on CRAN now
