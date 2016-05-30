@@ -30,7 +30,7 @@ compared to the main plot. A size of 5 means that the main plot is 5x wider
 and 5x taller than the marginal plots.}
 
 \item{...}{Extra parameters to pass to the marginal plots. Any parameter that
-\code{geom_line()}, \code{geom_histogram()}, or \code{geom_boxplot()} accept
+\code{geom_line()}, \code{geom_histogram()}, or \code{geom_boxplot()} accepts
 can be used. For example, \code{colour = "red"} can be used for any marginal plot type,
 and \code{binwidth = 10} can be used for histograms.}
 
@@ -50,7 +50,7 @@ Create a ggplot2 scatterplot with marginal density plots (default) or
 histograms, or add the marginal plots to an existing scatterplot.
 }
 \note{
-The \code{grid} and \code{gridExtra} packages are required for this
+The \code{grid} and \code{gtable} packages are required for this
 function.
 
 Since the \code{size} parameter is used by \code{ggMarginal}, if you want
