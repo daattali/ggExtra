@@ -3,7 +3,7 @@
 #' Create a ggplot2 scatterplot with marginal density plots (default) or 
 #' histograms, or add the marginal plots to an existing scatterplot.
 #'  
-#' @note The \code{grid} and \code{gridExtra} packages are required for this
+#' @note The \code{grid} and \code{gtable} packages are required for this
 #' function.
 #' @param p A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
 #' not provided, then all of \code{data}, \code{x}, and \code{y} must be
@@ -20,7 +20,7 @@
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
 #' and 5x taller than the marginal plots.
 #' @param ... Extra parameters to pass to the marginal plots. Any parameter that
-#' \code{geom_line()}, \code{geom_histogram()}, or \code{geom_boxplot()} accept
+#' \code{geom_line()}, \code{geom_histogram()}, or \code{geom_boxplot()} accepts
 #' can be used. For example, \code{colour = "red"} can be used for any marginal plot type,
 #' and \code{binwidth = 10} can be used for histograms.
 #' @param xparams List of extra parameters to use only for the marginal plot along
@@ -79,6 +79,7 @@
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams, yparams) {
+
   # figure out all the default parameters
   type <- match.arg(type)
   margins <- match.arg(margins)
@@ -107,10 +108,10 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   } else {
     yparams <- as.list(yparams)
   }
-  
+
   # Try to infer values for parameters that are missing from the input scatterplot
   if (missing(p)) {
-    if (missing(data) | missing(x) | missing(y)) {
+    if (missing(data) || missing(x) || missing(y)) {
       stop("`data`, `x`, and `y` must be provided if `p` is not provided",
            call. = FALSE)
     }
@@ -148,225 +149,20 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   
   # Remove all margin around plot so that it's easier to position the
   # density plots beside the main plot
-  p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"),
-                          legend.direction = "horizontal")
-  # Grab the legend grob if there is one, then reset theme to show no legend
-  tabpb <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(p))
-  lgnd_ind <- which(sapply(tabpb$grobs, function(x) x$name) == "guide-box")
-  if (length(lgnd_ind) != 0) tabpb$grobs[[lgnd_ind]] -> lgnd_grob
-  p <- p + ggplot2::theme(legend.position = "none")
-  
+  p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"))
+
   # Decompose the original ggplot2 object to grab all sorts of information from it
   pb <- ggplot2::ggplot_build(p)
-
-  # get the common code for both marginal (x and y) plots
-  marginPlot <- function(margin) {
-    aest <- ggplot2::aes()
-    if (margin == "x") {
-      if (type == "boxplot") {
-        aest[['x']] <- xvar
-        aest[['y']] <- xvar
-        plot <- ggplot2::ggplot(data, aest) + ggplot2::coord_flip()
-      } else {
-        aest[['x']] <- xvar
-        plot <- ggplot2::ggplot(data, aest)
-      }
-    } else if (margin == "y") {
-      if (type == "boxplot") {
-        aest[['x']] <- yvar
-        aest[['y']] <- yvar
-        plot <- ggplot2::ggplot(data, aest)
-      } else {
-        aest[['x']] <- yvar
-        plot <- ggplot2::ggplot(data, aest) + ggplot2::coord_flip()
-      }
-    } else {
-      stop(sprintf("`margin` = `%s` is not supported", margin), call. = FALSE)
-    }
-    
-    # add custom parameters specific to each marginal plot
-    # merge the parameters in an order that ensures that
-    # marginal plot params overwrite general params
-    originParamName <- "origin"
-    if (utils::packageVersion("ggplot2") >= "2.1.0") {
-      originParamName <- "boundary"
-    }
-    if (margin == "x") {
-      extraParams <- append(xparams, extraParams)
-      extraParams <- extraParams[!duplicated(names(extraParams))]
-      if (type == "histogram") {
-        if (!is.null(pb$panel$x_scales[[1]]$get_limits)) {
-          extraParams[[originParamName]] <- pb$panel$x_scales[[1]]$get_limits()[1]
-        }
-      }
-    } else if (margin == "y") {
-      extraParams <- append(yparams, extraParams)
-      extraParams <- extraParams[!duplicated(names(extraParams))]
-      if (type == "histogram") {
-        if (!is.null(pb$panel$y_scales[[1]]$get_limits)) {
-          extraParams[[originParamName]] <- pb$panel$y_scales[[1]]$get_limits()[1]
-        }
-      }      
-    }
-    
-    if (type == "density") {
-      extraParams[['stat']] <- "density"
-      layer <- do.call(ggplot2::geom_line, extraParams)
-    } else if (type == "histogram") {
-      layer <- do.call(ggplot2::geom_histogram, extraParams)
-    } else if (type == "boxplot") {
-      layer <- do.call(ggplot2::geom_boxplot, extraParams)
-    } else {
-      stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
-    }
-    
-    plot + layer
-  }  
   
-  # given a plot, copy some theme properties from the main plot so that they will
-  # resemble each other more and look better beside each other, and also add
-  # some common theme properties such as 0 margins and transparent text colour
-  addMainTheme <- function(marginal, margin) {
-    try(
-      {marginal <- marginal + ggplot2::theme_void()},
-      silent = TRUE
+  # Pull out the plot title if one exists and save it as a grob for later use.
+  hasTitle <- (!is.null(pb$plot$labels$title))
+  if (hasTitle) {
+    title <- grid::textGrob(
+      pb$plot$labels$title,
+      gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
+                      fontsize = 16)
     )
-    
-    if (utils::packageVersion("ggplot2") > "1.0.1") {
-      # copy theme from main plot
-      themeProps <- c("text",
-                      "axis.text","axis.text.x", "axis.text.y",
-                      "axis.ticks", "axis.ticks.length",
-                      "axis.title", "axis.title.x", "axis.title.y",
-                      "plot.title"
-                    )
-      for(property in themeProps) {
-        marginal$theme[[property]] <- p$theme[[property]]
-      }
-      
-      # make text and line colours transparent
-      transparentProps <- c("text",
-                            "axis.text", "axis.text.x", "axis.text.y",
-                            "axis.ticks",
-                            "axis.title", "axis.title.x", "axis.title.y",
-                            "line")
-      for(property in transparentProps) {
-        if (!is.null(marginal$theme[[property]])) {
-          marginal$theme[[property]]$colour <- "transparent"
-        } else if (property %in% c("axis.ticks", "line")) {
-          themePair <- list()
-          themePair[[property]] <- ggplot2::element_line(colour = "transparent")
-          marginal <- marginal + do.call(ggplot2::theme, themePair)
-        } else {
-          themePair <- list()
-          themePair[[property]] <- ggplot2::element_text(colour = "transparent")
-          marginal <- marginal + do.call(ggplot2::theme, themePair)
-        }
-      }
-      
-      # some more theme properties
-      marginal <- marginal +
-        ggplot2::theme(
-          panel.background = ggplot2::element_blank(),
-          axis.ticks.length = grid::unit(0, "null")
-        )
-      
-      # since the tick marks are removed on the marginal plot, we need to add
-      # space for them so that the marginal plot will align with the main plot
-      if (is.null(p$theme$axis.ticks.length)) {
-        marginUnit <- "null"
-        marginLength <- 0
-      } else {
-        marginUnit <- attr(p$theme$axis.ticks.length, "unit")
-        marginLength <- as.numeric(p$theme$axis.ticks.length, "unit")
-      }
-      if (margin == "x") {
-        marginal <- marginal + 
-          ggplot2::theme(
-            axis.title.x = ggplot2::element_blank(),
-            axis.text.x = ggplot2::element_blank(),
-            plot.margin = grid::unit(c(0, 0, 0, marginLength), marginUnit)
-          )
-      } else {
-        marginal <- marginal + 
-          ggplot2::theme(
-            axis.title.y = ggplot2::element_blank(),
-            axis.text.y = ggplot2::element_blank(),
-            plot.margin = grid::unit(c(0, 0, marginLength, 0), marginUnit)
-          )
-      }
-    }
-    # if this is the old ggplot2 version, things are simpler
-    else {
-      marginal <- marginal +
-        ggplot2::theme(
-          text = ggplot2::element_text(size = p$theme$text$size, color = "transparent"),
-          line = ggplot2::element_blank(),
-          panel.background = ggplot2::element_blank(),
-          axis.text = ggplot2::element_text(color = "transparent")
-        )
-
-      if (margin == "x") {
-        marginal <- marginal + 
-          ggplot2::theme(
-            axis.title.x = ggplot2::element_blank(),
-            axis.text.x = ggplot2::element_blank(),
-            plot.margin = grid::unit(c(0, 0, -1, 0), "lines")
-          )
-      } else {
-        marginal <- marginal + 
-          ggplot2::theme(
-            axis.title.y = ggplot2::element_blank(),
-            axis.text.y = ggplot2::element_blank(),
-            plot.margin = grid::unit(c(0, 0, 0, -1), "lines")
-          )
-      }
-    }
-    
-    marginal
-  }
-  
-  # Copy the scale transformation from the original plot (reverse/log/limits/etc)
-  # We have to do a bit of a trick on the marginal plot that's flipped by
-  # taking the original x/y scale and manually changing it to the other axis
-  getScale <- function(margin) {
-    if (margin == "x") {
-      if (type == "boxplot") {
-        scale <- pb$panel$x_scales[[1]]
-        scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
-        scale$limits <- pb$panel$x_scales[[1]]$get_limits()
-      } else {
-        scale <- pb$panel$x_scales[[1]]
-      }
-    } else if (margin == "y") { 
-      if (type == "boxplot") {
-        scale <- pb$panel$y_scales[[1]]
-        scale$limits <- pb$panel$y_scales[[1]]$get_limits()
-      } else {
-        scale <- pb$panel$y_scales[[1]]
-        scale$aesthetics <- gsub("^y", "x", scale$aesthetics)
-      }
-    }
-    scale
-  }
-  
-  # Get the axis range of the x or y axis of the given ggplot build object
-  # This is needed so that if the range of the plot is manually changed, the
-  # marginal plots will use the same range
-  getLimits <- function(pb, margin) {
-    if (margin == "x") {
-      scales <- pb$panel$x_scales[[1]]
-    } else if (margin == "y") {
-      scales <- pb$panel$y_scales[[1]]
-    } else {
-      stop("Invalid `margin` parameter (only x and y are supported)", call. = FALSE)
-    }
-    
-    range <- scales$limits
-    if (is.null(range)) {
-      range <- scales$range$range
-    }
-    range
+    p$labels$title <- NULL
   }
   
   # Create the horizontal margin plot
@@ -437,19 +233,30 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   }
   
   if (margins == "both") {
-    plots <- list(title, empty, top, empty, p, right)
+    ggxtra_tmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, 
+                                 size = size)
+    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right, 
+                                     size = size)
   } else if (margins == "x") {
-    plots <- list(title, empty, top, empty, p, empty)
-    colSize <- 0
+    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
+                                             grid::unit(c(0, 0.5, 0, 0), "lines"))
+    ggxtra_nottl <- addTopMargPlot(ggMargGrob = ggxtra_tmp, top = top, 
+                                   size = size)
   } else if (margins == "y") {
-    plots <- list(title, empty, empty, empty, p, right)
-    rowSize <- 0
+    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
+                                             grid::unit(c(0.5, 0, 0, 0), "lines"))
+    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right,
+                                     size = size)
   }
-  
-  if (exists("lgnd_grob")) {
-      nrow <- 4
-      plots <- c(plots, list(lgnd_grob, empty))
-      c(titleSize, rowSize, size, size/5) -> z
+  })
+  # Add the title to the resulting ggExtra plot
+  if (hasTitle) {
+      titleH <- grid::grobHeight(title)
+      gt_t <- gtable::gtable_add_rows(x = ggxtra_nottl, heights = titleH, pos = 0)
+      max(gt_t$layout$r) -> maxR
+      ggExtraPlot <- gtable::gtable_add_grob(x = gt_t, grobs = title, t = 1, b = 1,
+                                  l = 1, r = maxR, z = Inf, clip = "on",
+                                  name = "plotTitle")
   } else {
       c(titleSize, rowSize, size) -> z
   }
@@ -468,13 +275,9 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # later, I define an S3 print methods for this object that will call grid.draw
   # More info: http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object
   
-  # Build the grid of plots
-  suppressMessages(suppressWarnings(
-    # use suppressMessages to ignore message about adding multiple scales
-    plot <- do.call(gridExtra::arrangeGrob, gridArgs)
-  ))
-  class(plot) <- c("ggExtraPlot", class(plot))
-  plot
+  # Aadd a class for S3 method dispatch for printing the ggExtra plot
+  class(ggExtraPlot) <- c("ggExtraPlot", class(ggExtraPlot))
+  ggExtraPlot
 }
 
 #' Print a ggExtraPlot object
