@@ -11,7 +11,7 @@ shinyUI(fluidPage(
           "ggMarginal"
       ),
       div(id = "subtitle",
-          "Add marginal plots to ggplot2, available in the ggExtra package"),
+          "Add marginal plots to ggplot2 (from ggExtra package)"),
       div(id = "subsubtitle",
           "By",
           tags$a(href = "http://deanattali.com/", "Dean Attali"),
