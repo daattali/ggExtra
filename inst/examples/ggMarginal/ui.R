@@ -2,21 +2,25 @@ library(shiny)
 library(shinyjs)
 
 shinyUI(fluidPage(
-  title = "Demo of ggExtra::ggMarginal()",
+  title = "ggMarginal - add marginal plots to ggplot2",
   tags$head(includeCSS(file.path('www', 'style.css'))),   
   useShinyjs(),
   
-  fluidRow(id = "title-row",
-    column(12,
-      h1("Demo of",
-         em(a("ggMarginal()", href = "https://github.com/daattali/ggExtra"))
+  div(id = "header",
+      div(id = "title",
+          "ggMarginal"
       ),
-      h4(em("ggMarginal()"), "lets you add marginal plots to ggplot2 (finally!)"),
-      div("Created by", a("Dean Attali", href = "http://deanattali.com"),
-         HTML("&bull;"),
-         "Code", a("on GitHub", href = "https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal")
+      div(id = "subtitle",
+          "Add marginal plots to ggplot2, available in the ggExtra package"),
+      div(id = "subsubtitle",
+          "By",
+          tags$a(href = "http://deanattali.com/", "Dean Attali"),
+          HTML("&bull;"),
+          "Package available",
+          tags$a(href = "https://github.com/daattali/ggExtra", "on GitHub"),
+          HTML("&bull;"),
+          tags$a(href = "http://daattali.com/shiny/", "More apps"), "by Dean"
       )
-    )
   ),
   
   div(id = "loading-content", h2("Loading...")),
