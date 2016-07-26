@@ -1,9 +1,37 @@
 library(shiny)
 library(shinyjs)
 
+share <- list(
+  title = "ggMarginal (from ggExtra package)",
+  url = "http://daattali.com/shiny/ggExtra-ggMarginal-demo/",
+  image = "http://daattali.com/shiny/img/ggmarginal.png",
+  description = "Add marginal plots to ggplot2.",
+  twitter_user = "daattali"
+)
+
 shinyUI(fluidPage(
   title = "ggMarginal - add marginal plots to ggplot2",
-  tags$head(includeCSS(file.path('www', 'style.css'))),   
+  tags$head(
+    includeCSS(file.path('www', 'style.css')),
+    
+    # Favicon
+    tags$link(rel = "shortcut icon", type="image/x-icon", href="http://daattali.com/shiny/img/favicon.ico"),
+    
+    # Facebook OpenGraph tags
+    tags$meta(property = "og:title", content = share$title),
+    tags$meta(property = "og:type", content = "website"),
+    tags$meta(property = "og:url", content = share$url),
+    tags$meta(property = "og:image", content = share$image),
+    tags$meta(property = "og:description", content = share$description),
+    
+    # Twitter summary cards
+    tags$meta(name = "twitter:card", content = "summary"),
+    tags$meta(name = "twitter:site", content = paste0("@", share$twitter_user)),
+    tags$meta(name = "twitter:creator", content = paste0("@", share$twitter_user)),
+    tags$meta(name = "twitter:title", content = share$title),
+    tags$meta(name = "twitter:description", content = share$description),
+    tags$meta(name = "twitter:image", content = share$image)
+  ),
   useShinyjs(),
   
   div(id = "header",

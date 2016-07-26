@@ -1,4 +1,13 @@
-# ggExtra 0.5 2016-05-29
+# ggExtra 0.5.1
+
+2016-07-25
+
+- UI improvements to shiny app
+- add social media meta tags to shiny app
+
+# ggExtra 0.5
+
+2016-05-29
 
 - ggMarginal now supports plots with legends (thanks to @crew102) (#23)
 
