@@ -33,7 +33,7 @@ shinyUI(fluidPage(
     tags$meta(name = "twitter:image", content = share$image)
   ),
   tags$a(
-    href="https://github.com/daattali/shinyjs",
+    href="https://github.com/daattali/ggExtra",
     tags$img(style="position: absolute; top: 0; right: 0; border: 0;",
              src="github-orange-right.png",
              alt="Fork me on GitHub")
