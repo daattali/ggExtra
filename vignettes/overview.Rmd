@@ -22,6 +22,8 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
 [![Build Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
 [![CRAN version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
 
+> *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under the MIT license.*
+
 `ggExtra` is a collection of functions and layers to enhance ggplot2. The main function is `ggMarginal`, which can be used to add marginal histograms/boxplots/density plots to ggplot2 scatterplots. You can view a 
 [live interactive demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/)
 to see some of its functionality.

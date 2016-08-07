@@ -6,6 +6,9 @@ Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travi
 [![CRAN
 version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
 
+> *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under
+> the MIT license.*
+
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 The main function is `ggMarginal`, which can be used to add marginal
 histograms/boxplots/density plots to ggplot2 scatterplots. You can view
@@ -83,13 +86,13 @@ distributed, and plot a simple ggplot2 scatterplot.
     df1 <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
     (p1 <- ggplot(df1, aes(x, y)) + geom_point() + theme_bw())
 
-<img src="vignettes/overview_files/figure-markdown_strict/init-plot-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/init-plot-1.png" style="display: block; margin: auto;" />
 
 Ok, now let's add marginal density plots.
 
     ggMarginal(p1)
 
-<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-basic-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-basic-1.png" style="display: block; margin: auto;" />
 
 That was easy. Notice how the syntax is not following the standard
 ggplot2 syntax - you don't "add" a ggMarginal layer with
@@ -101,7 +104,7 @@ Let's make the text a bit larger to make it easier to see.
 
     ggMarginal(p1 + theme_bw(30) + ylab("Two\nlines"))
 
-<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-large-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-large-1.png" style="display: block; margin: auto;" />
 
 Notice how the marginal plots occupy the correct space, and even when
 the main plot's points are pushed to the right because of larger text or
@@ -111,7 +114,7 @@ You can also show histograms instead.
 
     ggMarginal(p1, type = "histogram")
 
-<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-hist-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-hist-1.png" style="display: block; margin: auto;" />
 
 There are several more parameters, here is an example with a few more
 being used. Note that you can use any parameters that the `geom_XXX`
@@ -121,7 +124,7 @@ and `fill` in the following example.
     ggMarginal(p1, margins = "x", size = 2, type = "histogram",
                col = "blue", fill = "orange")
 
-<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-params-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-params-1.png" style="display: block; margin: auto;" />
 
 In the above example, `size = 2` means that the main scatterplot should
 occupy twice as much height/width as the margin plots (default is 5).
@@ -133,7 +136,7 @@ plots, you can use the `xparams` or `yparams` parameters, like this:
 
     ggMarginal(p1, type = "histogram", xparams = list(binwidth = 1, fill = "orange"))
 
-<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-extraparams-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-extraparams-1.png" style="display: block; margin: auto;" />
 
 You don't have to supply a ggplot2 scatterplot, you can also just tell
 ggMarginal what dataset and variables to use, but of course this way you
@@ -142,7 +145,7 @@ text/font/theme/etc).
 
     ggMarginal(data = mtcars, x = "wt", y = "mpg")
 
-<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-manual-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-manual-1.png" style="display: block; margin: auto;" />
 
 Last but not least - you can also save the output from `ggMarginal` and
 display it later. (This may sound trivial, but it was not an easy
@@ -152,7 +155,7 @@ discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridex
     p <- ggMarginal(p1)
     p
 
-<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-save-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/ggmarginal-save-1.png" style="display: block; margin: auto;" />
 
 For more information, see `?ggExtra::ggMarginal`.
 
@@ -171,7 +174,7 @@ grid lines can be removed as well (default is to remove both).
     p2 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
     p2 + removeGrid()
 
-<img src="vignettes/overview_files/figure-markdown_strict/removeGrid-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/removeGrid-1.png" style="display: block; margin: auto;" />
 
 For more information, see `?ggExtra::removeGrid`.
 
@@ -188,7 +191,7 @@ tick line.
     p3 <- ggplot2::ggplot(df3, ggplot2::aes(x, y)) + ggplot2::geom_point()
     p3 + rotateTextX()
 
-<img src="vignettes/overview_files/figure-markdown_strict/rotateTextX-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/rotateTextX-1.png" style="display: block; margin: auto;" />
 
 For more information, see `?ggExtra::rotateTextX`.
 
@@ -204,7 +207,7 @@ An example using a table:
 
     plotCount(table(infert$education))
 
-<img src="vignettes/overview_files/figure-markdown_strict/plotCount-table-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/plotCount-table-1.png" style="display: block; margin: auto;" />
 
 An example using a data.frame:
 
@@ -212,6 +215,6 @@ An example using a data.frame:
                       "NumWheels" = c(2, 4, 1, 16))
     plotCount(df4) + removeGridX()
 
-<img src="vignettes/overview_files/figure-markdown_strict/plotCount-df-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="vignettes/overview_files/figure-markdown_strict/plotCount-df-1.png" style="display: block; margin: auto;" />
 
 For more information, see `?ggExtra::plotCount`.
