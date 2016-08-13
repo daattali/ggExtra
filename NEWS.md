@@ -1,3 +1,9 @@
+# ggExtra 0.5.2
+
+2016-08-13
+
+- bug fix: retain the title font face (#30)
+
 # ggExtra 0.5.1
 
 2016-07-25

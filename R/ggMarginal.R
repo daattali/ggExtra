@@ -160,7 +160,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     title <- grid::textGrob(
       pb$plot$labels$title,
       gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
-                      fontsize = 16)
+                      fontsize = 16, fontface = pb$plot$theme$plot.title$face)
     )
     p$labels$title <- NULL
   }
