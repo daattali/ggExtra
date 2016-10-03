@@ -13,11 +13,6 @@
 #' }
 #' @export
 runExample <- function() {
-  if (!requireNamespace("shinyjs", quietly = TRUE)) {
-    stop('`shinyjs` package is required for this function.\nPlease install it with `install.packages("shinyjs")`',
-         call. = FALSE)
-  }
-  
   appDir <- system.file("examples", "ggMarginal", package = "ggExtra")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `ggExtra`.",

@@ -1,7 +1,8 @@
 # ggExtra 0.5.2
 
-2016-08-13
+2016-10-03
 
+- use `colourpicker` package instead of deprecated colour input from shinyjs
 - bug fix: retain the title font face (#30)
 
 # ggExtra 0.5.1
