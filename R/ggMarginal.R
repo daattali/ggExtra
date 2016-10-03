@@ -188,7 +188,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     # Add the longest y axis label to the top plot and ensure it's at a y value
     # that is on the plot (this is why I build the top plot, to know the y values)
     pbTop <- ggplot2::ggplot_build(top)
-    ylabels <- pb$panel$ranges[[1]]$y.labels
+    ylabels <- pb$layout$panel_ranges[[1]]$y.labels
     ylabel <- ylabels[which.max(nchar(ylabels))]      
     if (type == "boxplot") {
       top <-

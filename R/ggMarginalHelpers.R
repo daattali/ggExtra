@@ -35,16 +35,16 @@ marginPlot <- function(margin, type, xvar, yvar, xparams, yparams, pb, data,
     extraParams <- append(xparams, extraParams)
     extraParams <- extraParams[!duplicated(names(extraParams))]
     if (type == "histogram") {
-      if (!is.null(pb$panel$x_scales[[1]]$get_limits)) {
-        extraParams[[originParamName]] <- pb$panel$x_scales[[1]]$get_limits()[1]
+      if (!is.null(pb$layout$panel_scales$x[[1]]$get_limits)) {
+        extraParams[[originParamName]] <- pb$layout$panel_scales$x[[1]]$get_limits()[1]
       }
     }
   } else if (margin == "y") {
     extraParams <- append(yparams, extraParams)
     extraParams <- extraParams[!duplicated(names(extraParams))]
     if (type == "histogram") {
-      if (!is.null(pb$panel$y_scales[[1]]$get_limits)) {
-        extraParams[[originParamName]] <- pb$panel$y_scales[[1]]$get_limits()[1]
+      if (!is.null(pb$layout$panel_scales$y[[1]]$get_limits)) {
+        extraParams[[originParamName]] <- pb$layout$panel_scales$y[[1]]$get_limits()[1]
       }
     }      
   }
@@ -172,18 +172,18 @@ addMainTheme <- function(marginal, margin, p) {
 getScale <- function(margin, type, pb) {
   if (margin == "x") {
     if (type == "boxplot") {
-      scale <- pb$panel$x_scales[[1]]
+      scale <- pb$layout$panel_scales$x[[1]]
       scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
-      scale$limits <- pb$panel$x_scales[[1]]$get_limits()
+      scale$limits <- pb$layout$panel_scales$x[[1]]$get_limits()
     } else {
-      scale <- pb$panel$x_scales[[1]]
+      scale <- pb$layout$panel_scales$x[[1]]
     }
   } else if (margin == "y") { 
     if (type == "boxplot") {
-      scale <- pb$panel$y_scales[[1]]
-      scale$limits <- pb$panel$y_scales[[1]]$get_limits()
+      scale <- pb$layout$panel_scales$y[[1]]
+      scale$limits <- pb$layout$panel_scales$y[[1]]$get_limits()
     } else {
-      scale <- pb$panel$y_scales[[1]]
+      scale <- pb$layout$panel_scales$y[[1]]
       scale$aesthetics <- gsub("^y", "x", scale$aesthetics)
     }
   }
@@ -195,9 +195,9 @@ getScale <- function(margin, type, pb) {
 # marginal plots will use the same range
 getLimits <- function(pb, margin) {
   if (margin == "x") {
-    scales <- pb$panel$x_scales[[1]]
+    scales <- pb$layout$panel_scales$x[[1]]
   } else if (margin == "y") {
-    scales <- pb$panel$y_scales[[1]]
+    scales <- pb$layout$panel_scales$y[[1]]
   } else {
     stop("Invalid `margin` parameter (only x and y are supported)", call. = FALSE)
   }
