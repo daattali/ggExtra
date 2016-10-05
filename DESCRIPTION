@@ -1,6 +1,6 @@
 Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
-Version: 0.5.2
+Version: 0.6
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
     )
@@ -13,7 +13,7 @@ Depends:
     R (>= 3.1.0)
 Imports:
     colourpicker (>= 0.1),
-    ggplot2 (>= 1.0.0),
+    ggplot2 (>= 2.2.0),
     grid (>= 3.1.3),
     gtable (>= 0.2.0),
     methods,
