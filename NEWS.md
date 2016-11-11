@@ -1,6 +1,6 @@
 # ggExtra 0.6
 
-2016-11-04
+2016-11-11
 
 - support new ggplot2 v2.2.0 (not backwards compatible unforunately because ggplot2 internals changed too much)
 
