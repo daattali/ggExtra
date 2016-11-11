@@ -416,4 +416,20 @@ No errors, warnings, or notes
 
 Thanks, on CRAN now.
 
-Thanks, on CRAN now
+# Version 0.6
+
+## Round 1
+
+### Test environments
+
+* Windows 7, R 3.3.1 (local)
+* ubuntu 12.04, R 3.3.1 (on travis-ci)
+* ubuntu 14.04, R 3.3.1 (on my DigitalOcean droplet)
+
+### Submission comments:
+
+2016-11-11
+
+update to fix new ggplot2 version: no errors, warnings, or notes
+
+### Reviewer comments
