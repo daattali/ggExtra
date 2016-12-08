@@ -5,7 +5,7 @@ ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
 Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
 [![CRAN
 version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
-[![saythanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/daattali)
+[![saythanks](http://i.imgur.com/L88apDa.png)](https://saythanks.io/to/daattali)
 
 > *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under
 > the MIT license.*
