@@ -1,3 +1,7 @@
+# ggExtra 0.6.1
+
+- add arguments to `rotateTextX()`
+
 # ggExtra 0.6
 
 2016-11-11
