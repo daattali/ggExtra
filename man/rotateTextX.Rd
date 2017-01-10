@@ -4,7 +4,14 @@
 \alias{rotateTextX}
 \title{Rotate x axis labels}
 \usage{
-rotateTextX()
+rotateTextX(angle = 90, hjust = 1, vjust = 0.5)
+}
+\arguments{
+\item{angle}{Angle (in [0, 360])}
+
+\item{hjust}{Horizontal justification (in [0, 1])}
+
+\item{vjust}{Vertical justification (in [0, 1])}
 }
 \value{
 A ggplot2 layer that can be added to an existing ggplot2 object.
