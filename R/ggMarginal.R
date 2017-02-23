@@ -160,7 +160,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     title <- grid::textGrob(
       pb$plot$labels$title,
       gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
-                      fontsize = 16)
+                      fontsize = 16, fontface = pb$plot$theme$plot.title$face)
     )
     p$labels$title <- NULL
   }
@@ -186,7 +186,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     # Add the longest y axis label to the top plot and ensure it's at a y value
     # that is on the plot (this is why I build the top plot, to know the y values)
     pbTop <- ggplot2::ggplot_build(top)
-    ylabels <- pb$panel$ranges[[1]]$y.labels
+    ylabels <- pb$layout$panel_ranges[[1]]$y.labels
     ylabel <- ylabels[which.max(nchar(ylabels))]      
     if (type == "boxplot") {
       top <-

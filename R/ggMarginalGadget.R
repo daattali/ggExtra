@@ -142,11 +142,11 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
             flex = c(2, 3),
             fillCol(
               class = "left-panel-area",
-              shinyjs::colourInput("col", "Marginal plot colour", "black",
+              colourpicker::colourInput("col", "Marginal plot colour", "black",
                                    showColour = "background", returnName = TRUE),
               conditionalPanel(
                 condition = "input.type != 'density'",
-                shinyjs::colourInput("fill", "Marginal plot fill colour", "gray",
+                colourpicker::colourInput("fill", "Marginal plot fill colour", "gray",
                                      showColour = "background", returnName = TRUE)
               ),
               div(),

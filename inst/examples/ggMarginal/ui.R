@@ -1,22 +1,60 @@
 library(shiny)
 library(shinyjs)
 
+share <- list(
+  title = "ggMarginal (from ggExtra package)",
+  url = "http://daattali.com/shiny/ggExtra-ggMarginal-demo/",
+  image = "http://daattali.com/shiny/img/ggmarginal.png",
+  description = "Add marginal plots to ggplot2.",
+  twitter_user = "daattali"
+)
+
 shinyUI(fluidPage(
-  title = "Demo of ggExtra::ggMarginal()",
-  tags$head(includeCSS(file.path('www', 'style.css'))),   
+  title = "ggMarginal - add marginal plots to ggplot2",
+  tags$head(
+    includeCSS(file.path('www', 'style.css')),
+    
+    # Favicon
+    tags$link(rel = "shortcut icon", type="image/x-icon", href="http://daattali.com/shiny/img/favicon.ico"),
+    
+    # Facebook OpenGraph tags
+    tags$meta(property = "og:title", content = share$title),
+    tags$meta(property = "og:type", content = "website"),
+    tags$meta(property = "og:url", content = share$url),
+    tags$meta(property = "og:image", content = share$image),
+    tags$meta(property = "og:description", content = share$description),
+    
+    # Twitter summary cards
+    tags$meta(name = "twitter:card", content = "summary"),
+    tags$meta(name = "twitter:site", content = paste0("@", share$twitter_user)),
+    tags$meta(name = "twitter:creator", content = paste0("@", share$twitter_user)),
+    tags$meta(name = "twitter:title", content = share$title),
+    tags$meta(name = "twitter:description", content = share$description),
+    tags$meta(name = "twitter:image", content = share$image)
+  ),
+  tags$a(
+    href="https://github.com/daattali/ggExtra",
+    tags$img(style="position: absolute; top: 0; right: 0; border: 0;",
+             src="github-orange-right.png",
+             alt="Fork me on GitHub")
+  ),
   useShinyjs(),
   
-  fluidRow(id = "title-row",
-    column(12,
-      h1("Demo of",
-         em(a("ggMarginal()", href = "https://github.com/daattali/ggExtra"))
+  div(id = "header",
+      div(id = "title",
+          "ggMarginal"
       ),
-      h4(em("ggMarginal()"), "lets you add marginal plots to ggplot2 (finally!)"),
-      div("Created by", a("Dean Attali", href = "http://deanattali.com"),
-         HTML("&bull;"),
-         "Code", a("on GitHub", href = "https://github.com/daattali/ggExtra/tree/master/inst/examples/ggMarginal")
+      div(id = "subtitle",
+          "Add marginal plots to ggplot2 (from ggExtra package)"),
+      div(id = "subsubtitle",
+          "By",
+          tags$a(href = "http://deanattali.com/", "Dean Attali"),
+          HTML("&bull;"),
+          "Package available",
+          tags$a(href = "https://github.com/daattali/ggExtra", "on GitHub"),
+          HTML("&bull;"),
+          tags$a(href = "http://daattali.com/shiny/", "More apps"), "by Dean"
       )
-    )
   ),
   
   div(id = "loading-content", h2("Loading...")),
@@ -49,10 +87,10 @@ shinyUI(fluidPage(
         sliderInput("size",
                     "Size ratio of main plot:marginal plots",
                     1, 5, 5, 0.5),
-        shinyjs::colourInput("col", "Marginal plot colour", "red", showColour = "background"),
+        colourpicker::colourInput("col", "Marginal plot colour", "red", showColour = "background"),
         conditionalPanel(
           condition = "input.type != 'density'",
-          shinyjs::colourInput("fill", "Marginal plot fill colour", "orange", showColour = "background")
+          colourpicker::colourInput("fill", "Marginal plot fill colour", "orange", showColour = "background")
         )
       )      
     )),

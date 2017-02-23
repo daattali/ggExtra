@@ -1,4 +1,30 @@
-# ggExtra 0.5 2016-05-29
+# ggExtra 0.6.1
+
+- add arguments to `rotateTextX()`
+
+# ggExtra 0.6
+
+2016-11-11
+
+- support new ggplot2 v2.2.0 (not backwards compatible unforunately because ggplot2 internals changed too much)
+
+# ggExtra 0.5.2
+
+2016-10-03
+
+- use `colourpicker` package instead of deprecated colour input from shinyjs
+- bug fix: retain the title font face (#30)
+
+# ggExtra 0.5.1
+
+2016-07-25
+
+- UI improvements to shiny app
+- add social media meta tags to shiny app
+
+# ggExtra 0.5
+
+2016-05-29
 
 - ggMarginal now supports plots with legends (thanks to @crew102) (#23)
 
