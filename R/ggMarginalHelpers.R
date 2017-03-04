@@ -1,78 +1,139 @@
-# Get the common code for both marginal (x and y) plots
-marginPlot <- function(margin, type, xvar, yvar, xparams, yparams, pb, data,
-                       extraParams) {
-  aest <- ggplot2::aes()
-  if (margin == "x") {
-    if (type == "boxplot") {
-      aest[['x']] <- xvar
-      aest[['y']] <- xvar
-      plot <- ggplot2::ggplot(data = data, aest) + ggplot2::coord_flip()
-    } else {
-      aest[['x']] <- xvar
-      plot <- ggplot2::ggplot(data = data, aest)
+toParamList <- function(exPrm, xPrm, yPrm) {
+
+  if (is.null(exPrm$col)) {
+    exPrm[['colour']] <- "black"
+  }
+
+  if (is.null(exPrm[['fill']])) {
+    exPrm[['fill']] <- "grey"
+  }
+  
+  list(
+    exPrm = exPrm,
+    xPrm = xPrm,
+    yPrm = yPrm
+  )
+}
+
+reconcileScatPlot <- function(p, data, x, y) {
+  
+  if (missing(p)) {
+    if (missing(data) || missing(x) || missing(y)) {
+      stop("`data`, `x`, and `y` must be provided if `p` is not provided",
+           call. = FALSE)
     }
-  } else if (margin == "y") {
-    if (type == "boxplot") {
-      aest[['x']] <- yvar
-      aest[['y']] <- yvar
-      plot <- ggplot2::ggplot(data = data, aest)
-    } else {
-      aest[['x']] <- yvar
-      plot <- ggplot2::ggplot(data = data, aest) + ggplot2::coord_flip()
-    }
+    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + ggplot2::geom_point()
+  }
+  p
+}
+
+wasFlipped <- function(scatPbuilt) {
+  classCoord <- class(scatPbuilt$plot$coordinates)
+  any(grepl("flip", classCoord, ignore.case = TRUE))
+}
+
+getVarDF <- function(scatPbuilt, marg) {
+  
+  if (wasFlipped(scatPbuilt = scatPbuilt)) {
+    marg <- switch(marg,
+      "x" = "y",
+      "y" = "x"
+      )
+  }
+  var <- scatPbuilt[["data"]][[1]][[marg]]
+  
+  data.frame(var = var)
+}
+
+needsFlip <- function(marg, type) {
+  
+  # If the marginal plot is: (for the x margin (top) and is a boxplot) or 
+  #                          (for the y margin (right) and is not a boxplot), 
+  # ... then have to flip
+  topAndBoxP <- marg == "x" && type == "boxplot"
+  rightAndNonBoxP <- marg == "y" && type != "boxplot"
+  topAndBoxP || rightAndNonBoxP
+}
+
+margPlotNoGeom <- function(marg, type, data) {
+
+  # Build plot (sans geom). Note: Boxplot is the only plot type that needs y aes
+  if (type == "boxplot") {
+    plot <- ggplot2::ggplot(data = data, ggplot2::aes(x = var, y = var))
   } else {
-    stop(sprintf("`margin` = `%s` is not supported", margin), call. = FALSE)
+    plot <- ggplot2::ggplot(data = data, ggplot2::aes(x = var))
+  }
+
+  if (needsFlip(marg = marg, type = type)) {
+    plot <- plot +  ggplot2::coord_flip()
   }
   
-  # add custom parameters specific to each marginal plot
-  # merge the parameters in an order that ensures that
-  # marginal plot params overwrite general params
-  originParamName <- "origin"
-  if (utils::packageVersion("ggplot2") >= "2.1.0") {
-    originParamName <- "boundary"
-  }
-  if (margin == "x") {
-    extraParams <- append(xparams, extraParams)
-    extraParams <- extraParams[!duplicated(names(extraParams))]
-    if (type == "histogram") {
-      if (!is.null(pb$layout$panel_scales$x[[1]]$get_limits)) {
-        extraParams[[originParamName]] <- pb$layout$panel_scales$x[[1]]$get_limits()[1]
-      }
-    }
-  } else if (margin == "y") {
-    extraParams <- append(yparams, extraParams)
-    extraParams <- extraParams[!duplicated(names(extraParams))]
-    if (type == "histogram") {
-      if (!is.null(pb$layout$panel_scales$y[[1]]$get_limits)) {
-        extraParams[[originParamName]] <- pb$layout$panel_scales$y[[1]]$get_limits()[1]
-      }
-    }      
-  }
+  plot
+}
+
+alterParams <- function(marg, type, prmL, scatPbuilt) {
+
+  # merge the parameters in an order that ensures that marginal plot params 
+  # overwrite general params
+  prmL$exPrm <- append(prmL[[paste0(marg, "Prm")]], prmL$exPrm)
+  prmL$exPrm <- prmL$exPrm[!duplicated(names(prmL$exPrm))]
+
+  # pull out limit function and use if histogram
+  panScale <- getPanelScale(marg = marg, builtP = scatPbuilt)
+  lim_fun <- panScale$get_limits
+  if (type == "histogram" && !is.null(lim_fun)) {
+    prmL$exPrm[["boundary"]] <- lim_fun()[1]
+  } 
   
+  # we're using geom_line for the density plot so that there will be no bottom line...
+  # ...so we have to tell geom_line to use non-default stat (stat = density)
   if (type == "density") {
-    extraParams[['stat']] <- "density"
-    layer <- do.call(ggplot2::geom_line, extraParams)
-  } else if (type == "histogram") {
-    layer <- do.call(ggplot2::geom_histogram, extraParams)
-  } else if (type == "boxplot") {
-    layer <- do.call(ggplot2::geom_boxplot, extraParams)
-  } else {
-    stop(sprintf("`type` = `%s` is not supported", type), call. = FALSE)
+    prmL$exPrm[['stat']] <- "density"
   }
+
+  prmL$exPrm
+}
+
+getPanelScale <- function(marg, builtP) {
+  panScale <- ifelse(utils::packageVersion("ggplot2") > "2.2.1", "_", "$")
+  txtExpr <- paste0("builtP$layout$panel_scales", panScale, marg, "[[1]]")
+  panScaleExpr <- parse(text = txtExpr)
+  eval(expr = panScaleExpr)
+}
+
+getGeomFun <- function(type) {
+  switch (type,
+    "density" = ggplot2::geom_line,
+    "histogram" = ggplot2::geom_histogram,
+    "boxplot" = ggplot2::geom_boxplot
+  )
+}
+
+genMargePlot <- function(marg, type, scatPbuilt, prmL) {
+
+  data <- getVarDF(scatPbuilt = scatPbuilt, marg = marg)
   
-  plot + layer
-}  
+  noGeomPlot <- margPlotNoGeom(marg = marg, type = type, data = data)
+
+  finalParms <- alterParams(marg = marg, type = type, prmL = prmL, 
+                            scatPbuilt = scatPbuilt)
+  
+  geomFun <- getGeomFun(type = type)
+  
+  layer <- do.call(geomFun, finalParms)
+
+  noGeomPlot + layer
+}
 
 # Given a plot, copy some theme properties from the main plot so that they will
 # resemble each other more and look better beside each other, and also add
 # some common theme properties such as 0 margins and transparent text colour
-addMainTheme <- function(marginal, margin, p) {
+addMainTheme <- function(rawMarg, marg, scatPTheme) {
   try(
-    {marginal <- marginal + ggplot2::theme_void()},
+    {rawMarg <- rawMarg + ggplot2::theme_void()},
     silent = TRUE
   )
   
-  if (utils::packageVersion("ggplot2") > "1.0.1") {
     # copy theme from main plot
     themeProps <- c("text",
                     "axis.text","axis.text.x", "axis.text.y",
@@ -81,7 +142,7 @@ addMainTheme <- function(marginal, margin, p) {
                     "plot.title"
     )
     for(property in themeProps) {
-      marginal$theme[[property]] <- p$theme[[property]]
+      rawMarg$theme[[property]] <- scatPTheme[[property]]
     }
     
     # make text and line colours transparent
@@ -90,22 +151,25 @@ addMainTheme <- function(marginal, margin, p) {
                           "axis.ticks",
                           "axis.title", "axis.title.x", "axis.title.y",
                           "line")
+    
     for(property in transparentProps) {
-      if (!is.null(marginal$theme[[property]])) {
-        marginal$theme[[property]]$colour <- "transparent"
+      
+      if (!is.null(rawMarg$theme[[property]])) {
+        rawMarg$theme[[property]]$colour <- "transparent"
       } else if (property %in% c("axis.ticks", "line")) {
         themePair <- list()
         themePair[[property]] <- ggplot2::element_line(colour = "transparent")
-        marginal <- marginal + do.call(ggplot2::theme, themePair)
+        rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
       } else {
         themePair <- list()
         themePair[[property]] <- ggplot2::element_text(colour = "transparent")
-        marginal <- marginal + do.call(ggplot2::theme, themePair)
+        rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
       }
+      
     }
     
     # some more theme properties
-    marginal <- marginal +
+    rawMarg <- rawMarg +
       ggplot2::theme(
         panel.background = ggplot2::element_blank(),
         axis.ticks.length = grid::unit(0, "null")
@@ -113,98 +177,61 @@ addMainTheme <- function(marginal, margin, p) {
     
     # since the tick marks are removed on the marginal plot, we need to add
     # space for them so that the marginal plot will align with the main plot
-    if (is.null(p$theme$axis.ticks.length)) {
+    if (is.null(scatPTheme$axis.ticks.length)) {
       marginUnit <- "null"
       marginLength <- 0
     } else {
-      marginUnit <- attr(p$theme$axis.ticks.length, "unit")
-      marginLength <- as.numeric(p$theme$axis.ticks.length, "unit")
+      marginUnit <- attr(scatPTheme$axis.ticks.length, "unit")
+      marginLength <- as.numeric(scatPTheme$axis.ticks.length, "unit")
     }
-    if (margin == "x") {
-      marginal <- marginal + 
+    
+    if (marg == "x") {
+      rawMarg <- rawMarg + 
         ggplot2::theme(
           axis.title.x = ggplot2::element_blank(),
           axis.text.x = ggplot2::element_blank(),
           plot.margin = grid::unit(c(0, 0, 0, marginLength), marginUnit)
         )
     } else {
-      marginal <- marginal + 
+      rawMarg <- rawMarg + 
         ggplot2::theme(
           axis.title.y = ggplot2::element_blank(),
           axis.text.y = ggplot2::element_blank(),
           plot.margin = grid::unit(c(0, 0, marginLength, 0), marginUnit)
         )
     }
-  }
-  # if this is the old ggplot2 version, things are simpler
-  else {
-    marginal <- marginal +
-      ggplot2::theme(
-        text = ggplot2::element_text(size = p$theme$text$size, color = "transparent"),
-        line = ggplot2::element_blank(),
-        panel.background = ggplot2::element_blank(),
-        axis.text = ggplot2::element_text(color = "transparent")
-      )
-    
-    if (margin == "x") {
-      marginal <- marginal + 
-        ggplot2::theme(
-          axis.title.x = ggplot2::element_blank(),
-          axis.text.x = ggplot2::element_blank(),
-          plot.margin = grid::unit(c(0, 0, -1, 0), "lines")
-        )
-    } else {
-      marginal <- marginal + 
-        ggplot2::theme(
-          axis.title.y = ggplot2::element_blank(),
-          axis.text.y = ggplot2::element_blank(),
-          plot.margin = grid::unit(c(0, 0, 0, -1), "lines")
-        )
-    }
-  }
   
-  marginal
+  rawMarg
 }
 
 # Copy the scale transformation from the original plot (reverse/log/limits/etc)
 # We have to do a bit of a trick on the marginal plot that's flipped by
 # taking the original x/y scale and manually changing it to the other axis
-getScale <- function(margin, type, pb) {
-  if (margin == "x") {
-    if (type == "boxplot") {
-      scale <- pb$layout$panel_scales$x[[1]]
-      scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
-      scale$limits <- pb$layout$panel_scales$x[[1]]$get_limits()
-    } else {
-      scale <- pb$layout$panel_scales$x[[1]]
-    }
-  } else if (margin == "y") { 
-    if (type == "boxplot") {
-      scale <- pb$layout$panel_scales$y[[1]]
-      scale$limits <- pb$layout$panel_scales$y[[1]]$get_limits()
-    } else {
-      scale <- pb$layout$panel_scales$y[[1]]
-      scale$aesthetics <- gsub("^y", "x", scale$aesthetics)
-    }
+getScale <- function(marg, type, builtP) {
+  
+  scale <- getPanelScale(marg = marg, builtP = builtP)
+  
+  if (type == "boxplot") {
+    scale$limits <- scale$get_limits()
   }
+  
+  if (needsFlip(marg = marg, type = type)) {
+    scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
+  }
+
   scale
 }
 
 # Get the axis range of the x or y axis of the given ggplot build object
 # This is needed so that if the range of the plot is manually changed, the
 # marginal plots will use the same range
-getLimits <- function(pb, margin) {
-  if (margin == "x") {
-    scales <- pb$layout$panel_scales$x[[1]]
-  } else if (margin == "y") {
-    scales <- pb$layout$panel_scales$y[[1]]
-  } else {
-    stop("Invalid `margin` parameter (only x and y are supported)", call. = FALSE)
-  }
+getLimits <- function(marg, builtP) {
   
-  range <- scales$limits
+  scale <- getPanelScale(marg = marg, builtP = builtP)
+  
+  range <- scale$limits
   if (is.null(range)) {
-    range <- scales$range$range
+    range <- scale$range$range
   }
   range
 }
