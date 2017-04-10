@@ -1,6 +1,6 @@
 Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
-Version: 0.6.1
+Version: 0.6.1.9000
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
     )
@@ -20,11 +20,14 @@ Imports:
     miniUI (>= 0.1.1),
     shiny (>= 0.13.0),
     shinyjs (>= 0.5.2),
-    utils
+    utils,
+    grDevices
 Suggests:
     knitr (>= 1.7),
     rmarkdown,
-    rstudioapi (>= 0.5)
+    rstudioapi (>= 0.5),
+    testthat,
+    vdiffr
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 LazyData: true
