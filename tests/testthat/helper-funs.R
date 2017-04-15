@@ -33,4 +33,3 @@ expectDopp2 <- function(funName, ggplot2Version) {
   path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
   vdiffr::expect_doppelganger(funName, funList[[funName]](), path = path)
 }
-}
