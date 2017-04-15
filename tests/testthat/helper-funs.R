@@ -28,3 +28,10 @@ funList <-
         ggplot2::theme(plot.title = ggplot2::element_text(hjust = .2, colour = "red"))
     )
   )
+
+expectDopp2 <- function(funName, ggplot2Version) {
+  paste0("ggMarginal/ggplot2-", ggplot2Version) -> path
+  vdiffr::expect_doppelganger(funName, funList[[funName]](), path = path)
+  
+}
+}
