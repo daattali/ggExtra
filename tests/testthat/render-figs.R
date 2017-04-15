@@ -22,8 +22,8 @@ writeSvg <- function(p, file) {
 
 asSvgFile <- function(funName, ggplot2Version = "2.2.1", 
                       parentDir =  "tests/figs/ggMarginal") {
-  paste0(gsub(" ", "-", funName), ".svg") -> fileName
-  paste0("ggplot2-", ggplot2Version) -> ggDir
+  fileName <- paste0(gsub(" ", "-", funName), ".svg")
+  ggDir <- paste0("ggplot2-", ggplot2Version)
   file.path(parentDir, ggDir, fileName)
 }
 
