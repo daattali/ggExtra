@@ -157,11 +157,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Pull out the plot title if one exists and save it as a grob for later use.
   hasTitle <- (!is.null(pb$plot$labels$title))
   if (hasTitle) {
-    title <- grid::textGrob(
-      pb$plot$labels$title,
-      gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
-                      fontsize = 16, fontface = pb$plot$theme$plot.title$face)
-    )
+    title <- getTitleGrob(p = p)
     p$labels$title <- NULL
   }
   

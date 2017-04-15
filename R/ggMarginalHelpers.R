@@ -246,3 +246,9 @@ addRightMargPlot <- function(ggMargGrob, right, size) {
                                 z = Inf, clip = "on", name = "rightMargPlot")
   gt
 }
+
+getTitleGrob <- function(p) {
+  grobs <- ggplot2::ggplotGrob(p)$grobs
+  gind <- sapply(grobs, function(x) grepl(pattern = "plot.title", x$name))
+  grobs[gind][[1]]
+}
