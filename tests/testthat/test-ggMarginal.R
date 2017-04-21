@@ -1,7 +1,9 @@
 # Wrap up the ggMarginal visual tests in a function runMarginalTests so that it's easy to test under multiple versions of ggplot2
 runMarginalTests <- function(ggplot2Version) {
+  
+  context <- paste("ggMarginal under ggplot2 version", ggplot2Version)
 
-  context(ggplot2Version)
+  context(context)
   
   test_that("ggMarginal can produce basic marginal plots" , {
     sapply(c("basic density", "basic histogram", "basic boxplot", 
