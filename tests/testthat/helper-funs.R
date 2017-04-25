@@ -24,8 +24,9 @@ funList <-
     "legend and title" = function() ggMarginal(
       ggplot2::ggplot(data = mtcars) +
         ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = gear)) +
-        ggplot2::ggtitle("pretty sweet title") + 
-        ggplot2::theme(plot.title = ggplot2::element_text(hjust = .2, colour = "red"))
+        ggplot2::ggtitle("pretty sweet title", 
+                         subtitle = "not a bad subtitle either") + 
+        ggplot2::theme(plot.title = ggplot2::element_text(colour = "red"))
     )
   )
 
