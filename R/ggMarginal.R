@@ -213,32 +213,32 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   pGrob <- ggplot2::ggplotGrob(p)
   suppressMessages({
   if (margins == "both") {
-    ggxtra_tmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, 
-                                 size = size)
-    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right, 
-                                     size = size)
+    ggxtraTmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, 
+                                size = size)
+    ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right, 
+                                    size = size)
   } else if (margins == "x") {
-    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
-                                             grid::unit(c(0, 0.5, 0, 0), "lines"))
-    ggxtra_nottl <- addTopMargPlot(ggMargGrob = ggxtra_tmp, top = top, 
-                                   size = size)
+    ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                            grid::unit(c(0, 0.5, 0, 0), "lines"))
+    ggxtraNoTtl <- addTopMargPlot(ggMargGrob = ggxtraTmp, top = top, 
+                                  size = size)
   } else if (margins == "y") {
-    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
-                                             grid::unit(c(0.5, 0, 0, 0), "lines"))
-    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right,
+    ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                            grid::unit(c(0.5, 0, 0, 0), "lines"))
+    ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right,
                                      size = size)
   }
   })
   # Add the title to the resulting ggExtra plot
   if (hasTitle) {
-      titleH <- grid::grobHeight(title)
-      gt_t <- gtable::gtable_add_rows(x = ggxtra_nottl, heights = titleH, pos = 0)
-      max(gt_t$layout$r) -> maxR
+      titleH <- grid::grobHeight(titleGrobs)
+      gt_t <- gtable::gtable_add_rows(x = ggxtraNoTtl, heights = titleH, pos = 0)
+      maxR <- max(gt_t$layout$r)
       ggExtraPlot <- gtable::gtable_add_grob(x = gt_t, grobs = title, t = 1, b = 1,
                                   l = 1, r = maxR, z = Inf, clip = "on",
                                   name = "plotTitle")
   } else {
-     ggExtraPlot <- ggxtra_nottl
+     ggExtraPlot <- ggxtraNoTtl
   }
   
   # Aadd a class for S3 method dispatch for printing the ggExtra plot
