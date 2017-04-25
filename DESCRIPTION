@@ -27,7 +27,9 @@ Suggests:
     rmarkdown,
     rstudioapi (>= 0.5),
     testthat,
-    vdiffr
+    vdiffr,
+    fontquiver,
+    svglite
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 LazyData: true
