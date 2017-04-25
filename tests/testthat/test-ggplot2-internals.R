@@ -16,23 +16,23 @@ runggplot2InternalsTests <- function(ggplot2Version) {
     
     expect_true({
       gTest <- sapply(titleList, function(x) {
-        "grob" %in% class(ggExtra:::getTitleGrob(titleP(x)))
-        })
-      sum(gTest) == 2
+        length(ggExtra:::getTitleGrobs(titleP(x))) == 2
+      })
+      all(gTest)
     })
     expect_true({
       gTest <- sapply(titleList, function(x) {
         !is.null(ggplot2::ggplot_build(titleP(x))$plot$labels$title)
       })
-      sum(gTest) == 2
+      all(gTest)
     })
-
+    
     expect_true({
       is.null(ggplot2::ggplot_build(titleP(ggplot2::theme()))$plot$labels$title)
     })
     
   })
-
+  
 }
 
 runggplot2InternalsTests("2.2.1")

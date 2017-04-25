@@ -155,10 +155,11 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   pb <- ggplot2::ggplot_build(p)
   
   # Pull out the plot title if one exists and save it as a grob for later use.
+  # Note: You can't have a subtitle without a title in ggplot2
   hasTitle <- (!is.null(pb$plot$labels$title))
   if (hasTitle) {
-    title <- getTitleGrob(p = p)
-    p$labels$title <- NULL
+    titleGrobs <- getTitleGrobs(p = p)
+    p$labels$title <- p$labels$subtitle <- NULL
   }
   
   # Create the horizontal margin plot
@@ -229,14 +230,11 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
                                      size = size)
   }
   })
-  # Add the title to the resulting ggExtra plot
+  
+  # Add the title to the resulting ggExtra plot if it exists
   if (hasTitle) {
-      titleH <- grid::grobHeight(titleGrobs)
-      gt_t <- gtable::gtable_add_rows(x = ggxtraNoTtl, heights = titleH, pos = 0)
-      maxR <- max(gt_t$layout$r)
-      ggExtraPlot <- gtable::gtable_add_grob(x = gt_t, grobs = title, t = 1, b = 1,
-                                  l = 1, r = maxR, z = Inf, clip = "on",
-                                  name = "plotTitle")
+    ggExtraPlot <- addTitleGrobs(ggxtraNoTtl = ggxtraNoTtl, 
+                                 titleGrobs = titleGrobs)
   } else {
      ggExtraPlot <- ggxtraNoTtl
   }
