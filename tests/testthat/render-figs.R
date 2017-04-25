@@ -7,10 +7,10 @@ library(svglite)
 # Load functions that will be used to create the figures
 source("tests/testthat/helper-funs.R")
 
-dir <- "tests/figs/ggMarginal/ggplot2-2.2.1"
-if (!dir.exists(dir)) dir.create(dir, recursive = TRUE)
-
-# writeSvg saves a plot in an svg file (function taken virtually verbatim from vidffr). We need to use write_svg so that our baseline files (i.e., those in tests/figs) are rendered in exactly the same way that vdiffr when it runs the visual regression tests.
+# writeSvg saves a plot in an svg file (function taken virtually verbatim from 
+# vidffr). We need to use write_svg so that our baseline files (i.e., those 
+# in tests/figs) are rendered in exactly the same way that vdiffr when it runs 
+# the visual regression tests.
 writeSvg <- function(p, file) {
   aliases <- font_families("Liberation")
   aliases$symbol$symbol <- font_symbol("Symbola")
@@ -20,13 +20,24 @@ writeSvg <- function(p, file) {
   print(p)
 }
 
-asSvgFile <- function(funName, ggplot2Version = "2.2.1", 
-                      parentDir =  "tests/figs/ggMarginal") {
-  fileName <- paste0(gsub(" ", "-", funName), ".svg")
+getFigDir <- function(ggplot2Version) {
   ggDir <- paste0("ggplot2-", ggplot2Version)
-  file.path(parentDir, ggDir, fileName)
+  file.path("tests/figs/ggMarginal", ggDir)
 }
 
-# Render the figures. Note, you must have ggExtra version >= 0.6.1.9000 (commit 4b31c7cf or after) for these figures to render correctly.
+asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
+  
+  figDir <- getFigDir(ggplot2Version = ggplot2Version)
+  
+  if (!dir.exists(figDir)) {
+    dir.create(figDir, recursive = TRUE)
+  }
+  
+  fileName <- paste0(gsub(" ", "-", funName), ".svg")
+  file.path(figDir, fileName)
+}
+
+# Render the figures. Note, you must have ggExtra version >= 0.6.1.9000 
+# (commit 4b31c7cf or after) for these figures to render correctly.
 sapply(names(funList), function(x) 
   writeSvg(p = funList[[x]](), file = asSvgFile(funName = x)))
