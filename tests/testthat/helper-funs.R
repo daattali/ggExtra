@@ -3,8 +3,9 @@ basicScatP <- function() {
     ggplot2::geom_point(ggplot2::aes(x = wt, y = drat)) 
 }
 
-ggMarg2 <- function(type, ...) 
-  ggMarginal(p = basicScatP(), type = type, ...)
+ggMarg2 <- function(type, ...) {
+  ggMarginal(p = basicScatP(), type = type, ...) 
+}
 
 funList <- 
   list(
