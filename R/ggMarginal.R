@@ -79,7 +79,7 @@
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams, yparams) {
-
+  
   # figure out all the default parameters
   type <- match.arg(type)
   margins <- match.arg(margins)
@@ -108,7 +108,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   } else {
     yparams <- as.list(yparams)
   }
-
+  
   # Try to infer values for parameters that are missing from the input scatterplot
   if (missing(p)) {
     if (missing(data) || missing(x) || missing(y)) {
@@ -150,19 +150,17 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Remove all margin around plot so that it's easier to position the
   # density plots beside the main plot
   p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"))
-
+  
   # Decompose the original ggplot2 object to grab all sorts of information from it
   pb <- ggplot2::ggplot_build(p)
   
   # Pull out the plot title if one exists and save it as a grob for later use.
+  # Note: You can't have a subtitle without a title in ggplot2
   hasTitle <- (!is.null(pb$plot$labels$title))
   if (hasTitle) {
-    title <- grid::textGrob(
-      pb$plot$labels$title,
-      gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
-                      fontsize = 16, fontface = pb$plot$theme$plot.title$face)
-    )
+    titleGrobs <- getTitleGrobs(p = p)
     p$labels$title <- NULL
+    p$labels$subtitle <- NULL
   }
   
   # Create the horizontal margin plot
@@ -184,7 +182,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     top <- top +
       ggplot2::ylab(p$labels$y) +
       getScale(margin = "x", type = type, pb = pb)
-  
+    
     # Add the longest y axis label to the top plot and ensure it's at a y value
     # that is on the plot (this is why I build the top plot, to know the y values)
     pbTop <- ggplot2::ggplot_build(top)
@@ -217,32 +215,29 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   pGrob <- ggplot2::ggplotGrob(p)
   suppressMessages({
   if (margins == "both") {
-    ggxtra_tmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, 
-                                 size = size)
-    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right, 
-                                     size = size)
+    ggxtraTmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, 
+                                size = size)
+    ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right, 
+                                    size = size)
   } else if (margins == "x") {
-    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
-                                             grid::unit(c(0, 0.5, 0, 0), "lines"))
-    ggxtra_nottl <- addTopMargPlot(ggMargGrob = ggxtra_tmp, top = top, 
-                                   size = size)
+    ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                            grid::unit(c(0, 0.5, 0, 0), "lines"))
+    ggxtraNoTtl <- addTopMargPlot(ggMargGrob = ggxtraTmp, top = top, 
+                                  size = size)
   } else if (margins == "y") {
-    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
-                                             grid::unit(c(0.5, 0, 0, 0), "lines"))
-    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right,
+    ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                            grid::unit(c(0.5, 0, 0, 0), "lines"))
+    ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right,
                                      size = size)
   }
   })
-  # Add the title to the resulting ggExtra plot
+  
+  # Add the title to the resulting ggExtra plot if it exists
   if (hasTitle) {
-      titleH <- grid::grobHeight(title)
-      gt_t <- gtable::gtable_add_rows(x = ggxtra_nottl, heights = titleH, pos = 0)
-      max(gt_t$layout$r) -> maxR
-      ggExtraPlot <- gtable::gtable_add_grob(x = gt_t, grobs = title, t = 1, b = 1,
-                                  l = 1, r = maxR, z = Inf, clip = "on",
-                                  name = "plotTitle")
+    ggExtraPlot <- addTitleGrobs(ggxtraNoTtl = ggxtraNoTtl, 
+                                 titleGrobs = titleGrobs)
   } else {
-     ggExtraPlot <- ggxtra_nottl
+     ggExtraPlot <- ggxtraNoTtl
   }
   
   # Aadd a class for S3 method dispatch for printing the ggExtra plot
@@ -257,11 +252,12 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 #' plots.
 #' 
 #' @param x ggExtraPlot object.
+#' @param newpage Should a new page (i.e., an empty page) be drawn before the ggExtraPlot is drawn?
 #' @param ... ignored
 #' @seealso \code{\link{ggMarginal}}
 #' @export
 #' @keywords internal
-print.ggExtraPlot <- function(x, ...) {
-  grid::grid.newpage()
+print.ggExtraPlot <- function(x, newpage = grDevices::dev.interactive(), ...) {
+  if (newpage) grid::grid.newpage()
   grid::grid.draw(x)
 }

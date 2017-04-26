@@ -246,3 +246,49 @@ addRightMargPlot <- function(ggMargGrob, right, size) {
                                 z = Inf, clip = "on", name = "rightMargPlot")
   gt
 }
+
+# Pull out the title and subtitle grobs for a plot, after we have checked to 
+# make sure there is a title. Note: plot.title and plot.subtitle will actually
+# always exist (I believe) in recent versions of ggplot2, even if the user 
+# doesn't specify a title/subtitle. In these cases, the title/subtitle grobs
+# will be "zeroGrobs." However, a 'label' won't exist 
+# (i.e, !is.null(pb$plot$labels$title) will be true) when there is no title,
+# so it's not like we will be needlessly adding zeroGrobs to our plot (though
+# it wouldn't be a problem, even if we did add the zeroGrobs - it would just take 
+# a little longer.
+getTitleGrobs <- function(p) {
+  grobs <- ggplot2::ggplotGrob(p)$grobs
+  gindTitle <- sapply(grobs, function(x) {
+    grepl(pattern = "plot\\.title", x$name)
+  })
+  gindSub <- sapply(grobs, function(x) {
+    grepl(pattern = "plot\\.subtitle", x$name)
+  })
+  list(
+    titleG = grobs[gindTitle][[1]],
+    subTitleG = grobs[gindSub][[1]]
+  )
+}
+
+# Helper function for addTitleGrobs
+rbindGrobs <- function(topGrob, gtable, l, r) {
+  topH <- grid::grobHeight(topGrob)
+  gt_t <- gtable::gtable_add_rows(x = gtable, heights = topH, pos = 0)
+  gtable::gtable_add_grob(x = gt_t, grobs = topGrob, t = 1, b = 1,
+                          l = l, r = r, z = Inf)
+}
+
+# Add the title/subtitle grobs to the main ggextra plot, along with a little 
+# padding
+addTitleGrobs <- function(ggxtraNoTtl, titleGrobs) {
+  layout <- ggxtraNoTtl$layout
+  l <- layout[layout$name == "panel", "l"]
+  spacerGrob <- grid::rectGrob(height = grid::unit(.2, "cm"), 
+                               gp = grid::gpar(col = "white", fill = NULL))
+  plotWSpace <- rbindGrobs(topGrob = spacerGrob, gtable = ggxtraNoTtl,
+                           l = l, r = l)
+  plotWSubTitle <- rbindGrobs(topGrob = titleGrobs$subTitleG, 
+                              gtable = plotWSpace, l = l, r = l)
+  rbindGrobs(topGrob = titleGrobs$titleG,
+             gtable = plotWSubTitle, l = l, r = l)
+}
