@@ -79,7 +79,7 @@
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams, yparams) {
-
+  
   # figure out all the default parameters
   type <- match.arg(type)
   margins <- match.arg(margins)
@@ -108,7 +108,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   } else {
     yparams <- as.list(yparams)
   }
-
+  
   # Try to infer values for parameters that are missing from the input scatterplot
   if (missing(p)) {
     if (missing(data) || missing(x) || missing(y)) {
@@ -150,7 +150,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Remove all margin around plot so that it's easier to position the
   # density plots beside the main plot
   p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"))
-
+  
   # Decompose the original ggplot2 object to grab all sorts of information from it
   pb <- ggplot2::ggplot_build(p)
   
@@ -159,7 +159,8 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   hasTitle <- (!is.null(pb$plot$labels$title))
   if (hasTitle) {
     titleGrobs <- getTitleGrobs(p = p)
-    p$labels$title <- p$labels$subtitle <- NULL
+    p$labels$title <- NULL
+    p$labels$subtitle <- NULL
   }
   
   # Create the horizontal margin plot
@@ -181,7 +182,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     top <- top +
       ggplot2::ylab(p$labels$y) +
       getScale(margin = "x", type = type, pb = pb)
-  
+    
     # Add the longest y axis label to the top plot and ensure it's at a y value
     # that is on the plot (this is why I build the top plot, to know the y values)
     pbTop <- ggplot2::ggplot_build(top)
