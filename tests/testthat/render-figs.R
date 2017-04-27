@@ -37,7 +37,17 @@ asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
   file.path(figDir, fileName)
 }
 
-# Render the figures. Note, you must have ggExtra version >= 0.6.1.9000 
-# (commit 4b31c7cf or after) for these figures to render correctly.
-sapply(names(funList), function(x) 
-  writeSvg(p = funList[[x]](), file = asSvgFile(funName = x)))
+# Function to render all figures under different versions of ggplot2. Note, you
+# must have ggExtra version >= 0.6.1.9000 (commit 4b31c7cf or after) for these 
+# figures to render correctly.
+renderAllFigsApply <- function(ggplot2Versions) {
+  sapply(ggplot2Versions, function(ggplot2Version) {
+    withGGplot2Version(ggplot2Version, {
+      sapply(names(funList), function(x) 
+        writeSvg(p = funList[[x]](), 
+                 file = asSvgFile(funName = x, ggplot2Version = ggplot2Version)))
+    })
+  })
+}
+
+renderAllFigsApply(c("2.2.0", "2.2.1"))
