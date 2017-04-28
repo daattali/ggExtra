@@ -29,7 +29,9 @@ Suggests:
     testthat,
     vdiffr,
     fontquiver,
-    svglite
+    svglite,
+    withr,
+    devtools
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 LazyData: true

@@ -25,4 +25,13 @@ runMarginalTests <- function(ggplot2Version) {
 
 }
 
-runMarginalTests("2.2.1")
+# Function to run all visual regression tests across all ggplot2 versions
+runMarginalTestsApply <- function(ggplot2Versions) {
+  sapply(ggplot2Versions, function(ggplot2Version) {
+    withGGplot2Version(ggplot2Version, {
+      runMarginalTests(ggplot2Version)
+    })
+  })
+}
+
+runMarginalTestsApply(c("2.2.0", "2.2.1"))
