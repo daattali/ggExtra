@@ -196,7 +196,8 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 #' plots.
 #' 
 #' @param x ggExtraPlot object.
-#' @param newpage Should a new page (i.e., an empty page) be drawn before the ggExtraPlot is drawn?
+#' @param newpage Should a new page (i.e., an empty page) be drawn before the 
+#' ggExtraPlot is drawn?
 #' @param ... ignored
 #' @seealso \code{\link{ggMarginal}}
 #' @export
