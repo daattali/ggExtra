@@ -34,4 +34,4 @@ runMarginalTestsApply <- function(ggplot2Versions) {
   })
 }
 
-runMarginalTestsApply(c("2.2.0", "2.2.1"))
+runMarginalTestsApply(c("2.2.0", "2.2.1", "latest"))
