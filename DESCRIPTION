@@ -20,13 +20,20 @@ Imports:
     miniUI (>= 0.1.1),
     shiny (>= 0.13.0),
     shinyjs (>= 0.5.2),
-    utils
+    utils,
+    grDevices
 Suggests:
     knitr (>= 1.7),
     rmarkdown,
-    rstudioapi (>= 0.5)
+    rstudioapi (>= 0.5),
+    testthat,
+    vdiffr,
+    fontquiver,
+    svglite,
+    withr,
+    devtools
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1.9000
