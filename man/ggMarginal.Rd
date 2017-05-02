@@ -5,7 +5,8 @@
 \title{Add marginal density/histogram to ggplot2 scatterplots}
 \usage{
 ggMarginal(p, data, x, y, type = c("density", "histogram", "boxplot"),
-  margins = c("both", "x", "y"), size = 5, ..., xparams, yparams)
+  margins = c("both", "x", "y"), size = 5, ..., xparams = NULL,
+  yparams = NULL)
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is

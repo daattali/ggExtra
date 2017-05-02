@@ -4,10 +4,12 @@
 \alias{print.ggExtraPlot}
 \title{Print a ggExtraPlot object}
 \usage{
-\method{print}{ggExtraPlot}(x, ...)
+\method{print}{ggExtraPlot}(x, newpage = grDevices::dev.interactive(), ...)
 }
 \arguments{
 \item{x}{ggExtraPlot object.}
+
+\item{newpage}{Should a new page (i.e., an empty page) be drawn before the ggExtraPlot is drawn?}
 
 \item{...}{ignored}
 }
