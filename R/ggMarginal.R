@@ -79,7 +79,7 @@
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams = NULL, yparams = NULL) {
-  
+
   # Figure out all the default parameters.
   type <- match.arg(type)
   margins <- match.arg(margins)
@@ -99,9 +99,9 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Pull out the plot title if one exists and save it as a grob for later use.
   hasTitle <- (!is.null(scatPbuilt$plot$labels$title))
   if (hasTitle) {
-    titleGrobs <- getTitleGrobs(p = p)
-    p$labels$title <- NULL
-    p$labels$subtitle <- NULL
+    titleGrobs <- getTitleGrobs(p = scatP)
+    scatP$labels$title <- NULL
+    scatP$labels$subtitle <- NULL
   }
   
   # Create the horizontal margin plot
