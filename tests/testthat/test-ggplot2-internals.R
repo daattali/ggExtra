@@ -33,6 +33,27 @@ runggplot2InternalsTests <- function(ggplot2Version) {
     
   })
   
+  builtP <- ggplot2::ggplot_build(basicScatP())
+  
+  test_that("Built ggplot object has expected data structure", {
+    dataCols <- names(builtP$data[[1]])
+    expect_true("x" %in% dataCols && "y" %in% dataCols)
+    
+    plotLabNames <- names(builtP$plot$labels)
+    expect_true("x" %in% plotLabNames && "y" %in% plotLabNames)
+    
+    plotNames <- names(builtP$plot)
+    expect_true(all(c("theme", "labels", "coordinates") %in% plotNames))
+  })
+  
+  test_that("Accession and manipulation of panel_scales object is successful", {
+    scale <- getPanelScale(marg = "x", builtP = builtP)
+    expect_true(is.function(scale$get_limits))
+    expect_true(is.character(scale$aesthetics))
+    lims <- getLimits("x", builtP)
+    expect_true(length(lims) == 2) 
+  })
+  
 }
 
 # Function to run all tests against ggplot2 internals under all ggplot2 versions
