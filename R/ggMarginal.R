@@ -84,7 +84,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   type <- match.arg(type)
   margins <- match.arg(margins)
 
-  # Fill in param defaults and consolodate params into single list (prmL).
+  # Fill in param defaults and consolidate params into single list (prmL).
   prmL <- toParamList(exPrm = list(...), xPrm = xparams, yPrm = yparams)
   
   # Create one version of the scat plot (scatP), based on values of p, data, x, 
