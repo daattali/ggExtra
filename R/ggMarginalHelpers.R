@@ -122,8 +122,8 @@ getGeomFun <- function(type) {
   )
 }
 
-genMargePlot <- function(marg, type, scatPbuilt, prmL) {
-
+# Wrapper function to create a "raw" marginal plot
+genRawMargPlot <- function(marg, type, scatPbuilt, prmL) {
   data <- getVarDF(scatPbuilt = scatPbuilt, marg = marg)
   noGeomPlot <- margPlotNoGeom(marg = marg, type = type, data = data)
   finalParms <- alterParams(marg = marg, type = type, prmL = prmL, 
@@ -131,6 +131,15 @@ genMargePlot <- function(marg, type, scatPbuilt, prmL) {
   geomFun <- getGeomFun(type = type)
   layer <- do.call(geomFun, finalParms)
   noGeomPlot + layer
+}
+
+# Wrapper function to create a "final" marginal plot
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL) {
+  rawMarg <- genRawMargPlot(marg = marg, type = type, scatPbuilt = scatPbuilt, 
+                            prmL = prmL)
+  margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg, 
+                             scatPTheme = scatPbuilt$plot$theme)
+  margThemed + getScale(marg = marg, type = type, builtP = scatPbuilt)
 }
 
 # Given a plot, copy some theme properties from the main plot so that they will

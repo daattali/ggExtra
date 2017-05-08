@@ -104,7 +104,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     p$labels$subtitle <- NULL
   }
   
-  # Create the horizontal margin plot
+  # Create the margin plots by calling genFinalMargPlot
   # In order to ensure the marginal plots line up nicely with the main plot,
   # several things are done:
     # - Use the same label text size as the original 
@@ -113,29 +113,18 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     # - Remove all lines and colours from marginal plots
     # - Use the same axis range as the main plot
 
-  # ... If margins = x or margins = (x and y), then you have to create top plot
+  # If margins = x or 'both' (x and y), then you have to create top plot
   # Top plot = horizontal margin plot, which corresponds to x marg
   if (margins != "y") { 
-    rawTop <- genMargePlot(marg = "x", type = type, scatPbuilt = scatPbuilt, 
-                           prmL = prmL)
-    top <- addMainTheme(rawMarg = rawTop, marg = "x", 
-                        scatPTheme = scatPbuilt$plot$theme)
-    top <- top + ggplot2::ylab(scatPbuilt$plot$labels$y) + 
-      getScale(marg = "x", type = type, builtP = scatPbuilt)
-    
+    top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt, 
+                            prmL = prmL)
   }
   
-  # If margins = y or margins = (x and y), then you have to create right plot. 
+  # If margins = y or 'both' (x and y), then you have to create right plot. 
   # (right plot = vertical margin plot, which corresponds to y marg)
   if (margins != "x") { 
-    rawRight <- genMargePlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
-                             prmL = prmL)
-    
-    right <- addMainTheme(rawMarg = rawRight, marg = "y", 
-                          scatPTheme = scatPbuilt$plot$theme)
-    
-    right <- right + ggplot2::ylab(scatPbuilt$plot$labels$y) + 
-      getScale(marg = "y", type = type, builtP = scatPbuilt)
+    right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
+                              prmL = prmL)
   }
   
   # Now add the marginal plots to the scatter plot
