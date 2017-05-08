@@ -1,6 +1,8 @@
 toParamList <- function(exPrm, xPrm, yPrm) {
-
-  if (is.null(exPrm$col)) {
+  
+  if (is.null(exPrm[['colour']]) && 
+      is.null(exPrm[['color']]) && 
+      is.null(exPrm[['col']])) {
     exPrm[['colour']] <- "black"
   }
 
