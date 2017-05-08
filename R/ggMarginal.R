@@ -107,14 +107,11 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Create the horizontal margin plot
   # In order to ensure the marginal plots line up nicely with the main plot,
   # several things are done:
-  # - Use the same label text size as the original 
-  # - Remove the margins from all plots
-  # - In the marginal plot, use the longest axis label of the main plot as the
-  #   axis labels
-  # - Make all text in marginal plots transparent
-  # - Remove all lines and colours from marginal plots
-  # - Use the same axis titles as the main plot, to ensure the same space is taken
-  # - Use the same axis range as the main plot
+    # - Use the same label text size as the original 
+    # - Remove the margins from all plots
+    # - Make all text in marginal plots transparent
+    # - Remove all lines and colours from marginal plots
+    # - Use the same axis range as the main plot
 
   # ... If margins = x or margins = (x and y), then you have to create top plot
   # Top plot = horizontal margin plot, which corresponds to x marg
@@ -126,19 +123,6 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     top <- top + ggplot2::ylab(scatPbuilt$plot$labels$y) + 
       getScale(marg = "x", type = type, builtP = scatPbuilt)
     
-    # Add the longest y axis label to the top plot and ensure it's at a y value
-    # that is on the plot (this is why I build the top plot, to know the y values)
-    pbTop <- ggplot2::ggplot_build(top)
-    ylabels <- scatPbuilt$layout$panel_ranges[[1]]$y.labels
-    ylabel <- ylabels[which.max(nchar(ylabels))]
-    
-    if (type == "boxplot") {
-      breaks <- mean(getLimits(marg = "x", builtP = pbTop))
-      top <- top + ggplot2::scale_x_continuous(breaks = breaks, labels = ylabel)      
-    } else {
-      breaks <- mean(getLimits(marg = "y", builtP = pbTop))
-      top <- top + ggplot2::scale_y_continuous(breaks = breaks, labels = ylabel)      
-    }
   }
   
   # If margins = y or margins = (x and y), then you have to create right plot. 
