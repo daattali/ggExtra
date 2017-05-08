@@ -24,7 +24,8 @@ reconcileScatPlot <- function(p, data, x, y) {
       stop("`data`, `x`, and `y` must be provided if `p` is not provided",
            call. = FALSE)
     }
-    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + ggplot2::geom_point()
+    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + 
+      ggplot2::geom_point()
   }
   p
 }
@@ -124,16 +125,11 @@ getGeomFun <- function(type) {
 genMargePlot <- function(marg, type, scatPbuilt, prmL) {
 
   data <- getVarDF(scatPbuilt = scatPbuilt, marg = marg)
-  
   noGeomPlot <- margPlotNoGeom(marg = marg, type = type, data = data)
-
   finalParms <- alterParams(marg = marg, type = type, prmL = prmL, 
                             scatPbuilt = scatPbuilt)
-  
   geomFun <- getGeomFun(type = type)
-  
   layer <- do.call(geomFun, finalParms)
-
   noGeomPlot + layer
 }
 
