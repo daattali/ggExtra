@@ -97,10 +97,20 @@ alterParams <- function(marg, type, prmL, scatPbuilt) {
 }
 
 getPanelScale <- function(marg, builtP) {
-  panScale <- ifelse(utils::packageVersion("ggplot2") > "2.2.1", "_", "$")
-  txtExpr <- paste0("builtP$layout$panel_scales", panScale, marg, "[[1]]")
-  panScaleExpr <- parse(text = txtExpr)
-  eval(expr = panScaleExpr)
+  above_221 <- utils::packageVersion("ggplot2") > "2.2.1"
+  if (above_221) {
+    if (marg == "x") {
+      builtP$layout$panel_scales_x[[1]]
+    } else {
+      builtP$layout$panel_scales_y[[1]]
+    }
+  } else {
+    if (marg == "x") {
+      builtP$layout$panel_scales$x[[1]]
+    } else {
+      builtP$layout$panel_scales$y[[1]]
+    }
+  }
 }
 
 getGeomFun <- function(type) {
