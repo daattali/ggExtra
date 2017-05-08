@@ -78,8 +78,8 @@
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
-                       ..., xparams = NULL, yparams = NULL) {
-  
+                       ..., xparams = list(), yparams = list()) {
+
   # Figure out all the default parameters.
   type <- match.arg(type)
   margins <- match.arg(margins)
