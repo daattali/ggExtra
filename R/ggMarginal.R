@@ -100,8 +100,8 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   hasTitle <- (!is.null(scatPbuilt$plot$labels$title))
   if (hasTitle) {
     titleGrobs <- getTitleGrobs(p = p)
-    p$labels$title <- NULL
-    p$labels$subtitle <- NULL
+    scatP$labels$title <- NULL
+    scatP$labels$subtitle <- NULL
   }
   
   # Create the margin plots by calling genFinalMargPlot
