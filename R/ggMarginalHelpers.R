@@ -219,10 +219,6 @@ getScale <- function(marg, type, builtP) {
   
   scale <- getPanelScale(marg = marg, builtP = builtP)
   
-  if (type == "boxplot") {
-    scale$limits <- scale$get_limits()
-  }
-  
   if (needsFlip(marg = marg, type = type)) {
     scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
   }

@@ -3,6 +3,8 @@
 #### Refactoring of `ggMarginal`:
 - Several of the stages/tasks that `ggMaringal` completes to create the final plot are now broken into (more) helper functions
 - The accession of the `panel_scales` object is now dependent on the `ggplot2` version used (see `getPanelScale` function)
+- Removed code that set the marginal plot limits when the marginal plot was a boxplot
+
 # ggExtra 0.6.1
 
 - add arguments to `rotateTextX()`
