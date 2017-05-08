@@ -2,7 +2,8 @@ Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
 Version: 0.6.1.9000
 Authors@R: c(
-    person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
+    person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre")),
+    person("Christopher", "Baker", , "chriscrewbaker@gmail.com", role = "ctb")
     )
 Description: Collection of functions and layers to enhance 'ggplot2'. The main
     function is ggMarginal(), which can be used to add marginal
