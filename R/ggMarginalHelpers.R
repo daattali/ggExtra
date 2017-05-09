@@ -62,9 +62,10 @@ margPlotNoGeom <- function(marg, type, data) {
 
   # Build plot (sans geom). Note: Boxplot is the only plot type that needs y aes
   if (type == "boxplot") {
-    plot <- ggplot2::ggplot(data = data, ggplot2::aes(x = var, y = var))
+    plot <- ggplot2::ggplot(data = data, 
+                            ggplot2::aes_string(x = 'var', y = 'var'))
   } else {
-    plot <- ggplot2::ggplot(data = data, ggplot2::aes(x = var))
+    plot <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = 'var'))
   }
 
   if (needsFlip(marg = marg, type = type)) {
