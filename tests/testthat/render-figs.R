@@ -50,4 +50,4 @@ renderAllFigsApply <- function(ggplot2Versions) {
   })
 }
 
-renderAllFigsApply(c("2.2.0", "2.2.1"))
+renderAllFigsApply(c("2.2.0", "2.2.1", "latest"))

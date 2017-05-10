@@ -19,7 +19,8 @@ runMarginalTests <- function(ggplot2Version) {
   })
   
   test_that("Misc. issues are solved" , {
-    sapply(c("theme bw", "legend and title"), function(x) 
+    sapply(c("theme bw", "legend and title", 
+             "flipped coord where x is drat and y is wt"), function(x) 
                expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
 
@@ -34,4 +35,4 @@ runMarginalTestsApply <- function(ggplot2Versions) {
   })
 }
 
-runMarginalTestsApply(c("2.2.0", "2.2.1"))
+runMarginalTestsApply(c("2.2.0", "2.2.1", "latest"))
