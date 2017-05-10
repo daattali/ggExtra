@@ -31,4 +31,3 @@ df <- data.frame(x = paste("Letter", LETTERS, sep = "_"),
 p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
 p + rotateTextX()
 }
-

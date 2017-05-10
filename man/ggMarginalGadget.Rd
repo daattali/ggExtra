@@ -30,4 +30,3 @@ if (interactive()) {
   plot2 <- ggMarginalGadget(plot)
 }
 }
-

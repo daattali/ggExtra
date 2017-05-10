@@ -28,6 +28,9 @@ funList <-
         ggplot2::ggtitle("pretty sweet title", 
                          subtitle = "not a bad subtitle either") + 
         ggplot2::theme(plot.title = ggplot2::element_text(colour = "red"))
+    ),
+    "flipped coord where x is drat and y is wt" = function() ggMarginal(
+      p = basicScatP() + ggplot2::coord_flip(), type = "density"
     )
   )
 
@@ -52,7 +55,7 @@ withGGplot2Version <- function(ggplot2Version, code) {
     if (ggplot2Version == "latest") {
       devtools::install_github("tidyverse/ggplot2")
     } else {
-      devtools::install_version("ggplot2", ggplot2Version, 
+      devtools::install_version("ggplot2", ggplot2Version, quiet = TRUE,
                                 repos = "https://cran.rstudio.com/")
     }
     

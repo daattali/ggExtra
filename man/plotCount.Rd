@@ -38,4 +38,3 @@ df <- data.frame("vehicle" = c("bicycle", "car", "unicycle", "Boeing747"),
                  "NumWheels" = c(2, 4, 1, 16))
 plotCount(df) + removeGridX()
 }
-
