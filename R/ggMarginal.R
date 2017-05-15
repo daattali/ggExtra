@@ -96,7 +96,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # and y...also remove all margin around plot so that it's easier to position 
   # the density plots beside the main plot
   scatP <- reconcileScatPlot(p = p, data = data, x = x, y = y) + 
-    ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"))
+    ggplot2::theme(plot.margin = grid::unit(c(0, 0, .25, .25), "cm"))
  
   # Decompose scatP to grab all sorts of information from it
   scatPbuilt <- ggplot2::ggplot_build(scatP)
