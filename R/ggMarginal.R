@@ -131,28 +131,35 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
                               prmL = prmL)
   }
-  
+
   # Now add the marginal plots to the scatter plot
   pGrob <- ggplot2::ggplotGrob(scatP)
   
-  suppressMessages({
-    if (margins == "both") {
-      ggxtraTmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, size = size)
-      ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right, 
+  withCallingHandlers({
+    suppressMessages({
+      if (margins == "both") {
+        ggxtraTmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, size = size)
+        ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right, 
+                                        size = size)
+      } else if (margins == "x") {
+        ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                                grid::unit(c(0, 0.5, 0, 0), 
+                                                           "lines"))
+        ggxtraNoTtl <- addTopMargPlot(ggMargGrob = ggxtraTmp, top = top, 
                                       size = size)
-    } else if (margins == "x") {
-      ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
-                                              grid::unit(c(0, 0.5, 0, 0), "lines"))
-      ggxtraNoTtl <- addTopMargPlot(ggMargGrob = ggxtraTmp, top = top, 
-                                    size = size)
-    } else if (margins == "y") {
-      ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
-                                              grid::unit(c(0.5, 0, 0, 0), "lines"))
-      ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right,
-                                      size = size)
+      } else if (margins == "y") {
+        ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                                grid::unit(c(0.5, 0, 0, 0), 
+                                                           "lines"))
+        ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right,
+                                        size = size)
       }
+    })
+  }, warning = function(w) {
+    if (grepl("did you forget aes", w, ignore.case = TRUE)) 
+      invokeRestart("muffleWarning")
   })
-  
+
   # Add the title to the resulting ggExtra plot if it exists
   if (hasTitle) {
     ggExtraPlot <- addTitleGrobs(ggxtraNoTtl = ggxtraNoTtl, 
@@ -160,7 +167,6 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   } else {
     ggExtraPlot <- ggxtraNoTtl
   }
-  
   # Add a class for S3 method dispatch for printing the ggExtra plot
   class(ggExtraPlot) <- c("ggExtraPlot", class(ggExtraPlot))
   ggExtraPlot
