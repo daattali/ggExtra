@@ -103,4 +103,3 @@ ggMarginal(p4)
 \seealso{
 \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 }
-
