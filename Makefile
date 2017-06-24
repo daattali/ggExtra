@@ -16,7 +16,8 @@ README.md : vignettes/ggExtra.Rmd
 #	echo "Correcting image paths"
 #	sed -i -- 's,../inst,inst,g' vignettes/ggExtra.md
 	Rscript -e 'file <- gsub("\\.\\./inst", "inst", readLines("vignettes/ggExtra.md")); writeLines(file, "vignettes/ggExtra.md")'
-	Rscript -e 'file <- gsub("ggExtra_files", "vignettes/ggExtra_files", readLines("vignettes/ggExtra.md")); writeLines(file, "vignettes/ggExtra.md")'
+	Rscript -e 'dir.create("inst/vignette_files/", showWarnings = FALSE);file.copy("vignettes/ggExtra_files/", "inst/vignette_files/", overwrite = TRUE, recursive = TRUE)'
+	Rscript -e 'file <- gsub("ggExtra_files", "inst/vignette_files/ggExtra_files", readLines("vignettes/ggExtra.md")); writeLines(file, "vignettes/ggExtra.md")'
 #	echo "Copying output to README.md"
 #	cp vignettes/ggExtra.md README.md
 	Rscript -e 'file.copy("vignettes/ggExtra.md", "README.md", overwrite = TRUE)'
