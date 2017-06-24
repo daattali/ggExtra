@@ -1,32 +1,32 @@
 basicScatP <- function() {
   ggplot2::ggplot(data = mtcars) +
-    ggplot2::geom_point(ggplot2::aes(x = wt, y = drat)) 
+    ggplot2::geom_point(ggplot2::aes(x = wt, y = drat))
 }
 
 ggMarg2 <- function(type, ...) {
-  ggMarginal(p = basicScatP(), type = type, ...) 
+  ggMarginal(p = basicScatP(), type = type, ...)
 }
 
-funList <- 
+funList <-
   list(
     "basic density" = function() ggMarg2("density"),
     "basic histogram" = function() ggMarg2("histogram"),
     "basic boxplot" = function() ggMarg2("boxplot"),
-    "scatter plot from data" = function() ggMarginal(data = mtcars, x = "mpg", 
+    "scatter plot from data" = function() ggMarginal(data = mtcars, x = "mpg",
                                                      y = "disp", type = "density"),
     "only x margin" =  function() ggMarg2("density", margins = "x"),
     "smaller marginal plots" =  function() ggMarg2("density", size = 10),
     "both hists red col" =  function() ggMarg2("histogram", colour = "red"),
-    "top hist red col and fill" =  function() ggMarg2("histogram", xparams = 
-                                                        list(colour = "red", 
+    "top hist red col and fill" =  function() ggMarg2("histogram", xparams =
+                                                        list(colour = "red",
                                                              fill = "red")),
-    "theme bw" = function() ggMarginal(p = basicScatP() + ggplot2::theme_bw(), 
+    "theme bw" = function() ggMarginal(p = basicScatP() + ggplot2::theme_bw(),
                                        type = "density"),
     "legend and title" = function() ggMarginal(
       ggplot2::ggplot(data = mtcars) +
         ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = gear)) +
-        ggplot2::ggtitle("pretty sweet title", 
-                         subtitle = "not a bad subtitle either") + 
+        ggplot2::ggtitle("pretty sweet title",
+                         subtitle = "not a bad subtitle either") +
         ggplot2::theme(plot.title = ggplot2::element_text(colour = "red"))
     ),
     "flipped coord where x is drat and y is wt" = function() ggMarginal(
@@ -51,14 +51,15 @@ withGGplot2Version <- function(ggplot2Version, code) {
   on.exit(unlink(dir))
   withr::with_libpaths(dir, action = "prefix", {
     on.exit(unloadNamespace("ggplot2"))
-    
+
     if (ggplot2Version == "latest") {
       devtools::install_github("tidyverse/ggplot2")
     } else {
       devtools::install_version("ggplot2", ggplot2Version, quiet = TRUE,
-                                repos = "https://cran.rstudio.com/")
+                                repos = "https://cloud.r-project.org",
+                                type = "source")
     }
-    
+
     force(code)
   })
 }
