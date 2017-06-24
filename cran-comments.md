@@ -433,3 +433,21 @@ Thanks, on CRAN now.
 update to fix new ggplot2 version: no errors, warnings, or notes
 
 ### Reviewer comments
+
+Thanks, on CRAN now.
+
+# Version 0.7
+
+## Round 1
+
+### Test environments
+
+* Windows 7, R 3.3.3 (local)
+* ubuntu 12.04, R 3.3.3 (on travis-ci)
+* ubuntu 14.04, R 3.3.1 (on my DigitalOcean droplet)
+
+### Submission comments:
+
+2017-06-23
+
+no errors, warning, or notes. Though testing does take a long time (~10 minutes) because I'm testing with multiple ggplot2 versions to ensure backwards compatibility with all ggplot2 versions that have major changes all the time
