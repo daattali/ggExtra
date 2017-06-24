@@ -8,3 +8,7 @@ addons:
       - debian-sid
     packages:
       - libfreetype6
+
+env:
+  global:
+    - RunGgplot2Tests=yes
