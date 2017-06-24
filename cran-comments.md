@@ -450,4 +450,13 @@ Thanks, on CRAN now.
 
 2017-06-23
 
-no errors, warning, or notes. Though testing does take a long time (~10 minutes) because I'm testing with multiple ggplot2 versions to ensure backwards compatibility with all ggplot2 versions that have major changes all the time
+no errors, warning - the only NOTEs are about the examples taking >10 seconds
+
+### Reviewer comments
+
+Uwe Ligges
+
+Not a false positive: Please reduce the runtime for each Rd file to less than 5 sec for the next time to resubmit. As it only exceeds the 10 sec threshhold of the machine by a small amount, I make an exception this time.
+
+On CRAN now.
+
