@@ -12,6 +12,7 @@ funList <-
     "basic density" = function() ggMarg2("density"),
     "basic histogram" = function() ggMarg2("histogram"),
     "basic boxplot" = function() ggMarg2("boxplot"),
+    "basic violin plot" = function() ggMarg2("violin"),
     "scatter plot from data" = function() ggMarginal(data = mtcars, x = "mpg",
                                                      y = "disp", type = "density"),
     "only x margin" =  function() ggMarg2("density", margins = "x"),

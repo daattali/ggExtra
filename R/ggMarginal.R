@@ -14,7 +14,7 @@
 #' provided and the \code{x} aesthetic is set in the main plot.
 #' @param y The name of the variable along the y axis. Optional if \code{p} is
 #' provided and the \code{y} aesthetic is set in the main plot.
-#' @param type What type of marginal plot to show. One of: [density, histogram, boxplot].
+#' @param type What type of marginal plot to show. One of: [density, histogram, boxplot, violin].
 #' @param margins Along which margins to show the plots. One of: [both, x, y].
 #' @param size Integer describing the relative size of the marginal plots
 #' compared to the main plot. A size of 5 means that the main plot is 5x wider
@@ -54,6 +54,9 @@
 #' ggMarginal(p2, colour = "red")
 #' ggMarginal(p2, colour = "red", xparams = list(colour = "blue", size = 3))
 #' ggMarginal(p2, type = "histogram", bins = 10)
+#' 
+#' # Using violin plot
+#' ggMarginal(p2, type = "violin")
 #' 
 #' # specifying the data directly instead of providing a plot       
 #' ggMarginal(data = df, x = "x", y = "y")
