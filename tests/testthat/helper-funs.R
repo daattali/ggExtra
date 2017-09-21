@@ -63,3 +63,18 @@ withGGplot2Version <- function(ggplot2Version, code) {
     force(code)
   })
 }
+
+## By default, do not run the tests (which also means do not run on CRAN)
+shouldTest <- function() {
+  if (
+    ## Use the Travis / GitHub integrations as we set this environment variable 
+    ## to "yes" in .travis.yml
+    Sys.getenv("RunGgplot2Tests") == "yes" || 
+    ## Also run the tests when building on Dean or Chris' machine
+    Sys.info()["user"] %in% c("cbaker", "Dean")
+  ) {
+    TRUE
+  } else {
+    FALSE
+  }
+}
