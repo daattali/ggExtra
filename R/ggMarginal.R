@@ -87,11 +87,6 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Fill in param defaults and consolidate params into single list (prmL).
   prmL <- toParamList(exPrm = list(...), xPrm = xparams, yPrm = yparams)
   
-  # After ggplot2 v1.0.1, layers became strict about parameters
-  if (type == "density") {
-    prmL[['exPrm']][['fill']] <- NULL
-  }
-  
   # Create one version of the scat plot (scatP), based on values of p, data, x, 
   # and y...also remove all margin around plot so that it's easier to position 
   # the density plots beside the main plot

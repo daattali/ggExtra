@@ -117,7 +117,7 @@ getPanelScale <- function(marg, builtP) {
 
 getGeomFun <- function(type) {
   switch (type,
-    "density" = ggplot2::geom_line,
+    "density" = ggplot2::geom_density,
     "histogram" = ggplot2::geom_histogram,
     "boxplot" = ggplot2::geom_boxplot
   )
@@ -131,7 +131,23 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL) {
                             scatPbuilt = scatPbuilt)
   geomFun <- getGeomFun(type = type)
   layer <- do.call(geomFun, finalParms)
-  noGeomPlot + layer
+  
+  # get rid of density outline along left, bottom, and right sides of 
+  # distribution
+  if (type == "density") {
+    plot <- noGeomPlot + layer + 
+      ggplot2::geom_hline(yintercept = 0, colour = "white") +
+      ggplot2::geom_vline(xintercept = min(data$var), colour = "white") +
+      ggplot2::geom_vline(xintercept = max(data$var), colour = "white") 
+  } else {
+    plot <- noGeomPlot + layer 
+  }
+  
+  if (needsFlip(marg = marg, type = type)) {
+    plot <- plot + ggplot2::coord_flip()
+  }
+  
+  plot
 }
 
 # Wrapper function to create a "final" marginal plot
