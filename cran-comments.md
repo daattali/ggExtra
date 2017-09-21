@@ -433,3 +433,30 @@ Thanks, on CRAN now.
 update to fix new ggplot2 version: no errors, warnings, or notes
 
 ### Reviewer comments
+
+Thanks, on CRAN now.
+
+# Version 0.7
+
+## Round 1
+
+### Test environments
+
+* Windows 7, R 3.3.3 (local)
+* ubuntu 12.04, R 3.3.3 (on travis-ci)
+* ubuntu 14.04, R 3.3.1 (on my DigitalOcean droplet)
+
+### Submission comments:
+
+2017-06-23
+
+no errors, warning - the only NOTEs are about the examples taking >10 seconds
+
+### Reviewer comments
+
+Uwe Ligges
+
+Not a false positive: Please reduce the runtime for each Rd file to less than 5 sec for the next time to resubmit. As it only exceeds the 10 sec threshhold of the machine by a small amount, I make an exception this time.
+
+On CRAN now.
+

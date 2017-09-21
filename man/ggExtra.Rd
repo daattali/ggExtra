@@ -14,4 +14,3 @@ marginal histograms/boxplots/density plots to ggplot2 scatterplots
 View a \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{demo Shiny app}
 or see the full \href{https://github.com/daattali/ggExtra}{README} on GitHub.
 }
-

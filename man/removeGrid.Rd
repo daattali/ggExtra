@@ -2,6 +2,7 @@
 % Please edit documentation in R/removeGrid.R
 \name{removeGrid}
 \alias{removeGrid}
+\alias{removeGrid}
 \alias{removeGridX}
 \alias{removeGridY}
 \title{Remove grid lines from ggplot2}
@@ -41,4 +42,3 @@ p + removeGrid()
 p + removeGrid(y = FALSE)
 p + removeGridX()
 }
-

@@ -78,204 +78,96 @@
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
-                       ..., xparams, yparams) {
+                       ..., xparams = list(), yparams = list()) {
 
-  # figure out all the default parameters
+  # Figure out all the default parameters.
   type <- match.arg(type)
   margins <- match.arg(margins)
-  extraParams <- list(...)
-  if (is.null(extraParams[['colour']]) &&
-      is.null(extraParams[['color']]) &&
-      is.null(extraParams[['col']])) {
-    extraParams[['colour']] <- "black"
-  }
-  if (is.null(extraParams[['fill']])) {
-    extraParams[['fill']] <- "grey"
-  }
+
+  # Fill in param defaults and consolidate params into single list (prmL).
+  prmL <- toParamList(exPrm = list(...), xPrm = xparams, yPrm = yparams)
   
-  # after ggplot2 v1.0.1, layers became strict about parameters
+  # After ggplot2 v1.0.1, layers became strict about parameters
   if (type == "density") {
-    extraParams[['fill']] <- NULL
+    prmL[['exPrm']][['fill']] <- NULL
   }
   
-  if (missing(xparams)) {
-    xparams <- list()
-  } else {
-    xparams <- as.list(xparams)
-  }
-  if (missing(yparams)) {
-    yparams <- list()
-  } else {
-    yparams <- as.list(yparams)
-  }
-
-  # Try to infer values for parameters that are missing from the input scatterplot
-  if (missing(p)) {
-    if (missing(data) || missing(x) || missing(y)) {
-      stop("`data`, `x`, and `y` must be provided if `p` is not provided",
-           call. = FALSE)
-    }
-    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + ggplot2::geom_point()
-    x <- as.symbol(x)
-    y <- as.symbol(y)
-  } else {
-    if (missing(data)) {
-      if (methods::is(p$data, "waiver")) {
-        stop("`data` must be provided if it is not part of the main ggplot object",
-             call. = FALSE)
-      }
-      data <- p$data
-    }
-    if (length(p$mapping) == 0) p$mapping <- p$layers[[1]]$mapping
-    if (margins != "y" && missing(x)) {
-      if (is.null(p$mapping$x)) {
-        stop("`x` must be provided if it is not an aesthetic of the main ggplot object",
-             call. = FALSE)
-      }
-      x <- p$mapping$x
-    }
-    if (margins != "x" && missing(y)) {
-      if (is.null(p$mapping$y)) {
-        stop("`y` must be provided if it is not an aesthetic of the main ggplot object",
-             call. = FALSE)
-      }
-      y <- p$mapping$y
-    }
-  }
-  
-  # rename the x and y variables just so it's easier to debug
-  if (!missing(x)) xvar <- x
-  if (!missing(y)) yvar <- y
-  
-  # Remove all margin around plot so that it's easier to position the
-  # density plots beside the main plot
-  p <- p + ggplot2::theme(plot.margin = grid::unit(c(0, 0, 0, 0), "null"))
-
-  # Decompose the original ggplot2 object to grab all sorts of information from it
-  pb <- ggplot2::ggplot_build(p)
-  
+  # Create one version of the scat plot (scatP), based on values of p, data, x, 
+  # and y...also remove all margin around plot so that it's easier to position 
+  # the density plots beside the main plot
+  scatP <- reconcileScatPlot(p = p, data = data, x = x, y = y) + 
+    ggplot2::theme(plot.margin = grid::unit(c(0, 0, .25, .25), "cm"))
+ 
+  # Decompose scatP to grab all sorts of information from it
+  scatPbuilt <- ggplot2::ggplot_build(scatP)
+ 
   # Pull out the plot title if one exists and save it as a grob for later use.
-  hasTitle <- (!is.null(pb$plot$labels$title))
+  hasTitle <- (!is.null(scatPbuilt$plot$labels$title))
   if (hasTitle) {
-    title <- grid::textGrob(
-      pb$plot$labels$title,
-      gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
-                      fontsize = 16, fontface = pb$plot$theme$plot.title$face)
-    )
-    p$labels$title <- NULL
+    titleGrobs <- getTitleGrobs(p = p)
+    scatP$labels$title <- NULL
+    scatP$labels$subtitle <- NULL
   }
   
-  # Create the horizontal margin plot
+  # Create the margin plots by calling genFinalMargPlot
   # In order to ensure the marginal plots line up nicely with the main plot,
   # several things are done:
-  # - Use the same label text size as the original 
-  # - Remove the margins from all plots
-  # - In the marginal plot, use the longest axis label of the main plot as the
-  #   axis labels
-  # - Make all text in marginal plots transparent
-  # - Remove all lines and colours from marginal plots
-  # - Use the same axis titles as the main plot, to ensure the same space is taken
-  # - Use the same axis range as the main plot
-  if (margins != "y") {
-    top <- marginPlot("x")
-    top <- addMainTheme(top, "x")
-    top <- top +
-      ggplot2::ylab(p$labels$y) +
-      getScale("x")
-  
-    # Add the longest y axis label to the top plot and ensure it's at a y value
-    # that is on the plot (this is why I build the top plot, to know the y values)
-    pbTop <- ggplot2::ggplot_build(top)
-    ylabels <- pb$layout$panel_ranges[[1]]$y.labels
-    ylabel <- ylabels[which.max(nchar(ylabels))]      
-    if (type == "boxplot") {
-      top <-
-        top +
-        ggplot2::scale_x_continuous(breaks = mean(getLimits(pbTop, "x")),
-                                    labels = ylabel)      
-    } else {
-      top <-
-        top +
-        ggplot2::scale_y_continuous(breaks = mean(getLimits(pbTop, "y")),
-                                    labels = ylabel)      
-    }
-  }
+    # - Use the same label text size as the original 
+    # - Remove the margins from all plots
+    # - Make all text in marginal plots transparent
+    # - Remove all lines and colours from marginal plots
+    # - Use the same axis range as the main plot
 
-  # Create the vertical margin plot
-  if (margins != "x") {
-    right <- marginPlot("y")
-    right <- addMainTheme(right, "y")
-    right <- right +
-      ggplot2::ylab(p$labels$x) +
-      getScale("y")
-  }
-
-  # Build a 2x2 grid for the scatterplot with marginal plots,
-  # with an extra row for the title
-  ncol <- 2
-  nrow <- 3
-  titleSize <- 1
-  rowSize <- 1
-  colSize <- 1
-
-  # Build the grid of grobs
-  empty <- grid::grid.rect(gp = grid::gpar(col = "transparent"), draw = FALSE)
-  if (!is.null(pb$plot$labels$title)) {
-    title <- grid::textGrob(
-      pb$plot$labels$title,
-      gp = grid::gpar(col = pb$plot$theme$plot.title$colour,
-                      fontsize = 16)
-    )
-    p$labels$title <- NULL
-  } else {
-    title <- empty
-    titleSize <- 0
+  # If margins = x or 'both' (x and y), then you have to create top plot
+  # Top plot = horizontal margin plot, which corresponds to x marg
+  if (margins != "y") { 
+    top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt, 
+                            prmL = prmL)
   }
   
-  if (margins == "both") {
-    ggxtra_tmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, 
-                                 size = size)
-    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right, 
-                                     size = size)
-  } else if (margins == "x") {
-    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
-                                             grid::unit(c(0, 0.5, 0, 0), "lines"))
-    ggxtra_nottl <- addTopMargPlot(ggMargGrob = ggxtra_tmp, top = top, 
-                                   size = size)
-  } else if (margins == "y") {
-    ggxtra_tmp <- gtable::gtable_add_padding(x = pGrob, 
-                                             grid::unit(c(0.5, 0, 0, 0), "lines"))
-    ggxtra_nottl <- addRightMargPlot(ggMargGrob = ggxtra_tmp, right = right,
-                                     size = size)
+  # If margins = y or 'both' (x and y), then you have to create right plot. 
+  # (right plot = vertical margin plot, which corresponds to y marg)
+  if (margins != "x") { 
+    right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
+                              prmL = prmL)
   }
+
+  # Now add the marginal plots to the scatter plot
+  pGrob <- ggplot2::ggplotGrob(scatP)
+  
+  withCallingHandlers({
+    suppressMessages({
+      if (margins == "both") {
+        ggxtraTmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, size = size)
+        ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right, 
+                                        size = size)
+      } else if (margins == "x") {
+        ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                                grid::unit(c(0, 0.5, 0, 0), 
+                                                           "lines"))
+        ggxtraNoTtl <- addTopMargPlot(ggMargGrob = ggxtraTmp, top = top, 
+                                      size = size)
+      } else if (margins == "y") {
+        ggxtraTmp <- gtable::gtable_add_padding(x = pGrob, 
+                                                grid::unit(c(0.5, 0, 0, 0), 
+                                                           "lines"))
+        ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right,
+                                        size = size)
+      }
+    })
+  }, warning = function(w) {
+    if (grepl("did you forget aes", w, ignore.case = TRUE)) 
+      invokeRestart("muffleWarning")
   })
-  # Add the title to the resulting ggExtra plot
-  if (hasTitle) {
-      titleH <- grid::grobHeight(title)
-      gt_t <- gtable::gtable_add_rows(x = ggxtra_nottl, heights = titleH, pos = 0)
-      max(gt_t$layout$r) -> maxR
-      ggExtraPlot <- gtable::gtable_add_grob(x = gt_t, grobs = title, t = 1, b = 1,
-                                  l = 1, r = maxR, z = Inf, clip = "on",
-                                  name = "plotTitle")
-  } else {
-      c(titleSize, rowSize, size) -> z
-  }
-  # Determine all the arguments to build the grid (dimensions, plots, plot sizes)
-  gridArgs <- c(plots, ncol = ncol, nrow = nrow)
-  gridArgs <- c(gridArgs,
-                widths = list(grid::unit(c(size, colSize), "null")),
-                heights = list(grid::unit(z, "null"))
-              )
 
-  # NOTE: I had to use arrangeGrob instead of grid.arrange because the latter does
-  # not allow saving the object, it only works as a side-effect and returns NULL.
-  # There were still problems with arrangeGrob - if gridExtra isn't loaded, I
-  # would get "No layers in plot" error. I noticed that calling grid::grid.draw 
-  # fixes this error. In order to allow the user to save the object and print it
-  # later, I define an S3 print methods for this object that will call grid.draw
-  # More info: http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object
-  
-  # Aadd a class for S3 method dispatch for printing the ggExtra plot
+  # Add the title to the resulting ggExtra plot if it exists
+  if (hasTitle) {
+    ggExtraPlot <- addTitleGrobs(ggxtraNoTtl = ggxtraNoTtl, 
+                                 titleGrobs = titleGrobs)
+  } else {
+    ggExtraPlot <- ggxtraNoTtl
+  }
+  # Add a class for S3 method dispatch for printing the ggExtra plot
   class(ggExtraPlot) <- c("ggExtraPlot", class(ggExtraPlot))
   ggExtraPlot
 }
@@ -287,11 +179,13 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 #' plots.
 #' 
 #' @param x ggExtraPlot object.
+#' @param newpage Should a new page (i.e., an empty page) be drawn before the 
+#' ggExtraPlot is drawn?
 #' @param ... ignored
 #' @seealso \code{\link{ggMarginal}}
 #' @export
 #' @keywords internal
-print.ggExtraPlot <- function(x, ...) {
-  grid::grid.newpage()
+print.ggExtraPlot <- function(x, newpage = grDevices::dev.interactive(), ...) {
+  if (newpage) grid::grid.newpage()
   grid::grid.draw(x)
 }

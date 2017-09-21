@@ -1,8 +1,9 @@
 Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
-Version: 0.6.1
+Version: 0.7
 Authors@R: c(
-    person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
+    person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre")),
+    person("Christopher", "Baker", , "chriscrewbaker@gmail.com", role = "ctb")
     )
 Description: Collection of functions and layers to enhance 'ggplot2'. The main
     function is ggMarginal(), which can be used to add marginal
@@ -16,17 +17,23 @@ Imports:
     ggplot2 (>= 2.2.0),
     grid (>= 3.1.3),
     gtable (>= 0.2.0),
-    methods,
     miniUI (>= 0.1.1),
     shiny (>= 0.13.0),
     shinyjs (>= 0.5.2),
-    utils
+    utils,
+    grDevices
 Suggests:
     knitr (>= 1.7),
     rmarkdown,
-    rstudioapi (>= 0.5)
+    rstudioapi (>= 0.5),
+    testthat,
+    vdiffr,
+    fontquiver,
+    svglite,
+    withr,
+    devtools
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1.9000

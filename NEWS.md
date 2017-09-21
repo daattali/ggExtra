@@ -1,5 +1,18 @@
-# ggExtra 0.6.1
+# ggExtra 0.7
 
+2017-06-21
+
+### Refactoring of `ggMarginal()`:
+
+- Several of the stages that `ggMarginal` completes to create the final plot are now broken into (more) helper functions
+- Code that uses internal ggplot2 structure works on different versions of ggplot2
+- Removed code that added y labels to marginal plot to deal with long y labels as well as spacing issues (https://github.com/daattali/ggExtra/blob/6c4923c2ad2e700226cdcdc9666de513d6ae3a41/R/ggMarginal.R#L186-L201)
+- Removed code that set the marginal plot limits when the marginal plot was a boxplot (https://github.com/daattali/ggExtra/blob/6c4923c2ad2e700226cdcdc9666de513d6ae3a41/R/ggMarginalHelpers.R#L177)
+
+### Other features
+
+- add visual tests
+- add tests over different versions of ggplot2, to ensure backwards compatibility
 - add arguments to `rotateTextX()`
 
 # ggExtra 0.6

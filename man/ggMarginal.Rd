@@ -5,7 +5,8 @@
 \title{Add marginal density/histogram to ggplot2 scatterplots}
 \usage{
 ggMarginal(p, data, x, y, type = c("density", "histogram", "boxplot"),
-  margins = c("both", "x", "y"), size = 5, ..., xparams, yparams)
+  margins = c("both", "x", "y"), size = 5, ..., xparams = list(),
+  yparams = list())
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
@@ -102,4 +103,3 @@ ggMarginal(p4)
 \seealso{
 \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 }
-
