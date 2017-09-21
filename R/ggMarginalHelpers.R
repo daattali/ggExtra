@@ -92,18 +92,6 @@ margPlotNoGeom <- function(data, type, scatPbuilt, marginMapping) {
 }
 
 alterParams <- function(marg, type, prmL, scatPbuilt, marginMapping) {
-
-  # merge the parameters in an order that ensures that marginal plot params 
-  # overwrite general params
-  prmL$exPrm <- append(prmL[[paste0(marg, "Prm")]], prmL$exPrm)
-  prmL$exPrm <- prmL$exPrm[!duplicated(names(prmL$exPrm))]
-
-  # pull out limit function and use if histogram
-  panScale <- getPanelScale(marg = marg, builtP = scatPbuilt)
-  lim_fun <- panScale$get_limits
-  if (type == "histogram" && !is.null(lim_fun)) {
-    prmL$exPrm[["boundary"]] <- lim_fun()[1]
-  }
   
   if (
     is.null(prmL$exPrm[['colour']]) &&
@@ -116,6 +104,18 @@ alterParams <- function(marg, type, prmL, scatPbuilt, marginMapping) {
   
   if (is.null(prmL$exPrm[["alpha"]])) {
     prmL$exPrm[["alpha"]] <- .5
+  }
+
+  # merge the parameters in an order that ensures that marginal plot params 
+  # overwrite general params
+  prmL$exPrm <- append(prmL[[paste0(marg, "Prm")]], prmL$exPrm)
+  prmL$exPrm <- prmL$exPrm[!duplicated(names(prmL$exPrm))]
+
+  # pull out limit function and use if histogram
+  panScale <- getPanelScale(marg = marg, builtP = scatPbuilt)
+  lim_fun <- panScale$get_limits
+  if (type == "histogram" && !is.null(lim_fun)) {
+    prmL$exPrm[["boundary"]] <- lim_fun()[1]
   }
   
   prmL$exPrm
