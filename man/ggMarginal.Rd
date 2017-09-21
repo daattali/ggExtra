@@ -6,7 +6,8 @@
 \usage{
 ggMarginal(p, data, x, y, type = c("density", "histogram", "boxplot",
   "violin"), margins = c("both", "x", "y"), size = 5, ...,
-  xparams = list(), yparams = list())
+  xparams = list(), yparams = list(), marginMapping = c(fill = FALSE,
+  colour = FALSE))
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
@@ -40,6 +41,8 @@ the x axis.}
 
 \item{yparams}{List of extra parameters to use only for the marginal plot along
 the y axis.}
+
+\item{marginMapping}{TODO}
 }
 \value{
 An object of class \code{ggExtraPlot}. This object can be printed to show the

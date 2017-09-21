@@ -27,6 +27,8 @@
 #' the x axis.
 #' @param yparams List of extra parameters to use only for the marginal plot along
 #' the y axis.
+#' @param marginGroupColour TODO
+#' @param marginGroupFill TODO
 #' @return An object of class \code{ggExtraPlot}. This object can be printed to show the
 #' plots or saved using any of the typical image-saving functions (for example, using
 #' \code{png()} or \code{pdf()}).
@@ -81,7 +83,8 @@
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot", "violin"),
                        margins = c("both", "x", "y"), size = 5,
-                       ..., xparams = list(), yparams = list()) {
+                       ..., xparams = list(), yparams = list(),
+                       marginGroupColour = FALSE, marginGroupFill = FALSE) {
 
   # Figure out all the default parameters.
   type <- match.arg(type)
@@ -118,16 +121,18 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 
   # If margins = x or 'both' (x and y), then you have to create top plot
   # Top plot = horizontal margin plot, which corresponds to x marg
-  if (margins != "y") {
-    top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt,
-                            prmL = prmL)
+  if (margins != "y") { 
+    top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt, 
+                            prmL = prmL, marginGroupColour = marginGroupColour, 
+                            marginGroupFill = marginGroupFill)
   }
 
   # If margins = y or 'both' (x and y), then you have to create right plot.
   # (right plot = vertical margin plot, which corresponds to y marg)
-  if (margins != "x") {
-    right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt,
-                              prmL = prmL)
+  if (margins != "x") { 
+    right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
+                              prmL = prmL, marginGroupColour = marginGroupColour, 
+                              marginGroupFill = marginGroupFill)
   }
 
   # Now add the marginal plots to the scatter plot
