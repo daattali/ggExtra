@@ -158,16 +158,18 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, marginMapping) {
                             marginMapping = marginMapping)
   geomFun <- getGeomFun(type = type)
   layer <- do.call(geomFun, finalParms)
+  plot <- noGeomPlot + layer 
   
   # get rid of density outline along left, bottom, and right sides of 
   # distribution
   if (type == "density") {
-    plot <- noGeomPlot + layer + 
-      ggplot2::geom_hline(yintercept = 0, colour = "white") +
-      ggplot2::geom_vline(xintercept = min(data$var), colour = "white") +
-      ggplot2::geom_vline(xintercept = max(data$var), colour = "white") 
-  } else {
-    plot <- noGeomPlot + layer 
+    plot <- plot + 
+      ggplot2::geom_hline(yintercept = 0, colour = "white", 
+                          size = 1.5) +
+      ggplot2::geom_vline(xintercept = min(data$var), colour = "white", 
+                          size = 1.5) +
+      ggplot2::geom_vline(xintercept = max(data$var), colour = "white", 
+                          size = 1.5)
   }
   
   if (needsFlip(marg = marg, type = type)) {
