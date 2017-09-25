@@ -110,12 +110,12 @@
     <rect x='37.70' y='0.00' width='568.59' height='90.78' />
   </clipPath>
 </defs>
-<circle cx='557.44' cy='45.39' r='1.95pt' style='stroke-width: 0.71; fill: #000000;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
-<circle cx='580.44' cy='45.39' r='1.95pt' style='stroke-width: 0.71; fill: #000000;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
-<circle cx='570.00' cy='45.39' r='1.95pt' style='stroke-width: 0.71; fill: #000000;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
+<circle cx='557.44' cy='45.39' r='1.95pt' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
+<circle cx='580.44' cy='45.39' r='1.95pt' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
+<circle cx='570.00' cy='45.39' r='1.95pt' style='stroke-width: 0.71; stroke: #000000; stroke-opacity: 0.50; fill: #000000; fill-opacity: 0.50;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
 <line x1='340.69' y1='45.39' x2='401.49' y2='45.39' style='stroke-width: 1.07; stroke-linecap: butt;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
 <line x1='204.73' y1='45.39' x2='63.54' y2='45.39' style='stroke-width: 1.07; stroke-linecap: butt;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
-<polyline points='340.69,86.65 204.73,86.65 204.73,4.13 340.69,4.13 340.69,86.65 ' style='stroke-width: 1.07; fill: #BEBEBE;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
+<polyline points='340.69,86.65 204.73,86.65 204.73,4.13 340.69,4.13 340.69,86.65 ' style='stroke-width: 1.07; fill: #FFFFFF; fill-opacity: 0.50;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
 <line x1='303.02' y1='86.65' x2='303.02' y2='4.13' style='stroke-width: 2.13; stroke-linecap: butt;' clip-path='url(#cpMzcuNjk2M3w2MDYuMjgzfDkwLjc3NjR8MA==)' />
 <defs>
   <clipPath id='cpMHw3MjB8NTc2fDA='>
@@ -129,7 +129,7 @@
 </defs>
 <line x1='663.14' y1='303.46' x2='663.14' y2='111.41' style='stroke-width: 1.07; stroke-linecap: butt;' clip-path='url(#cpNjA2LjI4M3w3MjB8NTQ0LjY1OXw5MC43NzY0)' />
 <line x1='663.14' y1='463.18' x2='663.14' y2='524.03' style='stroke-width: 1.07; stroke-linecap: butt;' clip-path='url(#cpNjA2LjI4M3w3MjB8NTQ0LjY1OXw5MC43NzY0)' />
-<polyline points='611.45,303.46 611.45,463.18 714.83,463.18 714.83,303.46 611.45,303.46 ' style='stroke-width: 1.07; fill: #BEBEBE;' clip-path='url(#cpNjA2LjI4M3w3MjB8NTQ0LjY1OXw5MC43NzY0)' />
+<polyline points='611.45,303.46 611.45,463.18 714.83,463.18 714.83,303.46 611.45,303.46 ' style='stroke-width: 1.07; fill: #FFFFFF; fill-opacity: 0.50;' clip-path='url(#cpNjA2LjI4M3w3MjB8NTQ0LjY1OXw5MC43NzY0)' />
 <line x1='611.45' y1='346.24' x2='714.83' y2='346.24' style='stroke-width: 2.13; stroke-linecap: butt;' clip-path='url(#cpNjA2LjI4M3w3MjB8NTQ0LjY1OXw5MC43NzY0)' />
 <defs>
   <clipPath id='cpMHw3MjB8NTc2fDA='>

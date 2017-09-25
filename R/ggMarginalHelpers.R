@@ -1,15 +1,4 @@
 toParamList <- function(exPrm, xPrm, yPrm) {
-  
-  if (is.null(exPrm[['colour']]) && 
-      is.null(exPrm[['color']]) && 
-      is.null(exPrm[['col']])) {
-    exPrm[['colour']] <- "black"
-  }
-
-  if (is.null(exPrm[['fill']])) {
-    exPrm[['fill']] <- "grey"
-  }
-  
   list(
     exPrm = exPrm,
     xPrm = xPrm,
@@ -35,19 +24,6 @@ wasFlipped <- function(scatPbuilt) {
   any(grepl("flip", classCoord, ignore.case = TRUE))
 }
 
-getVarDF <- function(scatPbuilt, marg) {
-  
-  if (wasFlipped(scatPbuilt = scatPbuilt)) {
-    marg <- switch(marg,
-      "x" = "y",
-      "y" = "x"
-      )
-  }
-  var <- scatPbuilt[["data"]][[1]][[marg]]
-  
-  data.frame(var = var)
-}
-
 needsFlip <- function(marg, type) {
   
   # If the marginal plot is: (for the x margin (top) and is a boxplot) or 
@@ -58,24 +34,77 @@ needsFlip <- function(marg, type) {
   topAndBoxP || rightAndNonBoxP
 }
 
-margPlotNoGeom <- function(marg, type, data) {
+getVarDf <- function(marg, scatPbuilt) {
+  
+  if (wasFlipped(scatPbuilt = scatPbuilt)) {
+    marg <- switch(marg,
+                   "x" = "y",
+                   "y" = "x"
+    )
+  }
+  
+  scatDF <- scatPbuilt[["data"]][[1]][,c(marg, "fill", "colour")]
+  colnames(scatDF)[1] <- "var"
+  scatDF
+}
 
-  # Build plot (sans geom). Note: Boxplot is the only plot type that needs y aes
-  if (type == "boxplot") {
-    plot <- ggplot2::ggplot(data = data, 
-                            ggplot2::aes_string(x = 'var', y = 'var'))
-  } else {
-    plot <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = 'var'))
+margPlotNoGeom <- function(data, type, scatPbuilt, marginMapping) {
+  
+  mapKeep <- marginMapping[marginMapping]
+  mapping <- ggplot2::aes(x = var)
+  
+  haveMargMap <- length(mapKeep) > 0
+  
+  if (haveMargMap) {
+    xtraMapNames <- names(mapKeep)
+    data <- data[,c("var", xtraMapNames), drop = FALSE]
+    
+    xtraMapDf <- data[,c(xtraMapNames), drop = FALSE]
+    valuesForScale <- lapply(xtraMapDf, function(x) {
+      vals <- unique(x)
+      names(vals) <- vals
+      vals
+    })
+    
+    xtraMap <- sapply(xtraMapNames, as.symbol, USE.NAMES = TRUE, 
+                      simplify = FALSE)
+    mapping <- structure(c(mapping, xtraMap), class = "uneval")
   }
 
-  if (needsFlip(marg = marg, type = type)) {
-    plot <- plot +  ggplot2::coord_flip()
+  # Boxplot is the only plot type that needs y aes
+  if (type == "boxplot") {
+    mapping$y <- as.symbol("var")
+  }
+  
+  # Build plot (sans geom)
+  plot <- ggplot2::ggplot(data = data, mapping = mapping)
+  
+  if (haveMargMap) {
+    if ("colour" %in% xtraMapNames) {
+      plot <- plot + ggplot2::scale_colour_manual(values = valuesForScale$colour)
+    }
+    if ("fill" %in% xtraMapNames) {
+      plot <- plot + ggplot2::scale_fill_manual(values = valuesForScale$fill)
+    }
   }
   
   plot
 }
 
-alterParams <- function(marg, type, prmL, scatPbuilt) {
+alterParams <- function(marg, type, prmL, scatPbuilt, marginMapping) {
+  
+  if (
+    is.null(prmL$exPrm[['colour']]) &&
+    is.null(prmL$exPrm[['color']]) &&
+    is.null(prmL$exPrm[['col']]) &&
+    !marginMapping[["colour"]]
+  ) {
+    prmL$exPrm[['colour']] <- "black"
+  }
+  
+  if (is.null(prmL$exPrm[["alpha"]])) {
+    prmL$exPrm[["alpha"]] <- .5
+  }
 
   # merge the parameters in an order that ensures that marginal plot params 
   # overwrite general params
@@ -87,14 +116,8 @@ alterParams <- function(marg, type, prmL, scatPbuilt) {
   lim_fun <- panScale$get_limits
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
-  } 
-  
-  # we're using geom_line for the density plot so that there will be no bottom line...
-  # ...so we have to tell geom_line to use non-default stat (stat = density)
-  if (type == "density") {
-    prmL$exPrm[['stat']] <- "density"
   }
-
+  
   prmL$exPrm
 }
 
@@ -117,27 +140,49 @@ getPanelScale <- function(marg, builtP) {
 
 getGeomFun <- function(type) {
   switch (type,
-    "density" = ggplot2::geom_line,
+    "density" = ggplot2::geom_density,
     "histogram" = ggplot2::geom_histogram,
     "boxplot" = ggplot2::geom_boxplot
   )
 }
 
 # Wrapper function to create a "raw" marginal plot
-genRawMargPlot <- function(marg, type, scatPbuilt, prmL) {
-  data <- getVarDF(scatPbuilt = scatPbuilt, marg = marg)
-  noGeomPlot <- margPlotNoGeom(marg = marg, type = type, data = data)
+genRawMargPlot <- function(marg, type, scatPbuilt, prmL, marginMapping) {
+
+  data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
+  noGeomPlot <- margPlotNoGeom(data = data, type = type, 
+                               scatPbuilt = scatPbuilt,
+                               marginMapping = marginMapping)
   finalParms <- alterParams(marg = marg, type = type, prmL = prmL, 
-                            scatPbuilt = scatPbuilt)
+                            scatPbuilt = scatPbuilt, 
+                            marginMapping = marginMapping)
   geomFun <- getGeomFun(type = type)
   layer <- do.call(geomFun, finalParms)
-  noGeomPlot + layer
+  plot <- noGeomPlot + layer 
+  
+  # get rid of density outline along left, bottom, and right sides of 
+  # distribution
+  if (type == "density") {
+    plot <- plot + 
+      ggplot2::geom_hline(yintercept = 0, colour = "white", 
+                          size = 1.5) +
+      ggplot2::geom_vline(xintercept = min(data$var), colour = "white", 
+                          size = 1.5) +
+      ggplot2::geom_vline(xintercept = max(data$var), colour = "white", 
+                          size = 1.5)
+  }
+  
+  if (needsFlip(marg = marg, type = type)) {
+    plot <- plot + ggplot2::coord_flip()
+  }
+  
+  plot
 }
 
 # Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL) {
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, marginMapping) {
   rawMarg <- genRawMargPlot(marg = marg, type = type, scatPbuilt = scatPbuilt, 
-                            prmL = prmL)
+                            prmL = prmL, marginMapping = marginMapping)
   margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg, 
                              scatPTheme = scatPbuilt$plot$theme)
   margThemed + getScale(marg = marg, type = type, builtP = scatPbuilt)

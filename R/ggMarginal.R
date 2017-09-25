@@ -78,7 +78,8 @@
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"),
                        margins = c("both", "x", "y"), size = 5,
-                       ..., xparams = list(), yparams = list()) {
+                       ..., xparams = list(), yparams = list(),
+                       marginMapping = c(fill = FALSE, colour = FALSE)) {
 
   # Figure out all the default parameters.
   type <- match.arg(type)
@@ -86,11 +87,6 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 
   # Fill in param defaults and consolidate params into single list (prmL).
   prmL <- toParamList(exPrm = list(...), xPrm = xparams, yPrm = yparams)
-  
-  # After ggplot2 v1.0.1, layers became strict about parameters
-  if (type == "density") {
-    prmL[['exPrm']][['fill']] <- NULL
-  }
   
   # Create one version of the scat plot (scatP), based on values of p, data, x, 
   # and y...also remove all margin around plot so that it's easier to position 
@@ -122,14 +118,14 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Top plot = horizontal margin plot, which corresponds to x marg
   if (margins != "y") { 
     top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt, 
-                            prmL = prmL)
+                            prmL = prmL, marginMapping = marginMapping)
   }
   
   # If margins = y or 'both' (x and y), then you have to create right plot. 
   # (right plot = vertical margin plot, which corresponds to y marg)
   if (margins != "x") { 
     right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
-                              prmL = prmL)
+                              prmL = prmL, marginMapping = marginMapping)
   }
 
   # Now add the marginal plots to the scatter plot
