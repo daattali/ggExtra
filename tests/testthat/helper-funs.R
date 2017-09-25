@@ -7,6 +7,16 @@ ggMarg2 <- function(type, ...) {
   ggMarginal(p = basicScatP(), type = type, ...)
 }
 
+margMapP <- function() {
+  ggplot2::ggplot(data = mtcars) +
+    ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, 
+                                     colour = factor(vs), 
+                                     fill = factor(am)),
+                        shape = 21, size = 3, stroke = 2) +
+    ggplot2::scale_colour_manual(values = c("green", "brown")) +
+    ggplot2::scale_fill_manual(values = c("orange", "pink"))
+}
+
 funList <-
   list(
     "basic density" = function() ggMarg2("density"),
@@ -31,6 +41,16 @@ funList <-
     ),
     "flipped coord where x is drat and y is wt" = function() ggMarginal(
       p = basicScatP() + ggplot2::coord_flip(), type = "density"
+    ),
+    "col and fill mapped" = function() ggMarginal(
+      p = margMapP(), marginMapping = c(colour = TRUE, fill = TRUE)
+    ),
+    "fill mapped with low alpha" = function() ggMarginal(
+      p = margMapP(), marginMapping = c(colour = FALSE, fill = TRUE), alpha = .2
+    ),
+    "colour mapped with grey fill"  = function() ggMarginal(
+      p = margMapP(), marginMapping = c(colour = TRUE, fill = FALSE), 
+      fill = "grey"
     )
   )
 
