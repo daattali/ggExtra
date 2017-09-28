@@ -50,6 +50,11 @@ getVarDF <- function(scatPbuilt, marg) {
   dfBools <- vapply(scatData, function(x) {
     "x" %in% colnames(x) && "y" %in% colnames(x)
   }, logical(1))
+  
+  if (!any(dfBools)) {
+    stop("No geom_point layer was found in your scatter plot", call. = FALSE)
+  }
+  
   scatDF <- scatData[dfBools][[1]]
   
   colnames(scatDF)[1] <- "var"
