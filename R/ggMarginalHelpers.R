@@ -43,9 +43,22 @@ getVarDF <- function(scatPbuilt, marg) {
       "y" = "x"
       )
   }
-  var <- scatPbuilt[["data"]][[1]][[marg]]
   
-  data.frame(var = var)
+  scatData <- scatPbuilt[["data"]]
+  
+  # Get data frame with geom_point layer data
+  dfBools <- vapply(scatData, function(x) {
+    "x" %in% colnames(x) && "y" %in% colnames(x)
+  }, logical(1))
+  
+  if (!any(dfBools)) {
+    stop("No geom_point layer was found in your scatter plot", call. = FALSE)
+  }
+  
+  scatDF <- scatData[dfBools][[1]]
+  
+  colnames(scatDF)[1] <- "var"
+  scatDF
 }
 
 needsFlip <- function(marg, type) {

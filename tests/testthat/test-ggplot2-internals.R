@@ -43,6 +43,16 @@ if (runTests) {
       })
 
     })
+    
+    test_that("ggplot2 models scatter plot data as expected" , {
+      
+      scatPbuilt <- ggplot2::ggplot_build(basicScatP())
+      scatDF <- scatPbuilt[["data"]][[1]]
+      expect_true({
+        "x" %in% colnames(scatDF) && "y" %in% colnames(scatDF)
+      })
+
+    })
 
   }
 
