@@ -3,7 +3,7 @@
 runTests <- FALSE
 ## Use the Travis / GitHub integrations as we set this
 ## environment variable to "yes" in .travis.yml
-if (Sys.getenv("RunGgplot2Tests=yes") == "yes") runTests <- TRUE
+if (Sys.getenv("RunGgplot2Tests") == "yes") runTests <- TRUE
 ## Also run the tests when building on Dean's machine
 if (isTRUE(unname(Sys.info()["user"]) == "Dean")) runTests <- TRUE
 
@@ -43,9 +43,9 @@ if (runTests) {
       })
 
     })
-    
+
     test_that("ggplot2 models scatter plot data as expected" , {
-      
+
       scatPbuilt <- ggplot2::ggplot_build(basicScatP())
       scatDF <- scatPbuilt[["data"]][[1]]
       expect_true({

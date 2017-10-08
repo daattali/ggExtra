@@ -3,7 +3,7 @@
 runTests <- FALSE
 ## Use the Travis / GitHub integrations as we set this
 ## environment variable to "yes" in .travis.yml
-if (Sys.getenv("RunGgplot2Tests=yes") == "yes") runTests <- TRUE
+if (Sys.getenv("RunGgplot2Tests") == "yes") runTests <- TRUE
 ## Also run the tests when building on Dean's machine
 if (isTRUE(unname(Sys.info()["user"]) == "Dean")) runTests <- TRUE
 
