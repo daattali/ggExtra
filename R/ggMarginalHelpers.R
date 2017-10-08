@@ -66,15 +66,15 @@ needsFlip <- function(marg, type) {
   # If the marginal plot is: (for the x margin (top) and is a boxplot) or 
   #                          (for the y margin (right) and is not a boxplot), 
   # ... then have to flip
-  topAndBoxP <- marg == "x" && type == "boxplot"
-  rightAndNonBoxP <- marg == "y" && type != "boxplot"
+  topAndBoxP <- marg == "x" && type %in% c("boxplot", "violin")
+  rightAndNonBoxP <- marg == "y" && !(type %in% c("boxplot", "violin"))
   topAndBoxP || rightAndNonBoxP
 }
 
 margPlotNoGeom <- function(marg, type, data) {
 
   # Build plot (sans geom). Note: Boxplot is the only plot type that needs y aes
-  if (type == "boxplot") {
+  if (type %in% c("boxplot", "violin")) {
     plot <- ggplot2::ggplot(data = data, 
                             ggplot2::aes_string(x = 'var', y = 'var'))
   } else {
@@ -132,7 +132,8 @@ getGeomFun <- function(type) {
   switch (type,
     "density" = ggplot2::geom_line,
     "histogram" = ggplot2::geom_histogram,
-    "boxplot" = ggplot2::geom_boxplot
+    "boxplot" = ggplot2::geom_boxplot,
+    "violin" = ggplot2::geom_violin
   )
 }
 

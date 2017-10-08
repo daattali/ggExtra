@@ -4,9 +4,9 @@
 \alias{ggMarginal}
 \title{Add marginal density/histogram to ggplot2 scatterplots}
 \usage{
-ggMarginal(p, data, x, y, type = c("density", "histogram", "boxplot"),
-  margins = c("both", "x", "y"), size = 5, ..., xparams = list(),
-  yparams = list())
+ggMarginal(p, data, x, y, type = c("density", "histogram", "boxplot",
+  "violin"), margins = c("both", "x", "y"), size = 5, ...,
+  xparams = list(), yparams = list())
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
@@ -22,7 +22,7 @@ provided and the \code{x} aesthetic is set in the main plot.}
 \item{y}{The name of the variable along the y axis. Optional if \code{p} is
 provided and the \code{y} aesthetic is set in the main plot.}
 
-\item{type}{What type of marginal plot to show. One of: [density, histogram, boxplot].}
+\item{type}{What type of marginal plot to show. One of: [density, histogram, boxplot, violin].}
 
 \item{margins}{Along which margins to show the plots. One of: [both, x, y].}
 
@@ -79,6 +79,9 @@ ggMarginal(p2, size = 2)
 ggMarginal(p2, colour = "red")
 ggMarginal(p2, colour = "red", xparams = list(colour = "blue", size = 3))
 ggMarginal(p2, type = "histogram", bins = 10)
+
+# Using violin plot
+ggMarginal(p2, type = "violin")
 
 # specifying the data directly instead of providing a plot       
 ggMarginal(data = df, x = "x", y = "y")
