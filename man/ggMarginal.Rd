@@ -31,7 +31,7 @@ compared to the main plot. A size of 5 means that the main plot is 5x wider
 and 5x taller than the marginal plots.}
 
 \item{...}{Extra parameters to pass to the marginal plots. Any parameter that
-\code{geom_line()}, \code{geom_histogram()}, or \code{geom_boxplot()} accepts
+\code{geom_line()}, \code{geom_histogram()}, \code{geom_boxplot()}, or \code{geom_violin()} accepts
 can be used. For example, \code{colour = "red"} can be used for any marginal plot type,
 and \code{binwidth = 10} can be used for histograms.}
 
@@ -47,7 +47,7 @@ plots or saved using any of the typical image-saving functions (for example, usi
 \code{png()} or \code{pdf()}).
 }
 \description{
-Create a ggplot2 scatterplot with marginal density plots (default) or 
+Create a ggplot2 scatterplot with marginal density plots (default) or
 histograms, or add the marginal plots to an existing scatterplot.
 }
 \note{
@@ -67,7 +67,7 @@ will make the density plot outline thicker.
 # basic usage
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
 ggMarginal(p)
-      
+
 # using some parameters
 set.seed(30)
 df <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
@@ -83,7 +83,7 @@ ggMarginal(p2, type = "histogram", bins = 10)
 # Using violin plot
 ggMarginal(p2, type = "violin")
 
-# specifying the data directly instead of providing a plot       
+# specifying the data directly instead of providing a plot
 ggMarginal(data = df, x = "x", y = "y")
 
 # more examples showing how the marginal plots are properly aligned even when

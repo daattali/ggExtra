@@ -13,17 +13,17 @@ shinyUI(fluidPage(
   title = "ggMarginal - add marginal plots to ggplot2",
   tags$head(
     includeCSS(file.path('www', 'style.css')),
-    
+
     # Favicon
     tags$link(rel = "shortcut icon", type="image/x-icon", href="http://daattali.com/shiny/img/favicon.ico"),
-    
+
     # Facebook OpenGraph tags
     tags$meta(property = "og:title", content = share$title),
     tags$meta(property = "og:type", content = "website"),
     tags$meta(property = "og:url", content = share$url),
     tags$meta(property = "og:image", content = share$image),
     tags$meta(property = "og:description", content = share$description),
-    
+
     # Twitter summary cards
     tags$meta(name = "twitter:card", content = "summary"),
     tags$meta(name = "twitter:site", content = paste0("@", share$twitter_user)),
@@ -39,7 +39,7 @@ shinyUI(fluidPage(
              alt="Fork me on GitHub")
   ),
   useShinyjs(),
-  
+
   div(id = "header",
       div(id = "title",
           "ggMarginal"
@@ -56,7 +56,7 @@ shinyUI(fluidPage(
           tags$a(href = "http://daattali.com/shiny/", "More apps"), "by Dean"
       )
   ),
-  
+
   div(id = "loading-content", h2("Loading...")),
   fluidRow(id = "app-content",
     column(3, wellPanel(
@@ -67,14 +67,14 @@ shinyUI(fluidPage(
       uiOutput("y_var_select"),
       sliderInput("font_size", "Font size", 0, 50, 15, 1)
     )),
-    
+
     column(3, wellPanel(
       class = "settings",
       h3(class = "settings-title", "Marginal plots"),
       checkboxInput("show_marginal", "Show marginal plots", TRUE),
-      
+
       div(id = "marginal-settings",
-        selectInput("type", NULL, c("density", "histogram", "boxplot")),
+        selectInput("type", NULL, c("density", "histogram", "boxplot", "violin")),
         selectInput("margins", "Which margins?", c("both", "x", "y")),
         conditionalPanel(
           condition = "input.margins != 'y'",
@@ -92,9 +92,9 @@ shinyUI(fluidPage(
           condition = "input.type != 'density'",
           colourpicker::colourInput("fill", "Marginal plot fill colour", "orange", showColour = "background")
         )
-      )      
+      )
     )),
-    
+
     column(6,
       plotOutput("plot"),
       pre(id = "code")

@@ -1,3 +1,13 @@
+# ggExtra 0.7.1
+
+NEW FEATURES
+
+- Added support for violin plots
+
+BUX FIXES
+
+- Make sure marginal data comes from correct data frame (#68) 
+
 # ggExtra 0.7
 
 2017-06-21
