@@ -57,7 +57,7 @@ getVarDF <- function(scatPbuilt, marg) {
   
   scatDF <- scatData[dfBools][[1]]
   
-  colnames(scatDF)[1] <- "var"
+  colnames(scatDF)[colnames(scatDF) == marg] <- "var"
   scatDF
 }
 
