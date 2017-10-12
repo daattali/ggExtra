@@ -5,8 +5,8 @@ runMarginalTests <- function(ggplot2Version) {
   context(context)
 
     test_that("ggMarginal can produce basic marginal plots" , {
-      sapply(c("basic density", "basic histogram", "basic boxplot", "basic violin",
-               "scatter plot from data"), function(x)
+      sapply(c("basic density", "basic histogram", "basic boxplot", 
+               "basic violin plot", "scatter plot from data"), function(x)
                  expectDopp2(funName = x, ggplot2Version = ggplot2Version))
     })
 
