@@ -257,7 +257,7 @@ getLimits <- function(marg, builtP) {
   
   scale <- getPanelScale(marg = marg, builtP = builtP)
   
-  range <- scale$limits
+  range <- scale$get_limits()
   if (is.null(range)) {
     range <- scale$range$range
   }
