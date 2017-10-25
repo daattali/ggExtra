@@ -32,6 +32,9 @@ funList <-
     ),
     "flipped coord where x is drat and y is wt" = function() ggMarginal(
       p = basicScatP() + ggplot2::coord_flip(), type = "density"
+    ),
+    "scale transformations work" = function() ggMarginal(
+        p = basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
     )
   )
 
