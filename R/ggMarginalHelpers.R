@@ -244,7 +244,11 @@ getScale <- function(marg, type, builtP) {
   scale <- getPanelScale(marg = marg, builtP = builtP)
   
   if (needsFlip(marg = marg, type = type)) {
-    scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
+    if (marg == "x") {
+      scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
+    } else {
+      scale$aesthetics <- gsub("^y", "x", scale$aesthetics)
+    }
   }
 
   scale
@@ -257,7 +261,7 @@ getLimits <- function(marg, builtP) {
   
   scale <- getPanelScale(marg = marg, builtP = builtP)
   
-  range <- scale$limits
+  range <- scale$get_limits()
   if (is.null(range)) {
     range <- scale$range$range
   }
