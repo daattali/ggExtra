@@ -17,7 +17,7 @@ writeSvg <- function(p, file) {
   user_fonts <- aliases
   svglite(file = file, user_fonts = user_fonts)
   on.exit(grDevices::dev.off())
-  print(p)
+  printMuffled(p)
 }
 
 getFigDir <- function(ggplot2Version) {

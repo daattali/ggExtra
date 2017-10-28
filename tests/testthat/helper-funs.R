@@ -40,7 +40,11 @@ funList <-
 
 expectDopp2 <- function(funName, ggplot2Version) {
   path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
-  vdiffr::expect_doppelganger(funName, funList[[funName]](), path = path)
+  vdiffr::expect_doppelganger(
+    funName, 
+    printMuffled(funList[[funName]]()),
+    path = path
+  )
 }
 
 # withGGplot2Version is essentially the same function as with_pkg_version that
@@ -81,4 +85,17 @@ shouldTest <- function() {
   } else {
     FALSE
   }
+}
+
+# Misc function to drop muffle a particular warning that occurs whenever a 
+# ggplot2 plot is printed under version 2.2.0...This warning clogs up the 
+# output of devtools::test(), because we test under ggplot 2.2.0.
+printMuffled <- function(plot) {
+  withCallingHandlers({
+    print(plot)
+  }, warning = function(w) {
+    if (grepl("structure", w, ignore.case = TRUE)) {
+      invokeRestart("muffleWarning")
+    }
+  })
 }
