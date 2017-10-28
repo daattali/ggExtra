@@ -4,24 +4,24 @@ runMarginalTests <- function(ggplot2Version) {
 
   context(context)
 
-    test_that("ggMarginal can produce basic marginal plots" , {
-      sapply(c("basic density", "basic histogram", "basic boxplot", 
-               "basic violin plot", "scatter plot from data"), function(x)
-                 expectDopp2(funName = x, ggplot2Version = ggplot2Version))
-    })
+  test_that("ggMarginal can produce basic marginal plots" , {
+    sapply(c("basic density", "basic histogram", "basic boxplot", 
+             "basic violin plot", "scatter plot from data"), function(x)
+               expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+  })
 
-    test_that("ggMarginal's other params work" , {
-      sapply(c("only x margin", "smaller marginal plots", "both hists red col",
-               "top hist red col and fill"), function(x)
-                 expectDopp2(funName = x, ggplot2Version = ggplot2Version))
-    })
+  test_that("ggMarginal's other params work" , {
+    sapply(c("only x margin", "smaller marginal plots", "both hists red col",
+             "top hist red col and fill"), function(x)
+               expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+  })
 
-    test_that("Misc. issues are solved" , {
-      sapply(c("theme bw", "legend and title",
-               "flipped coord where x is drat and y is wt",
-               "scale transformations work"), function(x)
-                 expectDopp2(funName = x, ggplot2Version = ggplot2Version))
-    })
+  test_that("Misc. issues are solved" , {
+    sapply(c("theme bw", "legend and title",
+             "flipped coord where x is drat and y is wt",
+             "scale transformations work"), function(x)
+               expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+  })
 
 }
 
