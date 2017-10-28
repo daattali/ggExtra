@@ -47,29 +47,72 @@ expectDopp2 <- function(funName, ggplot2Version) {
   )
 }
 
-# withGGplot2Version is essentially the same function as with_pkg_version that
+# withVersions is essentially the same function as with_pkg_version that
 # appears here: https://gist.github.com/jimhester/d7aeb95bbed02f2985a87c2a3ede19f5.
-# This function allows us to run unit tests under different versions of ggplot2.
-withGGplot2Version <- function(ggplot2Version, code) {
-  if (isNamespaceLoaded("ggplot2")) {
-    unloadNamespace("ggplot2")
-  }
+# This function allows us to run unit tests under different versions of ggplot2,
+# confirming that ggMarginal works under all versions >= 2.2.0. We also set
+# the package versions of three packages (vdiffr, fontquiver, and svglite) 
+# that could slightly effect the rendering of the SVGs, thus causing the tests 
+# to fail.
+withVersions <- function(..., code) {
+  
+  packageVersions <- list(...)
+  
+  unloadPackages(packages = names(packageVersions))
+  on.exit(unloadPackages(packages = names(packageVersions)))
+  
   dir <- tempfile()
   dir.create(dir)
   on.exit(unlink(dir))
-  withr::with_libpaths(dir, action = "prefix", {
-    on.exit(unloadNamespace("ggplot2"))
-
-    if (ggplot2Version == "latest") {
-      devtools::install_github("tidyverse/ggplot2")
-    } else {
-      devtools::install_version("ggplot2", ggplot2Version, quiet = TRUE,
-                                repos = "https://cloud.r-project.org",
-                                type = "source")
-    }
-
+  names(packageVersions)
+  packageVersions
+  
+  withr::with_libpaths(dir, action = "prefix", code = {
+    mapply(installVersion2, package = names(packageVersions), version = packageVersions)
     force(code)
   })
+}
+
+unloadPackages <- function(packages) {
+  lapply(packages, function(x) {
+    if (isNamespaceLoaded(x)) {
+      unloadNamespace(x)
+    }
+  })
+}
+
+installVersion2 <- function(package, version) {
+  
+  currentVersion <- tryCatch(
+    utils::packageVersion(package),
+    error = function(e) ""
+  )
+  
+  if (package == "ggplot2" && version == "latest") {
+    devtools::install_github("tidyverse/ggplot2", upgrade_dependencies = FALSE)
+  } else if (currentVersion != version) {
+    repos <- getSnapShotRepo(package = package, version = version)
+    devtools::install_version(package, version, repos = repos)
+  } else {
+    return()
+  }
+}
+
+getSnapShotRepo <- function(package, version) {
+  tryCatch(
+    attemptRepoDate(package = package, version = version),
+    error = function(e) "https://cloud.r-project.org"
+  )
+}
+
+attemptRepoDate <- function(package, version) {
+  arch <- devtools:::package_find_repo(
+    package = package, repo = "https://cloud.r-project.org"
+  )
+  versions <- gsub(".*/[^_]+_([^[:alpha:]]+)\\.tar\\.gz", "\\1", arch$path)
+  date <- arch[versions == version, "mtime", drop = TRUE]
+  dateString <- as.character(as.Date(date, format = "%Y/%m/%d") + 2)
+  sprintf("https://mran.microsoft.com/snapshot/%s", dateString)
 }
 
 ## By default, do not run the tests (which also means do not run on CRAN)

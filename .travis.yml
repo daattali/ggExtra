@@ -12,6 +12,3 @@ addons:
 env:
   global:
     - RunGgplot2Tests=yes
-
-before_script:
-  - Rscript -e "install.packages('vdiffr', repos = 'https://mran.microsoft.com/snapshot/2017-06-01')"

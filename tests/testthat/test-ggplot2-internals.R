@@ -48,7 +48,7 @@ runggplot2InternalsTests <- function(ggplot2Version) {
 # Function to run all tests against ggplot2 internals under all ggplot2 versions
 runInternalTestsApply <- function(ggplot2Versions) {
   sapply(ggplot2Versions, function(ggplot2Version) {
-    withGGplot2Version(ggplot2Version, {
+    withVersions(ggplot2 = ggplot2Version, code = {
       runggplot2InternalsTests(ggplot2Version)
     })
   })
