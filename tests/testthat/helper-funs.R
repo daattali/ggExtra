@@ -64,8 +64,6 @@ withVersions <- function(..., code) {
   dir <- tempfile()
   dir.create(dir)
   on.exit(unlink(dir))
-  names(packageVersions)
-  packageVersions
   
   withr::with_libpaths(dir, action = "prefix", code = {
     mapply(installVersion2, package = names(packageVersions), version = packageVersions)
@@ -141,3 +139,4 @@ printMuffled <- function(plot) {
       invokeRestart("muffleWarning")
     }
   })
+}
