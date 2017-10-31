@@ -141,4 +141,3 @@ printMuffled <- function(plot) {
       invokeRestart("muffleWarning")
     }
   })
-}
