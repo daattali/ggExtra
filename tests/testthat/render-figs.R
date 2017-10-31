@@ -12,10 +12,10 @@ source("tests/testthat/helper-funs.R")
 # in tests/figs) are rendered in exactly the same way that vdiffr when it runs
 # the visual regression tests.
 writeSvg <- function(p, file) {
-  aliases <- font_families("Liberation")
-  aliases$symbol$symbol <- font_symbol("Symbola")
+  aliases <- fontquiver::font_families("Liberation")
+  aliases$symbol$symbol <- fontquiver::font_symbol("Symbola")
   user_fonts <- aliases
-  svglite(file = file, user_fonts = user_fonts)
+  svglite::svglite(file = file, user_fonts = user_fonts)
   on.exit(grDevices::dev.off())
   printMuffled(p)
 }
@@ -53,3 +53,4 @@ renderAllFigsApply <- function(ggplot2Versions) {
 # This was called once to create all the expected versions of the test figures. 
 # It should be re-run each time a new test figure is added to the function list 
 # (funList) in  helper-funs.R (funList contains the code to create the figures).
+renderAllFigsApply(c("2.2.0", "2.2.1", "latest"))
