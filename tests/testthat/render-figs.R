@@ -41,20 +41,15 @@ asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
 # must have ggExtra version >= 0.6.1.9000 (commit 4b31c7cf or after) for these
 # figures to render correctly.
 renderAllFigsApply <- function(ggplot2Versions) {
-  withVersions(
-    vdiffr = "0.1.1", fontquiver = "0.2.1", svglite = "1.2.0", code = {
-      sapply(ggplot2Versions, function(ggplot2Version) {
-        withVersions(ggplot2 = ggplot2Version, code = {
-          sapply(names(funList), function(x)
-            writeSvg(p = funList[[x]](),
-                     file = asSvgFile(funName = x, ggplot2Version = ggplot2Version)))
-        })
-      })
-    }
-  )
+  sapply(ggplot2Versions, function(ggplot2Version) {
+    withVersions(ggplot2 = ggplot2Version, code = {
+      sapply(names(funList), function(x)
+        writeSvg(p = funList[[x]](),
+                 file = asSvgFile(funName = x, ggplot2Version = ggplot2Version)))
+    })
+  })
 }
 
 # This was called once to create all the expected versions of the test figures. 
 # It should be re-run each time a new test figure is added to the function list 
 # (funList) in  helper-funs.R (funList contains the code to create the figures).
-renderAllFigsApply(c("2.2.0", "2.2.1", "latest"))
