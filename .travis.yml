@@ -1,14 +1,11 @@
-language: r
-sudo: false
-cache: packages
+sudo: required
 
-addons:
-  apt:
-    sources:
-      - debian-sid
-    packages:
-      - libfreetype6
+services:
+  - docker
 
-env:
-  global:
-    - RunGgplot2Tests=yes
+before_install:
+  - docker build -t ggextra-image .
+
+script:
+  - docker run ggextra-image /bin/bash -c 'cd .. && R CMD build ggExtra && R CMD check $(ls | grep "tar\\.gz") --as-cran --no-manual'
+  
