@@ -10,5 +10,5 @@ script:
   - docker run ggextra-image /bin/bash -c 'cd .. && R CMD build ggExtra && R CMD check $(ls | grep "tar\\.gz") --as-cran --no-manual'
 
 after_script:
-  - cat ggExtra.Rcheck/`ls ggExtra.Rcheck | grep "\\.log"`
+  - cat ../ggExtra.Rcheck/`ls ../ggExtra.Rcheck | grep "\\.log"`
   
