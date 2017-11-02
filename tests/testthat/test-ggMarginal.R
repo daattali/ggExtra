@@ -39,5 +39,9 @@ runMarginalTestsApply <- function(ggplot2Versions) {
 }
 
 if (shouldTest()) {
-  runMarginalTestsApply(c("2.2.0", "2.2.1", "latest"))
+  withVersions(
+    vdiffr = "0.1.1", fontquiver = "0.2.1", svglite = "1.2.0", code = {
+      runMarginalTestsApply(c("2.2.0", "2.2.1", "latest"))
+    }
+  )
 }
