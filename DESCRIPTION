@@ -3,7 +3,7 @@ Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
 Version: 0.7.1
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre")),
-    person("Christopher", "Baker", , "chriscrewbaker@gmail.com", role = "ctb")
+    person("Christopher", "Baker", , "chriscrewbaker@gmail.com", role = "aut")
     )
 Description: Collection of functions and layers to enhance 'ggplot2'. The main
     function is ggMarginal(), which can be used to add marginal
