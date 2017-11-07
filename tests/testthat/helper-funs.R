@@ -19,7 +19,7 @@ funList <-
     "smaller marginal plots" =  function() ggMarg2("density", size = 10),
     "both hists red col" =  function() ggMarg2("histogram", colour = "red"),
     "top hist red col and fill" =  function() ggMarg2("histogram", xparams =
-                                                        list(colour = "red",
+                                                        list(colour = "blue",
                                                              fill = "red")),
     "theme bw" = function() ggMarginal(p = basicScatP() + ggplot2::theme_bw(),
                                        type = "density"),
