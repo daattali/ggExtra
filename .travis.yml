@@ -1,17 +1,14 @@
-language: r
-sudo: false
-cache: packages
+sudo: required
 
-addons:
-  apt:
-    sources:
-      - debian-sid
-    packages:
-      - libfreetype6
+services:
+  - docker
 
-env:
-  global:
-    - RunGgplot2Tests=yes
+before_install:
+  - docker build -t ggextra-image .
 
-before_script:
-  - Rscript -e "install.packages('vdiffr', repos = 'https://mran.microsoft.com/snapshot/2017-06-01')"
+script:
+  - docker run -v `pwd`/ggExtra.Rcheck:/home/ggExtra.Rcheck ggextra-image /bin/bash -c 'cd .. && R CMD build ggExtra && R CMD check $(ls | grep "tar\\.gz") --as-cran --no-manual'
+
+after_script:
+  - cat ggExtra.Rcheck/`ls ggExtra.Rcheck | grep "\\.log"`
+  
