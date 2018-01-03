@@ -105,7 +105,7 @@ getSnapShotRepo <- function(package, version) {
 
 attemptRepoDate <- function(package, version) {
   arch <- devtools:::package_find_repo(
-    package = package, repo = "https://cloud.r-project.org"
+    package, "https://cloud.r-project.org"
   )
   versions <- gsub(".*/[^_]+_([^[:alpha:]]+)\\.tar\\.gz", "\\1", arch$path)
   date <- arch[versions == version, "mtime", drop = TRUE]
