@@ -7,6 +7,12 @@ ggMarg2 <- function(type, ...) {
   ggMarginal(p = basicScatP(), type = type, ...)
 }
 
+margMapP <- function() {
+  ggplot2::ggplot(data = mtcars) +
+    ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = factor(vs))) +
+    ggplot2::scale_colour_manual(values = c("green", "brown")) 
+}
+
 funList <-
   list(
     "basic density" = function() ggMarg2("density"),
@@ -35,6 +41,15 @@ funList <-
     ),
     "scale transformations work" = function() ggMarginal(
         p = basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
+    ),
+    "col and fill mapped" = function() ggMarginal(
+      p = margMapP(), marginGroupColour = TRUE, marginGroupFill = TRUE
+    ),
+    "fill mapped with low alpha" = function() ggMarginal(
+      p = margMapP(), marginGroupFill = TRUE, alpha = .2
+    ),
+    "colour mapped with grey fill"  = function() ggMarginal(
+      p = margMapP(), marginGroupColour = TRUE, fill = "grey"
     )
   )
 
