@@ -43,11 +43,11 @@ getVarDf <- function(scatPbuilt, marg) {
   if (!any(dfBools)) {
     stop("No geom_point layer was found in your scatter plot", call. = FALSE)
   }
-  
+
   scatDF <- scatData[dfBools][[1]]
-  
+
   colnames(scatDF)[colnames(scatDF) == marg] <- "var"
-  scatDF[, c("var", "fill", "colour")]
+  scatDF[, c("var", "fill", "colour", "group")]
 }
 
 needsFlip <- function(marg, type) {
@@ -67,6 +67,15 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   haveMargMap <- groupColour || groupFill
   
   if (haveMargMap) {
+    
+    # Make sure user hasn't mapped a non-factor 
+    if (data[["group"]][1] < 0) { 
+      stop(
+        "Colour must be mapped to a factor or character variable ",
+        "(not a numeric variable) in your scatter plot if you set ",
+         "groupColour = TRUE or groupFill = TRUE"
+      )
+    } 
 
     data <- data[, c("var", "colour"), drop = FALSE]
     if (groupFill) {
