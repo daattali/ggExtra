@@ -60,26 +60,25 @@ needsFlip <- function(marg, type) {
   topAndBoxP || rightAndNonBoxP
 }
 
-margPlotNoGeom <- function(data, type, scatPbuilt, marginGroupColour,
-                           marginGroupFill) {
+margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   
   mapping <- ggplot2::aes(x = var)
   
-  haveMargMap <- marginGroupColour || marginGroupFill
+  haveMargMap <- groupColour || groupFill
   
   if (haveMargMap) {
 
     data <- data[, c("var", "colour"), drop = FALSE]
-    if (marginGroupFill) {
+    if (groupFill) {
       data[, "fill"] <- data[, "colour"]
     }
     
     values <- unique(data$colour)
     names(values) <- values
     
-    if (marginGroupColour && !marginGroupFill) {
+    if (groupColour && !groupFill) {
       xtraMapNames <- "colour"
-    } else if (marginGroupColour && marginGroupFill) {
+    } else if (groupColour && groupFill) {
       xtraMapNames <- c("colour", "fill")
     } else {
       xtraMapNames <- "fill"
@@ -112,20 +111,20 @@ margPlotNoGeom <- function(data, type, scatPbuilt, marginGroupColour,
 
 utils::globalVariables("var")
 
-alterParams <- function(marg, type, prmL, scatPbuilt, marginGroupColour,
-                        marginGroupFill) {
+alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
+                        groupFill) {
   
   if (
     is.null(prmL$exPrm[['colour']]) &&
     is.null(prmL$exPrm[['color']]) &&
     is.null(prmL$exPrm[['col']]) &&
-    !marginGroupColour
+    !groupColour
   ) {
     prmL$exPrm[['colour']] <- "black"
   }
   
   # default to an alpha of .5 if user specifies a margin mapping
-  if (is.null(prmL$exPrm[["alpha"]]) && (marginGroupColour || marginGroupFill)) {
+  if (is.null(prmL$exPrm[["alpha"]]) && (groupColour || groupFill)) {
     prmL$exPrm[["alpha"]] <- .5
   }
 
@@ -171,19 +170,19 @@ getGeomFun <- function(type) {
 }
 
 # Wrapper function to create a "raw" marginal plot
-genRawMargPlot <- function(marg, type, scatPbuilt, prmL, marginGroupColour,
-                           marginGroupFill) {
+genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+                           groupFill) {
 
   data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
   
   noGeomPlot <- margPlotNoGeom(
     data, type = type, scatPbuilt = scatPbuilt, 
-    marginGroupColour = marginGroupColour, marginGroupFill = marginGroupFill
+    groupColour = groupColour, groupFill = groupFill
   )
   
   finalParms <- alterParams(
     marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt, 
-    marginGroupColour = marginGroupColour, marginGroupFill = marginGroupFill
+    groupColour = groupColour, groupFill = groupFill
   )
   
   geomFun <- getGeomFun(type = type)
@@ -210,12 +209,12 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, marginGroupColour,
 }
 
 # Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, marginGroupColour, 
-                             marginGroupFill) {
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour, 
+                             groupFill) {
   
   rawMarg <- genRawMargPlot(
     marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL, 
-    marginGroupColour = marginGroupColour, marginGroupFill = marginGroupFill
+    groupColour = groupColour, groupFill = groupFill
   )
   
   margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg, 

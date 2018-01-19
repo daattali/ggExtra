@@ -84,7 +84,7 @@
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot", "violin"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams = list(), yparams = list(),
-                       marginGroupColour = FALSE, marginGroupFill = FALSE) {
+                       groupColour = FALSE, groupFill = FALSE) {
 
   # Figure out all the default parameters.
   type <- match.arg(type)
@@ -123,16 +123,16 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Top plot = horizontal margin plot, which corresponds to x marg
   if (margins != "y") { 
     top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt, 
-                            prmL = prmL, marginGroupColour = marginGroupColour, 
-                            marginGroupFill = marginGroupFill)
+                            prmL = prmL, groupColour = groupColour, 
+                            groupFill = groupFill)
   }
 
   # If margins = y or 'both' (x and y), then you have to create right plot.
   # (right plot = vertical margin plot, which corresponds to y marg)
   if (margins != "x") { 
     right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
-                              prmL = prmL, marginGroupColour = marginGroupColour, 
-                              marginGroupFill = marginGroupFill)
+                              prmL = prmL, groupColour = groupColour, 
+                              groupFill = groupFill)
   }
 
   # Now add the marginal plots to the scatter plot

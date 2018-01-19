@@ -43,13 +43,13 @@ funList <-
         p = basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
     ),
     "col and fill mapped" = function() ggMarginal(
-      p = margMapP(), marginGroupColour = TRUE, marginGroupFill = TRUE
+      p = margMapP(), groupColour = TRUE, groupFill = TRUE
     ),
     "fill mapped with low alpha" = function() ggMarginal(
-      p = margMapP(), marginGroupFill = TRUE, alpha = .2
+      p = margMapP(), groupFill = TRUE, alpha = .2
     ),
     "colour mapped with grey fill"  = function() ggMarginal(
-      p = margMapP(), marginGroupColour = TRUE, fill = "grey"
+      p = margMapP(), groupColour = TRUE, fill = "grey"
     )
   )
 
