@@ -98,7 +98,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
     mapping <- structure(c(mapping, xtraMap), class = "uneval")
   }
 
-  # Boxplot is the only plot type that needs y aes
+  # Boxplot and violin plots need y aes
   if (type %in% c("boxplot", "violin")) {
     mapping$y <- as.symbol("var")
   }
