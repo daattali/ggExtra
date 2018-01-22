@@ -31,16 +31,16 @@ runggplot2InternalsTests <- function(ggplot2Version) {
       is.null(ggplot2::ggplot_build(titleP(ggplot2::theme()))$plot$labels$title)
     })
 
-    test_that("ggplot2 models scatter plot data as expected" , {
-
-      scatPbuilt <- ggplot2::ggplot_build(basicScatP())
-      scatDF <- scatPbuilt[["data"]][[1]]
-      expect_true({
-        "x" %in% colnames(scatDF) && "y" %in% colnames(scatDF)
-      })
-
+  })
+  
+  test_that("ggplot2 models scatter plot data as expected" , {
+    
+    scatPbuilt <- ggplot2::ggplot_build(basicScatP())
+    scatDF <- scatPbuilt[["data"]][[1]]
+    expect_true({
+      "x" %in% colnames(scatDF) && "y" %in% colnames(scatDF)
     })
-
+    
   })
   
 }
