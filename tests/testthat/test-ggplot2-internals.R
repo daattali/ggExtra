@@ -43,6 +43,21 @@ runggplot2InternalsTests <- function(ggplot2Version) {
     
   })
   
+  test_that("ggplot2 uses positive integers for groups and -1 for no groups" , {
+    
+    p1 <- ggplot2::ggplot(
+      mtcars, ggplot2::aes(x = wt, y = mpg, colour = factor(gear))
+    ) + ggplot2::geom_point()
+    bp <- ggplot2::ggplot_build(p1)
+    grp_vals <- unique(bp$data[[1]]$group)
+    expect_true(all(grp_vals[order(grp_vals)] == c(1, 2, 3)))
+    
+    bp2 <- ggplot2::ggplot_build(basicScatP())
+    grp_vals2 <- unique(bp2$data[[1]]$group)
+    expect_true(grp_vals2 == -1L)
+    
+  })
+  
 }
 
 # Function to run all tests against ggplot2 internals under all ggplot2 versions
