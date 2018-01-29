@@ -77,7 +77,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
       )
     } 
 
-    data <- data[, c("var", "colour"), drop = FALSE]
+    data <- data[, c("var", "colour", "group"), drop = FALSE]
     if (groupFill) {
       data[, "fill"] <- data[, "colour"]
     }
@@ -86,11 +86,11 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
     names(values) <- values
     
     if (groupColour && !groupFill) {
-      xtraMapNames <- "colour"
+      xtraMapNames <- c("colour", "group")
     } else if (groupColour && groupFill) {
       xtraMapNames <- c("colour", "fill")
     } else {
-      xtraMapNames <- "fill"
+      xtraMapNames <- c("fill", "group")
     }
 
     xtraMap <- sapply(xtraMapNames, as.symbol, USE.NAMES = TRUE, 
@@ -169,9 +169,13 @@ getPanelScale <- function(marg, builtP) {
   }
 }
 
+geom_density2 <- function(...) {
+  ggplot2::geom_density(colour = "NA", ...) 
+}
+
 getGeomFun <- function(type) {
   switch (type,
-    "density" = ggplot2::geom_density,
+    "density" = geom_density2,
     "histogram" = ggplot2::geom_histogram,
     "boxplot" = ggplot2::geom_boxplot,
     "violin" = ggplot2::geom_violin
@@ -193,21 +197,21 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
     marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt, 
     groupColour = groupColour, groupFill = groupFill
   )
-  
+
   geomFun <- getGeomFun(type = type)
-  layer <- do.call(geomFun, finalParms)
-  plot <- noGeomPlot + layer 
   
-  # get rid of density outline along left, bottom, and right sides of 
-  # distribution
   if (type == "density") {
-    plot <- plot + 
-      ggplot2::geom_hline(yintercept = 0, colour = "white", 
-                          size = 1.5) +
-      ggplot2::geom_vline(xintercept = min(data$var), colour = "white", 
-                          size = 1.5) +
-      ggplot2::geom_vline(xintercept = max(data$var), colour = "white", 
-                          size = 1.5)
+    density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
+    layer1 <- do.call(geomFun, density_parms)
+
+    line_parms <- finalParms[names(finalParms) != "fill"]
+    line_parms$stat <- "density"
+    layer2 <- do.call(ggplot2::geom_line, line_parms)
+    
+    plot <- noGeomPlot + layer1 + layer2
+  } else {
+    layer <- do.call(geomFun, finalParms)
+    plot <- noGeomPlot + layer 
   }
   
   if (needsFlip(marg = marg, type = type)) {
