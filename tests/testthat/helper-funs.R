@@ -10,7 +10,7 @@ ggMarg2 <- function(type, ...) {
 margMapP <- function() {
   ggplot2::ggplot(data = mtcars) +
     ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = factor(vs))) +
-    ggplot2::scale_colour_manual(values = c("green", "brown")) 
+    ggplot2::scale_colour_manual(values = c("green", "blue")) 
 }
 
 funList <-
