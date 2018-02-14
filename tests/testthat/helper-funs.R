@@ -126,12 +126,25 @@ getSnapShotRepo <- function(package, version) {
   )
 }
 
+is_current_version <- function(version, versions) {
+  all(
+    vapply(
+      versions, 
+      function(x) utils::compareVersion(version, x) == 1, 
+      logical(1)
+    )
+  )
+}
+
 attemptRepoDate <- function(package, version) {
   arch <- devtools:::package_find_repo(
     package, "https://cloud.r-project.org"
   )
   versions <- gsub(".*/[^_]+_([^[:alpha:]]+)\\.tar\\.gz", "\\1", arch$path)
   date <- arch[versions == version, "mtime", drop = TRUE]
+  if (length(date) == 0 && is_current_version(version, versions)) {
+    return("https://cloud.r-project.org")
+  }
   dateString <- as.character(as.Date(date, format = "%Y/%m/%d") + 2)
   sprintf("https://mran.microsoft.com/snapshot/%s", dateString)
 }
