@@ -76,11 +76,7 @@ withVersions <- function(..., code) {
   unloadPackages(packages = names(packageVersions))
   on.exit(unloadPackages(packages = names(packageVersions)))
   
-  dir <- tempfile()
-  dir.create(dir)
-  on.exit(unlink(dir))
-  
-  withr::with_libpaths(dir, action = "prefix", code = {
+  withr::with_temp_libpaths({
     mapply(installVersion2, package = names(packageVersions), version = packageVersions)
     force(code)
   })
