@@ -105,7 +105,9 @@ installVersion2 <- function(package, version) {
     # of install_github. To fix this, we have to manually unload rlang 
     # (which requires unloading various other packages), install ggplot2,
     # then reattach vidffr/testthat to search path  
-    unloadPackages(c("vdiffr", "purrr", "tibble", "testthat", "rlang"))
+    unloadPackages(
+      c("vdiffr", "purrr", "ggplot2", "tibble", "testthat", "pillar", "rlang")
+    )
     devtools::install_github("tidyverse/ggplot2", force = TRUE)
     library(vdiffr)
     library(testthat)
