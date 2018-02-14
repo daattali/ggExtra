@@ -203,8 +203,11 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
   if (type == "density") {
     density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
     layer1 <- do.call(geomFun, density_parms)
+    
+    # Don't need fill b/c we get fill from geom_density
+    # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
+    line_parms <- finalParms[!(names(finalParms) %in% c("fill", "alpha"))]    
 
-    line_parms <- finalParms[names(finalParms) != "fill"]
     line_parms$stat <- "density"
     layer2 <- do.call(ggplot2::geom_line, line_parms)
     
