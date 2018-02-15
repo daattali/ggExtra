@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{ggExtraPlot object.}
 
-\item{newpage}{Should a new page (i.e., an empty page) be drawn before the 
+\item{newpage}{Should a new page (i.e., an empty page) be drawn before the
 ggExtraPlot is drawn?}
 
 \item{...}{ignored}

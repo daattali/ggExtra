@@ -6,7 +6,8 @@
 \usage{
 ggMarginal(p, data, x, y, type = c("density", "histogram", "boxplot",
   "violin"), margins = c("both", "x", "y"), size = 5, ...,
-  xparams = list(), yparams = list())
+  xparams = list(), yparams = list(), groupColour = FALSE,
+  groupFill = FALSE)
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
@@ -40,6 +41,16 @@ the x axis.}
 
 \item{yparams}{List of extra parameters to use only for the marginal plot along
 the y axis.}
+
+\item{groupColour}{Do you want the colour mapping from your scatter plot to 
+to used to define the colours of the marginal density plots? If \code{TRUE}, 
+the variable mapped to \code{colour} in your scatter plot must be a character 
+or factor variable. See examples.}
+
+\item{groupFill}{Do you want the colour mapping from your scatter plot to 
+to used to define the fills of the marginal density plots? If \code{TRUE}, 
+the variable mapped to \code{colour} in your scatter plot must be a character 
+or factor variable. See examples.}
 }
 \value{
 An object of class \code{ggExtraPlot}. This object can be printed to show the
@@ -102,6 +113,17 @@ ggMarginal(p3)
 
 p4 <- p3 + ggplot2::scale_x_continuous(limits = c(2, 6)) + ggplot2::theme_bw(50)
 ggMarginal(p4)
+
+# Using groupColour and groupFill
+# In order to use either of these arguments, we must map colour in the scatter 
+# plot to a factor or character variable (e.g., the vs variable below)
+p <- ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = drat, colour = factor(vs))) +
+     ggplot2::geom_point()
+# Now we can color or fill the marginal density plots using the same groupings
+# as we used in the scatter plot
+ggMarginal(p, groupColour = TRUE)
+ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
+
 }
 \seealso{
 \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}

@@ -1,15 +1,4 @@
 toParamList <- function(exPrm, xPrm, yPrm) {
-  
-  if (is.null(exPrm[['colour']]) && 
-      is.null(exPrm[['color']]) && 
-      is.null(exPrm[['col']])) {
-    exPrm[['colour']] <- "black"
-  }
-
-  if (is.null(exPrm[['fill']])) {
-    exPrm[['fill']] <- "grey"
-  }
-  
   list(
     exPrm = exPrm,
     xPrm = xPrm,
@@ -35,7 +24,7 @@ wasFlipped <- function(scatPbuilt) {
   any(grepl("flip", classCoord, ignore.case = TRUE))
 }
 
-getVarDF <- function(scatPbuilt, marg) {
+getVarDf <- function(scatPbuilt, marg) {
   
   if (wasFlipped(scatPbuilt = scatPbuilt)) {
     marg <- switch(marg,
@@ -54,11 +43,11 @@ getVarDF <- function(scatPbuilt, marg) {
   if (!any(dfBools)) {
     stop("No geom_point layer was found in your scatter plot", call. = FALSE)
   }
-  
+
   scatDF <- scatData[dfBools][[1]]
-  
+
   colnames(scatDF)[colnames(scatDF) == marg] <- "var"
-  scatDF
+  scatDF[, c("var", "fill", "colour", "group")]
 }
 
 needsFlip <- function(marg, type) {
@@ -71,24 +60,82 @@ needsFlip <- function(marg, type) {
   topAndBoxP || rightAndNonBoxP
 }
 
-margPlotNoGeom <- function(marg, type, data) {
+margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
+  
+  mapping <- ggplot2::aes(x = var)
+  
+  haveMargMap <- groupColour || groupFill
+  
+  if (haveMargMap) {
+    
+    # Make sure user hasn't mapped a non-factor 
+    if (data[["group"]][1] < 0) { 
+      stop(
+        "Colour must be mapped to a factor or character variable ",
+        "(not a numeric variable) in your scatter plot if you set ",
+         "groupColour = TRUE or groupFill = TRUE"
+      )
+    } 
 
-  # Build plot (sans geom). Note: Boxplot is the only plot type that needs y aes
-  if (type %in% c("boxplot", "violin")) {
-    plot <- ggplot2::ggplot(data = data, 
-                            ggplot2::aes_string(x = 'var', y = 'var'))
-  } else {
-    plot <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = 'var'))
+    data <- data[, c("var", "colour", "group"), drop = FALSE]
+    if (groupFill) {
+      data[, "fill"] <- data[, "colour"]
+    }
+    
+    values <- unique(data$colour)
+    names(values) <- values
+    
+    if (groupColour && !groupFill) {
+      xtraMapNames <- c("colour", "group")
+    } else if (groupColour && groupFill) {
+      xtraMapNames <- c("colour", "fill")
+    } else {
+      xtraMapNames <- c("fill", "group")
+    }
+
+    xtraMap <- sapply(xtraMapNames, as.symbol, USE.NAMES = TRUE, 
+                      simplify = FALSE)
+    mapping <- structure(c(mapping, xtraMap), class = "uneval")
   }
 
-  if (needsFlip(marg = marg, type = type)) {
-    plot <- plot +  ggplot2::coord_flip()
+  # Boxplot and violin plots need y aes
+  if (type %in% c("boxplot", "violin")) {
+    mapping$y <- as.symbol("var")
+  }
+  
+  # Build plot (sans geom)
+  plot <- ggplot2::ggplot(data = data, mapping = mapping)
+  
+  if (haveMargMap) {
+    if ("colour" %in% xtraMapNames) {
+      plot <- plot + ggplot2::scale_colour_manual(values = values)
+    }
+    if ("fill" %in% xtraMapNames) {
+      plot <- plot + ggplot2::scale_fill_manual(values = values)
+    }
   }
   
   plot
 }
 
-alterParams <- function(marg, type, prmL, scatPbuilt) {
+utils::globalVariables("var")
+
+alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
+                        groupFill) {
+  
+  if (
+    is.null(prmL$exPrm[['colour']]) &&
+    is.null(prmL$exPrm[['color']]) &&
+    is.null(prmL$exPrm[['col']]) &&
+    !groupColour
+  ) {
+    prmL$exPrm[['colour']] <- "black"
+  }
+  
+  # default to an alpha of .5 if user specifies a margin mapping
+  if (is.null(prmL$exPrm[["alpha"]]) && (groupColour || groupFill)) {
+    prmL$exPrm[["alpha"]] <- .5
+  }
 
   # merge the parameters in an order that ensures that marginal plot params 
   # overwrite general params
@@ -100,14 +147,8 @@ alterParams <- function(marg, type, prmL, scatPbuilt) {
   lim_fun <- panScale$get_limits
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
-  } 
-  
-  # we're using geom_line for the density plot so that there will be no bottom line...
-  # ...so we have to tell geom_line to use non-default stat (stat = density)
-  if (type == "density") {
-    prmL$exPrm[['stat']] <- "density"
   }
-
+  
   prmL$exPrm
 }
 
@@ -128,9 +169,13 @@ getPanelScale <- function(marg, builtP) {
   }
 }
 
+geom_density2 <- function(...) {
+  ggplot2::geom_density(colour = "NA", ...) 
+}
+
 getGeomFun <- function(type) {
   switch (type,
-    "density" = ggplot2::geom_line,
+    "density" = geom_density2,
     "histogram" = ggplot2::geom_histogram,
     "boxplot" = ggplot2::geom_boxplot,
     "violin" = ggplot2::geom_violin
@@ -138,20 +183,56 @@ getGeomFun <- function(type) {
 }
 
 # Wrapper function to create a "raw" marginal plot
-genRawMargPlot <- function(marg, type, scatPbuilt, prmL) {
-  data <- getVarDF(scatPbuilt = scatPbuilt, marg = marg)
-  noGeomPlot <- margPlotNoGeom(marg = marg, type = type, data = data)
-  finalParms <- alterParams(marg = marg, type = type, prmL = prmL, 
-                            scatPbuilt = scatPbuilt)
+genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+                           groupFill) {
+
+  data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
+  
+  noGeomPlot <- margPlotNoGeom(
+    data, type = type, scatPbuilt = scatPbuilt, 
+    groupColour = groupColour, groupFill = groupFill
+  )
+  
+  finalParms <- alterParams(
+    marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt, 
+    groupColour = groupColour, groupFill = groupFill
+  )
+
   geomFun <- getGeomFun(type = type)
-  layer <- do.call(geomFun, finalParms)
-  noGeomPlot + layer
+  
+  if (type == "density") {
+    density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
+    layer1 <- do.call(geomFun, density_parms)
+    
+    # Don't need fill b/c we get fill from geom_density
+    # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
+    line_parms <- finalParms[!(names(finalParms) %in% c("fill", "alpha"))]    
+
+    line_parms$stat <- "density"
+    layer2 <- do.call(ggplot2::geom_line, line_parms)
+    
+    plot <- noGeomPlot + layer1 + layer2
+  } else {
+    layer <- do.call(geomFun, finalParms)
+    plot <- noGeomPlot + layer 
+  }
+  
+  if (needsFlip(marg = marg, type = type)) {
+    plot <- plot + ggplot2::coord_flip()
+  }
+  
+  plot
 }
 
 # Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL) {
-  rawMarg <- genRawMargPlot(marg = marg, type = type, scatPbuilt = scatPbuilt, 
-                            prmL = prmL)
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour, 
+                             groupFill) {
+  
+  rawMarg <- genRawMargPlot(
+    marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL, 
+    groupColour = groupColour, groupFill = groupFill
+  )
+  
   margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg, 
                              scatPTheme = scatPbuilt$plot$theme)
   margThemed + getScale(marg = marg, type = type, builtP = scatPbuilt)

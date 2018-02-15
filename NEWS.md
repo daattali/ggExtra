@@ -1,12 +1,13 @@
-# ggExtra 0.7.1
+# ggExtra 0.7.1.9000
 
 NEW FEATURES
 
-- Added support for violin plots
+- Added support for violin plots (#62)
+- Added support for mapping colour from the scatter plot to colour/fill in the marginal plots (#61)
 
 BUX FIXES
 
-- Make sure marginal data comes from correct data frame (#68) 
+- Make sure marginal data comes from correct data frame (#67) 
 
 # ggExtra 0.7
 

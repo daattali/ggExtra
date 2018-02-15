@@ -7,6 +7,12 @@ ggMarg2 <- function(type, ...) {
   ggMarginal(p = basicScatP(), type = type, ...)
 }
 
+margMapP <- function() {
+  ggplot2::ggplot(data = mtcars) +
+    ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = factor(vs))) +
+    ggplot2::scale_colour_manual(values = c("green", "blue")) 
+}
+
 funList <-
   list(
     "basic density" = function() ggMarg2("density"),
@@ -35,6 +41,15 @@ funList <-
     ),
     "scale transformations work" = function() ggMarginal(
         p = basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
+    ),
+    "col and fill mapped" = function() ggMarginal(
+      p = margMapP(), groupColour = TRUE, groupFill = TRUE
+    ),
+    "fill mapped with low alpha" = function() ggMarginal(
+      p = margMapP(), groupFill = TRUE, alpha = .2
+    ),
+    "colour mapped with grey fill"  = function() ggMarginal(
+      p = margMapP(), groupColour = TRUE, fill = "grey"
     )
   )
 
@@ -61,11 +76,7 @@ withVersions <- function(..., code) {
   unloadPackages(packages = names(packageVersions))
   on.exit(unloadPackages(packages = names(packageVersions)))
   
-  dir <- tempfile()
-  dir.create(dir)
-  on.exit(unlink(dir))
-  
-  withr::with_libpaths(dir, action = "prefix", code = {
+  withr::with_temp_libpaths({
     mapply(installVersion2, package = names(packageVersions), version = packageVersions)
     force(code)
   })
@@ -87,7 +98,19 @@ installVersion2 <- function(package, version) {
   )
   
   if (package == "ggplot2" && version == "latest") {
-    devtools::install_github("tidyverse/ggplot2", upgrade_dependencies = FALSE)
+    # rlang v0.1.6 is loaded in memory at this point (due to various library 
+    # calls earlier in execution). The latest version of ggplot2 needs at least
+    # rlang v0.1.6.9002. For some reason, install_github() doesn't want to 
+    # reload rlang after it installs the new version...This results in failure 
+    # of install_github. To fix this, we have to manually unload rlang 
+    # (which requires unloading various other packages), install ggplot2,
+    # then reattach vidffr/testthat to search path  
+    unloadPackages(
+      c("vdiffr", "purrr", "ggplot2", "tibble", "testthat", "pillar", "rlang")
+    )
+    devtools::install_github("tidyverse/ggplot2", force = TRUE)
+    library(vdiffr)
+    library(testthat)
   } else if (currentVersion != version) {
     repos <- getSnapShotRepo(package = package, version = version)
     devtools::install_version(package, version, repos = repos)
@@ -103,12 +126,25 @@ getSnapShotRepo <- function(package, version) {
   )
 }
 
+is_current_version <- function(version, versions) {
+  all(
+    vapply(
+      versions, 
+      function(x) utils::compareVersion(version, x) == 1, 
+      logical(1)
+    )
+  )
+}
+
 attemptRepoDate <- function(package, version) {
   arch <- devtools:::package_find_repo(
-    package = package, repo = "https://cloud.r-project.org"
+    package, "https://cloud.r-project.org"
   )
   versions <- gsub(".*/[^_]+_([^[:alpha:]]+)\\.tar\\.gz", "\\1", arch$path)
   date <- arch[versions == version, "mtime", drop = TRUE]
+  if (length(date) == 0 && is_current_version(version, versions)) {
+    return("https://cloud.r-project.org")
+  }
   dateString <- as.character(as.Date(date, format = "%Y/%m/%d") + 2)
   sprintf("https://mran.microsoft.com/snapshot/%s", dateString)
 }
