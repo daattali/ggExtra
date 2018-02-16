@@ -7,13 +7,13 @@ toParamList <- function(exPrm, xPrm, yPrm) {
 }
 
 reconcileScatPlot <- function(p, data, x, y) {
-  
+
   if (missing(p)) {
     if (missing(data) || missing(x) || missing(y)) {
       stop("`data`, `x`, and `y` must be provided if `p` is not provided",
            call. = FALSE)
     }
-    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) + 
+    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) +
       ggplot2::geom_point()
   }
   p
@@ -25,21 +25,21 @@ wasFlipped <- function(scatPbuilt) {
 }
 
 getVarDf <- function(scatPbuilt, marg) {
-  
+
   if (wasFlipped(scatPbuilt = scatPbuilt)) {
     marg <- switch(marg,
       "x" = "y",
       "y" = "x"
       )
   }
-  
+
   scatData <- scatPbuilt[["data"]]
-  
+
   # Get data frame with geom_point layer data
   dfBools <- vapply(scatData, function(x) {
     "x" %in% colnames(x) && "y" %in% colnames(x)
   }, logical(1))
-  
+
   if (!any(dfBools)) {
     stop("No geom_point layer was found in your scatter plot", call. = FALSE)
   }
@@ -51,9 +51,9 @@ getVarDf <- function(scatPbuilt, marg) {
 }
 
 needsFlip <- function(marg, type) {
-  
-  # If the marginal plot is: (for the x margin (top) and is a boxplot) or 
-  #                          (for the y margin (right) and is not a boxplot), 
+
+  # If the marginal plot is: (for the x margin (top) and is a boxplot) or
+  #                          (for the y margin (right) and is not a boxplot),
   # ... then have to flip
   topAndBoxP <- marg == "x" && type %in% c("boxplot", "violin")
   rightAndNonBoxP <- marg == "y" && !(type %in% c("boxplot", "violin"))
@@ -61,30 +61,30 @@ needsFlip <- function(marg, type) {
 }
 
 margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
-  
+
   mapping <- ggplot2::aes(x = var)
-  
+
   haveMargMap <- groupColour || groupFill
-  
+
   if (haveMargMap) {
-    
-    # Make sure user hasn't mapped a non-factor 
-    if (data[["group"]][1] < 0) { 
+
+    # Make sure user hasn't mapped a non-factor
+    if (data[["group"]][1] < 0) {
       stop(
         "Colour must be mapped to a factor or character variable ",
         "(not a numeric variable) in your scatter plot if you set ",
-         "groupColour = TRUE or groupFill = TRUE"
+         "groupColour = TRUE or groupFill = TRUE (ie. use `aes(colour = ...)`)"
       )
-    } 
+    }
 
     data <- data[, c("var", "colour", "group"), drop = FALSE]
     if (groupFill) {
       data[, "fill"] <- data[, "colour"]
     }
-    
+
     values <- unique(data$colour)
     names(values) <- values
-    
+
     if (groupColour && !groupFill) {
       xtraMapNames <- c("colour", "group")
     } else if (groupColour && groupFill) {
@@ -93,7 +93,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
       xtraMapNames <- c("fill", "group")
     }
 
-    xtraMap <- sapply(xtraMapNames, as.symbol, USE.NAMES = TRUE, 
+    xtraMap <- sapply(xtraMapNames, as.symbol, USE.NAMES = TRUE,
                       simplify = FALSE)
     mapping <- structure(c(mapping, xtraMap), class = "uneval")
   }
@@ -102,10 +102,10 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   if (type %in% c("boxplot", "violin")) {
     mapping$y <- as.symbol("var")
   }
-  
+
   # Build plot (sans geom)
   plot <- ggplot2::ggplot(data = data, mapping = mapping)
-  
+
   if (haveMargMap) {
     if ("colour" %in% xtraMapNames) {
       plot <- plot + ggplot2::scale_colour_manual(values = values)
@@ -114,7 +114,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
       plot <- plot + ggplot2::scale_fill_manual(values = values)
     }
   }
-  
+
   plot
 }
 
@@ -122,7 +122,7 @@ utils::globalVariables("var")
 
 alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
                         groupFill) {
-  
+
   if (
     is.null(prmL$exPrm[['colour']]) &&
     is.null(prmL$exPrm[['color']]) &&
@@ -131,13 +131,13 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   ) {
     prmL$exPrm[['colour']] <- "black"
   }
-  
+
   # default to an alpha of .5 if user specifies a margin mapping
   if (is.null(prmL$exPrm[["alpha"]]) && (groupColour || groupFill)) {
     prmL$exPrm[["alpha"]] <- .5
   }
 
-  # merge the parameters in an order that ensures that marginal plot params 
+  # merge the parameters in an order that ensures that marginal plot params
   # overwrite general params
   prmL$exPrm <- append(prmL[[paste0(marg, "Prm")]], prmL$exPrm)
   prmL$exPrm <- prmL$exPrm[!duplicated(names(prmL$exPrm))]
@@ -148,7 +148,7 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
   }
-  
+
   prmL$exPrm
 }
 
@@ -170,7 +170,7 @@ getPanelScale <- function(marg, builtP) {
 }
 
 geom_density2 <- function(...) {
-  ggplot2::geom_density(colour = "NA", ...) 
+  ggplot2::geom_density(colour = "NA", ...)
 }
 
 getGeomFun <- function(type) {
@@ -187,53 +187,53 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
                            groupFill) {
 
   data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
-  
+
   noGeomPlot <- margPlotNoGeom(
-    data, type = type, scatPbuilt = scatPbuilt, 
+    data, type = type, scatPbuilt = scatPbuilt,
     groupColour = groupColour, groupFill = groupFill
   )
-  
+
   finalParms <- alterParams(
-    marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt, 
+    marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt,
     groupColour = groupColour, groupFill = groupFill
   )
 
   geomFun <- getGeomFun(type = type)
-  
+
   if (type == "density") {
     density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
     layer1 <- do.call(geomFun, density_parms)
-    
+
     # Don't need fill b/c we get fill from geom_density
     # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
-    line_parms <- finalParms[!(names(finalParms) %in% c("fill", "alpha"))]    
+    line_parms <- finalParms[!(names(finalParms) %in% c("fill", "alpha"))]
 
     line_parms$stat <- "density"
     layer2 <- do.call(ggplot2::geom_line, line_parms)
-    
+
     plot <- noGeomPlot + layer1 + layer2
   } else {
     layer <- do.call(geomFun, finalParms)
-    plot <- noGeomPlot + layer 
+    plot <- noGeomPlot + layer
   }
-  
+
   if (needsFlip(marg = marg, type = type)) {
     plot <- plot + ggplot2::coord_flip()
   }
-  
+
   plot
 }
 
 # Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour, 
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
                              groupFill) {
-  
+
   rawMarg <- genRawMargPlot(
-    marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL, 
+    marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL,
     groupColour = groupColour, groupFill = groupFill
   )
-  
-  margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg, 
+
+  margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg,
                              scatPTheme = scatPbuilt$plot$theme)
   margThemed + getScale(marg = marg, type = type, builtP = scatPbuilt)
 }
@@ -246,7 +246,7 @@ addMainTheme <- function(rawMarg, marg, scatPTheme) {
     {rawMarg <- rawMarg + ggplot2::theme_void()},
     silent = TRUE
   )
-  
+
     # copy theme from main plot
     themeProps <- c("text",
                     "axis.text","axis.text.x", "axis.text.y",
@@ -257,16 +257,16 @@ addMainTheme <- function(rawMarg, marg, scatPTheme) {
     for(property in themeProps) {
       rawMarg$theme[[property]] <- scatPTheme[[property]]
     }
-    
+
     # make text and line colours transparent
     transparentProps <- c("text",
                           "axis.text", "axis.text.x", "axis.text.y",
                           "axis.ticks",
                           "axis.title", "axis.title.x", "axis.title.y",
                           "line")
-    
+
     for(property in transparentProps) {
-      
+
       if (!is.null(rawMarg$theme[[property]])) {
         rawMarg$theme[[property]]$colour <- "transparent"
       } else if (property %in% c("axis.ticks", "line")) {
@@ -278,16 +278,16 @@ addMainTheme <- function(rawMarg, marg, scatPTheme) {
         themePair[[property]] <- ggplot2::element_text(colour = "transparent")
         rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
       }
-      
+
     }
-    
+
     # some more theme properties
     rawMarg <- rawMarg +
       ggplot2::theme(
         panel.background = ggplot2::element_blank(),
         axis.ticks.length = grid::unit(0, "null")
       )
-    
+
     # since the tick marks are removed on the marginal plot, we need to add
     # space for them so that the marginal plot will align with the main plot
     if (is.null(scatPTheme$axis.ticks.length)) {
@@ -297,23 +297,23 @@ addMainTheme <- function(rawMarg, marg, scatPTheme) {
       marginUnit <- attr(scatPTheme$axis.ticks.length, "unit")
       marginLength <- as.numeric(scatPTheme$axis.ticks.length, "unit")
     }
-    
+
     if (marg == "x") {
-      rawMarg <- rawMarg + 
+      rawMarg <- rawMarg +
         ggplot2::theme(
           axis.title.x = ggplot2::element_blank(),
           axis.text.x = ggplot2::element_blank(),
           plot.margin = grid::unit(c(0, 0, 0, marginLength), marginUnit)
         )
     } else {
-      rawMarg <- rawMarg + 
+      rawMarg <- rawMarg +
         ggplot2::theme(
           axis.title.y = ggplot2::element_blank(),
           axis.text.y = ggplot2::element_blank(),
           plot.margin = grid::unit(c(0, 0, marginLength, 0), marginUnit)
         )
     }
-  
+
   rawMarg
 }
 
@@ -321,9 +321,9 @@ addMainTheme <- function(rawMarg, marg, scatPTheme) {
 # We have to do a bit of a trick on the marginal plot that's flipped by
 # taking the original x/y scale and manually changing it to the other axis
 getScale <- function(marg, type, builtP) {
-  
+
   scale <- getPanelScale(marg = marg, builtP = builtP)
-  
+
   if (needsFlip(marg = marg, type = type)) {
     if (marg == "x") {
       scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
@@ -339,9 +339,9 @@ getScale <- function(marg, type, builtP) {
 # This is needed so that if the range of the plot is manually changed, the
 # marginal plots will use the same range
 getLimits <- function(marg, builtP) {
-  
+
   scale <- getPanelScale(marg = marg, builtP = builtP)
-  
+
   range <- scale$get_limits()
   if (is.null(range)) {
     range <- scale$range$range
@@ -367,10 +367,10 @@ getMargGrob <- function(margPlot) {
 addTopMargPlot <- function(ggMargGrob, top, size) {
   panelPos <- getPanelPos(gtableGrob = ggMargGrob)
   topMargG <- getMargGrob(margPlot = top)
-  gt <- gtable::gtable_add_rows(x = ggMargGrob, 
+  gt <- gtable::gtable_add_rows(x = ggMargGrob,
                                 heights = grid::unit(1/size, "null"), pos = 0)
-  gt <- gtable::gtable_add_grob(x = gt, grobs = topMargG, t = 1, b = 1, 
-                                l = panelPos[["l"]], r = panelPos[["r"]], 
+  gt <- gtable::gtable_add_grob(x = gt, grobs = topMargG, t = 1, b = 1,
+                                l = panelPos[["l"]], r = panelPos[["r"]],
                                 z = Inf, clip = "on", name = "topMargPlot")
   gt
 }
@@ -378,23 +378,23 @@ addTopMargPlot <- function(ggMargGrob, top, size) {
 addRightMargPlot <- function(ggMargGrob, right, size) {
   panelPos <- getPanelPos(gtableGrob = ggMargGrob)
   rightMargG <- getMargGrob(margPlot = right)
-  gt <- gtable::gtable_add_cols(x = ggMargGrob, 
+  gt <- gtable::gtable_add_cols(x = ggMargGrob,
                                 widths = grid::unit(1/size, "null"),
                                 pos = -1)
-  gt <- gtable::gtable_add_grob(x = gt, grobs = rightMargG, t = panelPos[["t"]], 
+  gt <- gtable::gtable_add_grob(x = gt, grobs = rightMargG, t = panelPos[["t"]],
                                 b = panelPos[["b"]], r = ncol(gt), l = ncol(gt),
                                 z = Inf, clip = "on", name = "rightMargPlot")
   gt
 }
 
-# Pull out the title and subtitle grobs for a plot, after we have checked to 
+# Pull out the title and subtitle grobs for a plot, after we have checked to
 # make sure there is a title. Note: plot.title and plot.subtitle will actually
-# always exist (I believe) in recent versions of ggplot2, even if the user 
+# always exist (I believe) in recent versions of ggplot2, even if the user
 # doesn't specify a title/subtitle. In these cases, the title/subtitle grobs
-# will be "zeroGrobs." However, a 'label' won't exist 
+# will be "zeroGrobs." However, a 'label' won't exist
 # (i.e, !is.null(pb$plot$labels$title) will be true) when there is no title,
 # so it's not like we will be needlessly adding zeroGrobs to our plot (though
-# it wouldn't be a problem, even if we did add the zeroGrobs - it would just take 
+# it wouldn't be a problem, even if we did add the zeroGrobs - it would just take
 # a little longer.
 getTitleGrobs <- function(p) {
   grobs <- ggplot2::ggplotGrob(p)$grobs
@@ -418,16 +418,16 @@ rbindGrobs <- function(topGrob, gtable, l, r) {
                           l = l, r = r, z = Inf)
 }
 
-# Add the title/subtitle grobs to the main ggextra plot, along with a little 
+# Add the title/subtitle grobs to the main ggextra plot, along with a little
 # padding
 addTitleGrobs <- function(ggxtraNoTtl, titleGrobs) {
   layout <- ggxtraNoTtl$layout
   l <- layout[layout$name == "panel", "l"]
-  spacerGrob <- grid::rectGrob(height = grid::unit(.2, "cm"), 
+  spacerGrob <- grid::rectGrob(height = grid::unit(.2, "cm"),
                                gp = grid::gpar(col = "white", fill = NULL))
   plotWSpace <- rbindGrobs(topGrob = spacerGrob, gtable = ggxtraNoTtl,
                            l = l, r = l)
-  plotWSubTitle <- rbindGrobs(topGrob = titleGrobs$subTitleG, 
+  plotWSubTitle <- rbindGrobs(topGrob = titleGrobs$subTitleG,
                               gtable = plotWSpace, l = l, r = l)
   rbindGrobs(topGrob = titleGrobs$titleG,
              gtable = plotWSubTitle, l = l, r = l)
