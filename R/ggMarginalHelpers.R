@@ -123,12 +123,7 @@ utils::globalVariables("var")
 alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
                         groupFill) {
 
-  if (
-    is.null(prmL$exPrm[['colour']]) &&
-    is.null(prmL$exPrm[['color']]) &&
-    is.null(prmL$exPrm[['col']]) &&
-    !groupColour
-  ) {
+  if (is.null(prmL$exPrm$colour) && !groupColour) { 
     prmL$exPrm[['colour']] <- "black"
   }
 
@@ -152,6 +147,26 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   prmL$exPrm
 }
 
+reconcileColParamApply <- function(prmL) {
+  lapply(prmL, reconcileColParam)
+}
+
+reconcileColParam <- function(paramEl) {
+  
+  col_vrnts <- c("colour", "color", "col")
+  vrnts_exts <- vapply(
+    col_vrnts, function(x) !is.null(paramEl[[x]]), logical(1), USE.NAMES = TRUE
+  )
+  
+  if (any(vrnts_exts)) {
+    paramEl$colour <- paramEl[[names(vrnts_exts[vrnts_exts])]]
+    paramEl$col <- NULL
+    paramEl$color <- NULL
+  }
+
+  paramEl
+}
+  
 getPanelScale <- function(marg, builtP) {
   above_221 <- utils::packageVersion("ggplot2") > "2.2.1"
   if (above_221) {

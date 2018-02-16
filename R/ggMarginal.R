@@ -108,7 +108,9 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 
   # Fill in param defaults and consolidate params into single list (prmL).
   prmL <- toParamList(exPrm = list(...), xPrm = xparams, yPrm = yparams)
-
+  # Reconcile different naming variants on "colour" param
+  prmL <- reconcileColParamApply(prmL)
+  
   # Create one version of the scat plot (scatP), based on values of p, data, x,
   # and y...also remove all margin around plot so that it's easier to position
   # the density plots beside the main plot
