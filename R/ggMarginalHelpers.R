@@ -123,12 +123,7 @@ utils::globalVariables("var")
 alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
                         groupFill) {
 
-  if (
-    is.null(prmL$exPrm[['colour']]) &&
-    is.null(prmL$exPrm[['color']]) &&
-    is.null(prmL$exPrm[['col']]) &&
-    !groupColour
-  ) {
+  if (is.null(prmL$exPrm$colour) && !groupColour) { 
     prmL$exPrm[['colour']] <- "black"
   }
 
@@ -148,10 +143,45 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
   }
+  
+  prmL <- overrideMappedParams(prmL, "colour", groupColour)
+  prmL <- overrideMappedParams(prmL, "fill", groupFill)
 
   prmL$exPrm
 }
 
+overrideMappedParams <- function(prmL, paramName, groupVar) {
+  if (!is.null(prmL$exPrm[[paramName]]) && groupVar) {
+    message(
+      "You specified group", paramName, " = TRUE as well as a ", paramName,
+      " parameter for a marginal plot. The ", paramName, " parameter will be",
+      " ignored in favor of using ", paramName, "s mapped from the scatter plot."
+    )
+    prmL$exPrm[[paramName]] <- NULL
+  }
+  prmL
+}
+
+reconcileColParamApply <- function(prmL) {
+  lapply(prmL, reconcileColParam)
+}
+
+reconcileColParam <- function(paramEl) {
+  
+  col_vrnts <- c("colour", "color", "col")
+  vrnts_exts <- vapply(
+    col_vrnts, function(x) !is.null(paramEl[[x]]), logical(1), USE.NAMES = TRUE
+  )
+  
+  if (any(vrnts_exts)) {
+    paramEl$colour <- paramEl[[names(vrnts_exts[vrnts_exts])]]
+    paramEl$col <- NULL
+    paramEl$color <- NULL
+  }
+
+  paramEl
+}
+  
 getPanelScale <- function(marg, builtP) {
   above_221 <- utils::packageVersion("ggplot2") > "2.2.1"
   if (above_221) {

@@ -50,6 +50,13 @@ funList <-
     ),
     "colour mapped with grey fill"  = function() ggMarginal(
       p = margMapP(), groupColour = TRUE, fill = "grey"
+    ),
+    "colour mapped and colour param provided" = function() ggMarginal(
+      p = margMapP(), groupColour = TRUE, colour = "red"
+    ),
+    "colour & fill mapped and both params provided" = function() ggMarginal(
+      p = margMapP(), groupColour = TRUE, groupFill = TRUE,
+      colour = "red", fill = "blue"
     )
   )
 
