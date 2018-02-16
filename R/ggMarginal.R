@@ -27,14 +27,14 @@
 #' the x axis.
 #' @param yparams List of extra parameters to use only for the marginal plot along
 #' the y axis.
-#' @param groupColour Do you want the colour mapping from your scatter plot to 
-#' to used to define the colours of the marginal density plots? If \code{TRUE}, 
-#' the variable mapped to \code{colour} in your scatter plot must be a character 
-#' or factor variable. See examples.
-#' @param groupFill Do you want the colour mapping from your scatter plot to 
-#' to used to define the fills of the marginal density plots? If \code{TRUE}, 
-#' the variable mapped to \code{colour} in your scatter plot must be a character 
-#' or factor variable. See examples.
+#' @param groupColour If \code{TRUE}, the colour (or outline) of the marginal
+#' plots will be grouped according to the variable mapped to \code{colour} in the
+#' scatter plot. The variable mapped to \code{colour} in the scatter plot must
+#' be a character or factor variable. See examples below.
+#' @param groupFill If \code{TRUE}, the fill of the marginal
+#' plots will be grouped according to the variable mapped to \code{colour} in the
+#' scatter plot. The variable mapped to \code{colour} in the scatter plot must
+#' be a character or factor variable. See examples below.
 #' @return An object of class \code{ggExtraPlot}. This object can be printed to show the
 #' plots or saved using any of the typical image-saving functions (for example, using
 #' \code{png()} or \code{pdf()}).
@@ -46,15 +46,16 @@
 #' while \code{ggMarginal(p, xparams = list(size=2), yparams = list(size=2))}
 #' will make the density plot outline thicker.
 #' @examples
+#' library(ggplot2)
 #'
 #' # basic usage
-#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+#' p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
 #' ggMarginal(p)
 #'
 #' # using some parameters
 #' set.seed(30)
 #' df <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
-#' p2 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+#' p2 <- ggplot(df, aes(x, y)) + geom_point()
 #' ggMarginal(p2)
 #' ggMarginal(p2, type = "histogram")
 #' ggMarginal(p2, margins = "x")
@@ -74,28 +75,26 @@
 #' set.seed(30)
 #' df2 <- data.frame(x = c(rnorm(250, 50, 10), rnorm(250, 100, 10)),
 #'                   y = runif(500, 0, 50))
-#' p2 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
+#' p2 <- ggplot(df2, aes(x, y)) + geom_point()
 #' ggMarginal(p2)
 #'
-#' p2 <- p2 + ggplot2::ggtitle("Random data") + ggplot2::theme_bw(30)
+#' p2 <- p2 + ggtitle("Random data") + theme_bw(30)
 #' ggMarginal(p2)
 #'
-#' p3 <- ggplot2::ggplot(df2, ggplot2::aes(log(x), y - 500)) + ggplot2::geom_point()
+#' p3 <- ggplot(df2, aes(log(x), y - 500)) + geom_point()
 #' ggMarginal(p3)
 #'
-#' p4 <- p3 + ggplot2::scale_x_continuous(limits = c(2, 6)) + ggplot2::theme_bw(50)
+#' p4 <- p3 + scale_x_continuous(limits = c(2, 6)) + theme_bw(50)
 #' ggMarginal(p4)
-#' 
+#'
 #' # Using groupColour and groupFill
-#' # In order to use either of these arguments, we must map colour in the scatter 
-#' # plot to a factor or character variable (e.g., the vs variable below)
-#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = drat, colour = factor(vs))) +
-#'      ggplot2::geom_point()
-#' # Now we can color or fill the marginal density plots using the same groupings
-#' # as we used in the scatter plot
+#' # In order to use either of these arguments, we must map 'colour' in the
+#' # scatter plot to a factor or character variable
+#' p <- ggplot(mtcars, aes(x = wt, y = drat, colour = factor(vs))) +
+#'      geom_point()
 #' ggMarginal(p, groupColour = TRUE)
 #' ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
-#' 
+#'
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
 ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot", "violin"),
@@ -109,9 +108,9 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 
   # Fill in param defaults and consolidate params into single list (prmL).
   prmL <- toParamList(exPrm = list(...), xPrm = xparams, yPrm = yparams)
-  
-  # Create one version of the scat plot (scatP), based on values of p, data, x, 
-  # and y...also remove all margin around plot so that it's easier to position 
+
+  # Create one version of the scat plot (scatP), based on values of p, data, x,
+  # and y...also remove all margin around plot so that it's easier to position
   # the density plots beside the main plot
   scatP <- reconcileScatPlot(p = p, data = data, x = x, y = y) +
     ggplot2::theme(plot.margin = grid::unit(c(0, 0, .25, .25), "cm"))
@@ -138,17 +137,17 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 
   # If margins = x or 'both' (x and y), then you have to create top plot
   # Top plot = horizontal margin plot, which corresponds to x marg
-  if (margins != "y") { 
-    top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt, 
-                            prmL = prmL, groupColour = groupColour, 
+  if (margins != "y") {
+    top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt,
+                            prmL = prmL, groupColour = groupColour,
                             groupFill = groupFill)
   }
 
   # If margins = y or 'both' (x and y), then you have to create right plot.
   # (right plot = vertical margin plot, which corresponds to y marg)
-  if (margins != "x") { 
-    right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt, 
-                              prmL = prmL, groupColour = groupColour, 
+  if (margins != "x") {
+    right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt,
+                              prmL = prmL, groupColour = groupColour,
                               groupFill = groupFill)
   }
 

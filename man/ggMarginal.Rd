@@ -42,15 +42,15 @@ the x axis.}
 \item{yparams}{List of extra parameters to use only for the marginal plot along
 the y axis.}
 
-\item{groupColour}{Do you want the colour mapping from your scatter plot to 
-to used to define the colours of the marginal density plots? If \code{TRUE}, 
-the variable mapped to \code{colour} in your scatter plot must be a character 
-or factor variable. See examples.}
+\item{groupColour}{If \code{TRUE}, the colour (or outline) of the marginal
+plots will be grouped according to the variable mapped to \code{colour} in the
+scatter plot. The variable mapped to \code{colour} in the scatter plot must
+be a character or factor variable. See examples below.}
 
-\item{groupFill}{Do you want the colour mapping from your scatter plot to 
-to used to define the fills of the marginal density plots? If \code{TRUE}, 
-the variable mapped to \code{colour} in your scatter plot must be a character 
-or factor variable. See examples.}
+\item{groupFill}{If \code{TRUE}, the fill of the marginal
+plots will be grouped according to the variable mapped to \code{colour} in the
+scatter plot. The variable mapped to \code{colour} in the scatter plot must
+be a character or factor variable. See examples below.}
 }
 \value{
 An object of class \code{ggExtraPlot}. This object can be printed to show the
@@ -74,15 +74,16 @@ while \code{ggMarginal(p, xparams = list(size=2), yparams = list(size=2))}
 will make the density plot outline thicker.
 }
 \examples{
+library(ggplot2)
 
 # basic usage
-p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
 ggMarginal(p)
 
 # using some parameters
 set.seed(30)
 df <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
-p2 <- ggplot2::ggplot(df, ggplot2::aes(x, y)) + ggplot2::geom_point()
+p2 <- ggplot(df, aes(x, y)) + geom_point()
 ggMarginal(p2)
 ggMarginal(p2, type = "histogram")
 ggMarginal(p2, margins = "x")
@@ -102,25 +103,23 @@ ggMarginal(data = df, x = "x", y = "y")
 set.seed(30)
 df2 <- data.frame(x = c(rnorm(250, 50, 10), rnorm(250, 100, 10)),
                   y = runif(500, 0, 50))
-p2 <- ggplot2::ggplot(df2, ggplot2::aes(x, y)) + ggplot2::geom_point()
+p2 <- ggplot(df2, aes(x, y)) + geom_point()
 ggMarginal(p2)
 
-p2 <- p2 + ggplot2::ggtitle("Random data") + ggplot2::theme_bw(30)
+p2 <- p2 + ggtitle("Random data") + theme_bw(30)
 ggMarginal(p2)
 
-p3 <- ggplot2::ggplot(df2, ggplot2::aes(log(x), y - 500)) + ggplot2::geom_point()
+p3 <- ggplot(df2, aes(log(x), y - 500)) + geom_point()
 ggMarginal(p3)
 
-p4 <- p3 + ggplot2::scale_x_continuous(limits = c(2, 6)) + ggplot2::theme_bw(50)
+p4 <- p3 + scale_x_continuous(limits = c(2, 6)) + theme_bw(50)
 ggMarginal(p4)
 
 # Using groupColour and groupFill
-# In order to use either of these arguments, we must map colour in the scatter 
-# plot to a factor or character variable (e.g., the vs variable below)
-p <- ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = drat, colour = factor(vs))) +
-     ggplot2::geom_point()
-# Now we can color or fill the marginal density plots using the same groupings
-# as we used in the scatter plot
+# In order to use either of these arguments, we must map 'colour' in the
+# scatter plot to a factor or character variable
+p <- ggplot(mtcars, aes(x = wt, y = drat, colour = factor(vs))) +
+     geom_point()
 ggMarginal(p, groupColour = TRUE)
 ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
 

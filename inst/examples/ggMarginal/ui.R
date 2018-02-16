@@ -1,6 +1,3 @@
-library(shiny)
-library(shinyjs)
-
 share <- list(
   title = "ggMarginal (from ggExtra package)",
   url = "http://daattali.com/shiny/ggExtra-ggMarginal-demo/",
@@ -62,9 +59,10 @@ shinyUI(fluidPage(
     column(3, wellPanel(
       class = "settings",
       h3(class = "settings-title", "Main plot"),
-      uiOutput("dataset_select"),
+      selectInput("dataset", "Choose a dataset:", names(datasets)),
       uiOutput("x_var_select"),
       uiOutput("y_var_select"),
+      uiOutput("col_var_select"),
       sliderInput("font_size", "Font size", 0, 50, 15, 1)
     )),
 
@@ -84,14 +82,15 @@ shinyUI(fluidPage(
           condition = "input.margins != 'x'",
           selectInput("ytrans", "Y axis transformation", c("none", "log","reverse"))
         ),
+        checkboxInput("groupColour", "Show groups as 'colour'", FALSE),
+        checkboxInput("groupFill", "Show groups as 'fill'", FALSE),
         sliderInput("size",
                     "Size ratio of main plot:marginal plots",
                     1, 5, 5, 0.5),
-        colourpicker::colourInput("col", "Marginal plot colour", "red", showColour = "background"),
-        conditionalPanel(
-          condition = "input.type != 'density'",
-          colourpicker::colourInput("fill", "Marginal plot fill colour", "orange", showColour = "background")
-        )
+        colourpicker::colourInput("col", "Marginal plot colour", "red",
+                                  showColour = "background", allowTransparent = TRUE),
+        colourpicker::colourInput("fill", "Marginal plot fill colour", "orange",
+                                  showColour = "background", allowTransparent = TRUE)
       )
     )),
 
