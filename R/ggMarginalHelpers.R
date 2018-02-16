@@ -143,8 +143,23 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
   }
+  
+  prmL <- overrideMappedParams(prmL, "colour", groupColour)
+  prmL <- overrideMappedParams(prmL, "fill", groupFill)
 
   prmL$exPrm
+}
+
+overrideMappedParams <- function(prmL, paramName, groupVar) {
+  if (!is.null(prmL$exPrm[[paramName]]) && groupVar) {
+    message(
+      "You specified group", paramName, " = TRUE as well as a ", paramName,
+      " parameter for a marginal plot. The ", paramName, " parameter will be",
+      " ignored in favor of using ", paramName, "s mapped from the scatter plot."
+    )
+    prmL$exPrm[[paramName]] <- NULL
+  }
+  prmL
 }
 
 reconcileColParamApply <- function(prmL) {
