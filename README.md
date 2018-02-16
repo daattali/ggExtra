@@ -11,11 +11,11 @@ version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.or
 > the MIT license.*
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
-The main function is `ggMarginal`, which can be used to add marginal
+The flagship function is `ggMarginal`, which can be used to add marginal
 histograms/boxplots/density plots to ggplot2 scatterplots. You can view
 a [live interactive
-demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to see some of
-its functionality.
+demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to test it
+out!
 
 Most other functions/layers are quite simple but are useful because they
 are fairly common ggplot2 operations that are a bit verbose.
@@ -59,57 +59,66 @@ a ggplot2 plot.
 Usage
 -----
 
-We'll first load the package and ggplot2, and then see how all the
+We’ll first load the package and ggplot2, and then see how all the
 functions work.
 
-    suppressPackageStartupMessages({
-      library("ggExtra")
-      library("ggplot2")
-    })
+    library("ggExtra")
+    library("ggplot2")
 
 `ggMarginal` - Add marginal histograms/boxplots/density plots to ggplot2 scatterplots
 -------------------------------------------------------------------------------------
 
-You need to have the `grid` and `gtable` packages installed for this
-function.
+`ggMarginal()` is an easy drop-in solution for adding marginal density
+plots/histograms/boxplots to a ggplot2 scatterplot. The easiest way to
+use it is by simply passing it a ggplot2 scatter plot, and
+`ggMarginal()` will add the marginal plots.
 
-This function is meant to work as an easy drop-in solution for adding
-marginal density plots/histograms/boxplots to a ggplot2 scatterplot. You
-can either pass it a ready ggplot2 scatterplot and it will add the
-marginal plots, or you can just tell it what dataset and variables to
-use and it will generate the scatterplot plus the marginal plots.
-
-As a simple first example, let's create a dataset with 500 points where
+As a simple first example, let’s create a dataset with 500 points where
 the x values are normally distributed and the y values are uniformly
 distributed, and plot a simple ggplot2 scatterplot.
 
     set.seed(30)
     df1 <- data.frame(x = rnorm(500, 50, 10), y = runif(500, 0, 50))
-    (p1 <- ggplot(df1, aes(x, y)) + geom_point() + theme_bw())
+    p1 <- ggplot(df1, aes(x, y)) + geom_point() + theme_bw()
+    p1
 
 <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/init-plot-1.png" style="display: block; margin: auto;" />
 
-Ok, now let's add marginal density plots.
+And now to add marginal density plots:
 
     ggMarginal(p1)
 
 <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-basic-1.png" style="display: block; margin: auto;" />
 
-That was easy. Notice how the syntax is not following the standard
-ggplot2 syntax - you don't "add" a ggMarginal layer with
+That was easy. Notice how the syntax does not follow the standard
+ggplot2 syntax - **you don’t “add” a ggMarginal layer with
 `p1 + ggMarginal()`, but rather ggMarginal takes the object as an
-argument and returns a different object `ggMarginal(p1)`. This means
-that you can use magrittr pipes, for example `p1 %>% ggMarginal`.
+argument** and returns a different object. This means that you can use
+magrittr pipes, for example `p1 %>% ggMarginal()`.
 
-Let's make the text a bit larger to make it easier to see.
+Let’s make the text a bit larger to make it easier to see.
 
     ggMarginal(p1 + theme_bw(30) + ylab("Two\nlines"))
 
 <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-large-1.png" style="display: block; margin: auto;" />
 
-Notice how the marginal plots occupy the correct space, and even when
-the main plot's points are pushed to the right because of larger text or
+Notice how the marginal plots occupy the correct space; even when the
+main plot’s points are pushed to the right because of larger text or
 longer axis labels, the marginal plots automatically adjust.
+
+If your scatterplot has a factor variable mapping to a colour (ie.
+points in the scatterplot are colour-coded according to a variable in
+the data, by using `aes(colour = ...)`), then you can use
+`groupColour = TRUE` and/or `groupFill = TRUE` to reflect these
+groupings in the marginal plots. The result is multiple marginal plots,
+one for each colour group of points. Here’s an example using the iris
+dataset.
+
+    piris <- ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
+      geom_point()
+    ggMarginal(piris, groupColour = TRUE, groupFill = TRUE)
+
+<img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-grouping-1.png" style="display: block; margin: auto;" />
 
 You can also show histograms instead.
 
@@ -118,9 +127,9 @@ You can also show histograms instead.
 <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-hist-1.png" style="display: block; margin: auto;" />
 
 There are several more parameters, here is an example with a few more
-being used. Note that you can use any parameters that the `geom_XXX`
-layers accept, and they will be passed to those layers, such as `col`
-and `fill` in the following example.
+being used. Note that you can use any parameters that the `geom_XXX()`
+layers accept, such as `col` and `fill`, and they will be passed to
+these layers.
 
     ggMarginal(p1, margins = "x", size = 2, type = "histogram",
                col = "blue", fill = "orange")
@@ -139,7 +148,7 @@ plots, you can use the `xparams` or `yparams` parameters, like this:
 
 <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-extraparams-1.png" style="display: block; margin: auto;" />
 
-You don't have to supply a ggplot2 scatterplot, you can also just tell
+You don’t have to supply a ggplot2 scatterplot, you can also just tell
 ggMarginal what dataset and variables to use, but of course this way you
 lose the ability to customize the main plot (change
 text/font/theme/etc).
@@ -158,7 +167,8 @@ discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridex
 
 <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-save-1.png" style="display: block; margin: auto;" />
 
-For more information, see `?ggExtra::ggMarginal`.
+You can also create marginal box plots and violin plots. For more
+information, see `?ggExtra::ggMarginal`.
 
 `removeGrid` - Remove grid lines from ggplot2
 ---------------------------------------------
@@ -168,7 +178,7 @@ memorization. Minor grid lines are always removed, and the major x or y
 grid lines can be removed as well (default is to remove both).
 
 `removeGridX` is a shortcut for `removeGrid(x = TRUE, y = FALSE)`, and
-`removeGridY` is similarly a shortcut for...
+`removeGridY` is similarly a shortcut for…
 <leave as exercise for reader>.
 
     df2 <- data.frame(x = 1:50, y = 1:50)

@@ -10,11 +10,11 @@ ggMarginalGadget(plot)
 \item{plot}{A ggplot2 scatterplot}
 }
 \value{
-An object of class \code{ggExtraPlot}. This object can be printed to 
+An object of class \code{ggExtraPlot}. This object can be printed to
 show the marginal plots or saved using any of the typical image-saving functions
 }
 \description{
-This gadget and addin allow you to select a ggplot2 plot and interactively 
+This gadget and addin allow you to select a ggplot2 plot and interactively
 use \code{ggMarginal} to build marginal plots on top of your scatterplot.
 }
 \note{
