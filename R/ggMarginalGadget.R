@@ -1,6 +1,6 @@
 #' ggMarginal gadget
 #'
-#' This gadget and addin allow you to select a ggplot2 plot and interactively 
+#' This gadget and addin allow you to select a ggplot2 plot and interactively
 #' use \code{ggMarginal} to build marginal plots on top of your scatterplot.
 #'
 #' @param plot A ggplot2 scatterplot
@@ -9,7 +9,7 @@
 #' embed the marginal plots code into your script. Alternatively, you can call
 #' \code{ggMarginalGadget()} with a ggplot2 plot, and the gadget will return
 #' a plot object.
-#' @return An object of class \code{ggExtraPlot}. This object can be printed to 
+#' @return An object of class \code{ggExtraPlot}. This object can be printed to
 #' show the marginal plots or saved using any of the typical image-saving functions
 #' @export
 #' @examples
@@ -21,7 +21,7 @@ ggMarginalGadget <- function(plot) {
   if (missing(plot)) {
     stop("You must provide a ggplot2 plot.", call. = FALSE)
   }
-  
+
   ggMarginalGadgetHelper(deparse(substitute(plot)), addin = FALSE)
 }
 
@@ -44,7 +44,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
 
   # Remove leading and trailing whitespace from input
   origPlot <- trimws(origPlot)
-  
+
   # If the given plot is a variable (object) holding a plot object, use that
   # as the plot name
   if (exists(origPlot)) {
@@ -54,7 +54,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
   # If the given plot is not an object, it means it's probably actual code
   # for generating a plot. So assign that code to a a new unique variable
   else {
-    
+
     # Find a unique variable to assign to this plot (make sure this variable
     # name isn't already in use)
     plotnum <- 1
@@ -65,23 +65,24 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
       }
       plotnum <- plotnum + 1
     }
-    
+
     tryCatch(
       assign(plotname, eval(parse(text = origPlot))),
       error = function(err) {
         stop("You did not provide a valid ggplot2 plot.", call. = FALSE)
       }
     )
-    baseCode <- paste0(plotname, " <- ", origPlot, "\n\n")    
+    baseCode <- paste0(plotname, " <- ", origPlot, "\n\n")
   }
-  
-  if (!ggplot2::is.ggplot(get(plotname))) {
+
+  if (!ggplot2::is.ggplot(get(plotname)) &&
+      !ggplot2::is.ggplot(get(plotname, envir = .GlobalEnv))) {
     stop("You did not provide a ggplot2 plot.", call. = FALSE)
   }
 
   resourcePath <- system.file("gadgets", "ggmarginal", package = "ggExtra")
   shiny::addResourcePath("ggm", resourcePath)
-  
+
   ui <- miniPage(
     shinyjs::useShinyjs(),
     tags$head(includeCSS(file.path(resourcePath, "css", "app.css"))),
@@ -89,24 +90,24 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
                    var height = $('#panels-area').height();
                    Shiny.onInputChange('plotHeight', height);
                  });"),
-    
+
     gadgetTitleBar(
       span(strong("Add marginal plots to ggplot2"),
            span(id = "author", "By",
                 a(href = "http://deanattali.com", "Dean Attali")))
     ),
-    
+
     shinyjs::hidden(
       div(id = "error",
           div("Error with the advanced options:"),
           div(tags$i(id = "errorMsg"))
       )
     ),
-    
+
     plotOutput("plot", width = "60%", height = "auto"),
     img(id = "plot-spinner",
         src = file.path("ggm", "img", "ajax-loader.gif")),
-    
+
     miniTabstripPanel(
       miniTabPanel(
         "Main options",
@@ -143,14 +144,17 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
             fillCol(
               class = "left-panel-area",
               colourpicker::colourInput("col", "Marginal plot colour", "black",
-                                   showColour = "background", returnName = TRUE),
-              conditionalPanel(
-                condition = "input.type != 'density'",
-                colourpicker::colourInput("fill", "Marginal plot fill colour", "gray",
-                                     showColour = "background", returnName = TRUE)
+                                   showColour = "background", returnName = TRUE,
+                                   allowTransparent = TRUE),
+              colourpicker::colourInput("fill", "Marginal plot fill colour", "gray",
+                                        showColour = "background", returnName = TRUE,
+                                        allowTransparent = TRUE),
+              div(
+                helpText("Colour must be mapped to a factor or character variable",
+                         "in order to use the two options below."),
+                checkboxInput("groupColour", "Show groups as 'colour'", FALSE),
+                checkboxInput("groupFill", "Show groups as 'fill'", FALSE)
               ),
-              div(),
-              div(),
               div()
             ),
             fillCol(
@@ -207,9 +211,9 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
       )
     )
   )
-  
+
   server <- function(input, output) {
-    
+
     # User canceled
     observeEvent(input$cancel, {
       stopApp(stop("User canceled", call. = FALSE))
@@ -219,7 +223,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
       plot = NULL,
       error = NULL
     )
-    
+
     observeEvent(input$done, {
       if (addin) {
         rstudioapi::insertText(completeCode())
@@ -228,12 +232,12 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         stopApp(values$plot)
       }
     })
-    
+
     observe({
       shinyjs::toggleState(id = "xparams", condition = input$margins != "y")
       shinyjs::toggleState(id = "yparams", condition = input$margins != "x")
     })
-    
+
     output$extraType <- renderText({
       if (input$type == "density") {
         "geom_line()"
@@ -241,7 +245,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         paste0("geom_", input$type, "()")
       }
     })
-    
+
     output$extraExample <- renderText({
       if (input$type == "density") {
         '(e.g. adjust = 3)'
@@ -251,7 +255,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         '(e.g. outlier.colour = "red")'
       }
     })
-    
+
     observeEvent(values$error, ignoreNULL = FALSE, {
       shinyjs::hide("error")
       shinyjs::toggleState("done", condition = is.null(values$error))
@@ -262,7 +266,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         shinyjs::show(id = "error", anim = TRUE, animType = "fade")
       }
     })
-    
+
     observeEvent(marginCode(), {
       tryCatch({
         values$plot <- eval(parse(text = marginCode()))
@@ -271,12 +275,12 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         values$error <- as.character(err$message)
       })
     })
-    
+
     output$plot <- renderPlot({
       if (is.null(input$plotHeight)) return(NULL)
       values$plot
     }, height = function() { if (is.null(input$plotHeight)) { 0 } else { input$plotHeight } })
-    
+
     marginCode <- reactive({
       code <- ""
       code <- paste0(code, sprintf(paste0(
@@ -284,13 +288,20 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         "  p = %s,\n",
         "  type = '%s',\n",
         "  margins = '%s',\n",
-        "  size = %s,\n",
-        "  col = '%s'"
-      ), plotname, input$type, input$margins, input$size, input$col))
-      if (input$type != "density") {
-        code <- paste0(code, sprintf(",\n  fill = '%s'", input$fill))
+        "  size = %s,\n"
+      ), plotname, input$type, input$margins, input$size))
+
+      if (input$groupColour) {
+        code <- paste0(code, "  groupColour = TRUE,\n")
+      } else {
+        code <- paste0(code, "  colour = '", input$col, "',\n")
       }
-      
+      if (input$groupFill) {
+        code <- paste0(code, "  groupFill = TRUE")
+      } else {
+        code <- paste0(code, "  fill = '", input$fill, "'")
+      }
+
       if (input$margins != "x") {
         yparams <- trimws(input$yparams)
         if (nzchar(yparams)) {
@@ -307,19 +318,19 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
       if (nzchar(extraparams)) {
         code <- paste0(code, sprintf(",\n  %s", extraparams))
       }
-      
+
       code <- paste0(code, "\n)")
       code
     })
-    
+
     completeCode <- reactive({
       paste0(baseCode, marginCode())
     })
-    
+
     output$code <- renderText({
       completeCode()
     })
-    
+
   }
 
   viewer <- dialogViewer("Add marginal plots to ggplot2", 1000, 630)
