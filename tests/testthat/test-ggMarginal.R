@@ -22,6 +22,17 @@ runMarginalTests <- function(ggplot2Version) {
              "scale transformations work"), function(x)
                expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
+  
+  test_that("Grouping feature works as expected" , {
+    sapply(
+      c(
+        "col and fill mapped", "fill mapped with low alpha",
+        "colour mapped with grey fill",
+        "colour mapped and colour param provided",
+        "colour & fill mapped and both params provided"
+      ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version)
+    )
+  })
 
 }
 
