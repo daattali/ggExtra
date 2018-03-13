@@ -15,6 +15,10 @@ margMapP <- function() {
     ggplot2::scale_colour_manual(values = c("green", "blue")) 
 }
 
+basicScatPWithLims <- function() {
+  basicScatP() + ggplot2::scale_x_continuous(limits = c(0, 2))
+}
+
 funList <-
   list(
     "basic density" = function() ggMarg2("density"),
@@ -41,9 +45,6 @@ funList <-
     "flipped coord where x is drat and y is wt" = function() ggMarginal(
       p = basicScatP() + ggplot2::coord_flip(), type = "density"
     ),
-    "scale transformations work" = function() ggMarginal(
-        p = basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
-    ),
     "col and fill mapped" = function() ggMarginal(
       p = margMapP(), groupColour = TRUE, groupFill = TRUE
     ),
@@ -59,7 +60,25 @@ funList <-
     "colour & fill mapped and both params provided" = function() ggMarginal(
       p = margMapP(), groupColour = TRUE, groupFill = TRUE,
       colour = "red", fill = "blue"
-    )
+    ),
+    "marg plots reflect axis limits using scale_x_continuous" = 
+      function() ggMarginal(basicScatPWithLims()),
+    "marg plots reflect axis limits using xlim and ylim" = 
+      function() ggMarginal(
+        basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
+      ),
+    "marg plots reflect axis limits for histograms" = 
+      function() ggMarginal(basicScatPWithLims(), type = "histogram"),
+    "marg plots reflect axis limits for marginals with y aes" = 
+      function() ggMarginal(basicScatPWithLims(), type = "violin"),
+    "marg plots reflect scale trans" = 
+      function() ggMarginal(
+        basicScatP() + ggplot2::scale_x_reverse() + ggplot2::scale_y_reverse()
+      ), 
+    "geom_smooth doesn't mess up marg plot alignment" = 
+      function() ggMarginal(
+        basicScatP() + ggplot2::geom_smooth(), type = "histogram"
+      )
   )
 
 expectDopp2 <- function(funName, ggplot2Version) {
