@@ -61,21 +61,21 @@ funList <-
       p = margMapP(), groupColour = TRUE, groupFill = TRUE,
       colour = "red", fill = "blue"
     ),
-    "marg plots reflect axis limits using scale_x_continuous" = 
+    "x-axis limits using scale_x_continuous" = 
       function() ggMarginal(basicScatPWithLims()),
-    "marg plots reflect axis limits using xlim and ylim" = 
+    "axis limits using xlim and ylim" = 
       function() ggMarginal(
         basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
       ),
-    "marg plots reflect axis limits for histograms" = 
+    "x-axis limits for histograms" = 
       function() ggMarginal(basicScatPWithLims(), type = "histogram"),
-    "marg plots reflect axis limits for marginals with y aes" = 
+    "x-axis limits for marginals with y aes" = 
       function() ggMarginal(basicScatPWithLims(), type = "violin"),
-    "marg plots reflect scale trans" = 
+    "x and y scale_reverse" = 
       function() ggMarginal(
         basicScatP() + ggplot2::scale_x_reverse() + ggplot2::scale_y_reverse()
       ), 
-    "geom_smooth doesn't mess up marg plot alignment" = 
+    "geom_smooth with aligned marg plots" = 
       function() ggMarginal(
         basicScatP() + ggplot2::geom_smooth(), type = "histogram"
       )
