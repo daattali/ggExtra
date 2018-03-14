@@ -18,8 +18,7 @@ runMarginalTests <- function(ggplot2Version) {
 
   test_that("Misc. issues are solved" , {
     sapply(c("theme bw", "legend and title",
-             "flipped coord where x is drat and y is wt",
-             "scale transformations work"), function(x)
+             "flipped coord where x is drat and y is wt"), function(x)
                expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
   
@@ -30,6 +29,17 @@ runMarginalTests <- function(ggplot2Version) {
         "colour mapped with grey fill",
         "colour mapped and colour param provided",
         "colour & fill mapped and both params provided"
+      ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version)
+    )
+  })
+  
+  test_that("Transforms to scatter plot scales are reflected in marginals" , {
+    sapply(
+      c(
+        "x-axis limits using scale_x_continuous", 
+        "axis limits using xlim and ylim", "x-axis limits for histograms",
+        "x-axis limits for marginals with y aes", "x and y scale_reverse",
+        "geom_smooth with aligned marg plots"
       ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version)
     )
   })
