@@ -19,7 +19,8 @@ runMarginalTests <- function(ggplot2Version) {
   test_that("Misc. issues are solved" , {
     sapply(c("theme bw", "legend and title",
              "flipped coord where x is drat and y is wt",
-             "scale transformations work"), function(x)
+             "scale transformations work", 
+             "subtitle but no title"), function(x)
                expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
   

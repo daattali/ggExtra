@@ -57,6 +57,9 @@ funList <-
     "colour & fill mapped and both params provided" = function() ggMarginal(
       p = margMapP(), groupColour = TRUE, groupFill = TRUE,
       colour = "red", fill = "blue"
+    ),
+    "subtitle but no title" = function() ggMarginal(
+      basicScatP() + ggplot2::labs(subtitle = "This should be above marginal")
     )
   )
 
