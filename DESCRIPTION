@@ -21,7 +21,8 @@ Imports:
     shiny (>= 0.13.0),
     shinyjs (>= 0.5.2),
     utils,
-    grDevices
+    grDevices,
+    scales (>= 0.2.0)
 Suggests:
     knitr (>= 1.7),
     rmarkdown,
