@@ -1,4 +1,4 @@
-# ggExtra 0.7.1.9000
+# ggExtra 0.7.1.*
 
 NEW FEATURES
 
@@ -8,6 +8,7 @@ NEW FEATURES
 BUX FIXES
 
 - Make sure marginal data comes from correct data frame (#67) 
+- Fix #81: many issues when the x or y axis have custom scales applied (#101)
 
 # ggExtra 0.7
 
