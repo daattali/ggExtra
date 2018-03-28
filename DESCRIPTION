@@ -1,6 +1,6 @@
 Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
-Version: 0.7.1.9000
+Version: 0.7.1.9001
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre")),
     person("Christopher", "Baker", , "chriscrewbaker@gmail.com", role = "aut")
@@ -15,13 +15,14 @@ Depends:
 Imports:
     colourpicker (>= 1.0),
     ggplot2 (>= 2.2.0),
+    grDevices,
     grid (>= 3.1.3),
     gtable (>= 0.2.0),
     miniUI (>= 0.1.1),
+    scales (>= 0.2.0),
     shiny (>= 0.13.0),
     shinyjs (>= 0.5.2),
-    utils,
-    grDevices
+    utils
 Suggests:
     knitr (>= 1.7),
     rmarkdown,

@@ -46,6 +46,14 @@ getVarDf <- function(scatPbuilt, marg) {
 
   scatDF <- scatData[dfBools][[1]]
 
+  # When points are excluded from the scatter plot via a limit on the x 
+  # axis, the y values in the built scatter plot's "data" object will be NA (and
+  # visa-versa for the y axis/x values). Exclude these NA points from the data 
+  # frame ggMarginal uses to create the marginal plots, as they don't
+  # actually show up in the scatter plot (and thus shouldn't be in the marginal
+  # plots either).
+  scatDF <- scatDF[!(is.na(scatDF$x) | is.na(scatDF$y)), ]
+
   colnames(scatDF)[colnames(scatDF) == marg] <- "var"
   scatDF[, c("var", "fill", "colour", "group")]
 }
@@ -73,7 +81,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
       stop(
         "Colour must be mapped to a factor or character variable ",
         "(not a numeric variable) in your scatter plot if you set ",
-         "groupColour = TRUE or groupFill = TRUE (ie. use `aes(colour = ...)`)"
+         "groupColour = TRUE or groupFill = TRUE (i.e. use `aes(colour = ...)`)"
       )
     }
 
@@ -143,7 +151,7 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
   }
-  
+
   prmL <- overrideMappedParams(prmL, "colour", groupColour)
   prmL <- overrideMappedParams(prmL, "fill", groupFill)
 
@@ -265,7 +273,18 @@ genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 
   margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg,
                              scatPTheme = scatPbuilt$plot$theme)
-  margThemed + getScale(marg = marg, type = type, builtP = scatPbuilt)
+
+  limits <- getLimits(marg, scatPbuilt)
+
+  # for plots with y aes we have to use scale_y_continuous instead of 
+  # scale_x_continuous.
+  if (type %in% c("boxplot", "violin")) {
+    margThemed + 
+      ggplot2::scale_y_continuous(limits = limits, oob = scales::squish)
+  } else {
+    margThemed + 
+      ggplot2::scale_x_continuous(limits = limits, oob = scales::squish)
+  }
 }
 
 # Given a plot, copy some theme properties from the main plot so that they will
@@ -347,28 +366,17 @@ addMainTheme <- function(rawMarg, marg, scatPTheme) {
   rawMarg
 }
 
-# Copy the scale transformation from the original plot (reverse/log/limits/etc)
-# We have to do a bit of a trick on the marginal plot that's flipped by
-# taking the original x/y scale and manually changing it to the other axis
-getScale <- function(marg, type, builtP) {
-
-  scale <- getPanelScale(marg = marg, builtP = builtP)
-
-  if (needsFlip(marg = marg, type = type)) {
-    if (marg == "x") {
-      scale$aesthetics <- gsub("^x", "y", scale$aesthetics)
-    } else {
-      scale$aesthetics <- gsub("^y", "x", scale$aesthetics)
-    }
-  }
-
-  scale
-}
-
 # Get the axis range of the x or y axis of the given ggplot build object
 # This is needed so that if the range of the plot is manually changed, the
 # marginal plots will use the same range
 getLimits <- function(marg, builtP) {
+  
+  if (wasFlipped(builtP)) {
+    marg <- switch(marg,
+                   "x" = "y",
+                   "y" = "x"
+    )
+  }
 
   scale <- getPanelScale(marg = marg, builtP = builtP)
 

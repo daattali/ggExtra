@@ -34,6 +34,17 @@ runMarginalTests <- function(ggplot2Version) {
       ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version)
     )
   })
+  
+  test_that("Transforms to scatter plot scales are reflected in marginals" , {
+    sapply(
+      c(
+        "x-axis limits using scale_x_continuous", 
+        "axis limits using xlim and ylim", "x-axis limits for histograms",
+        "x-axis limits for marginals with y aes", "x and y scale_reverse",
+        "geom_smooth with aligned marg plots"
+      ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version)
+    )
+  })
 
 }
 
