@@ -9,6 +9,7 @@ BUX FIXES
 
 - Make sure marginal data comes from correct data frame (#67) 
 - Fix #81: many issues when the x or y axis have custom scales applied (#101)
+- Fix #99: plot subtitle was in the wrong position when no title was used (#103)
 
 # ggExtra 0.7
 
