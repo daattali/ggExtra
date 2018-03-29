@@ -61,6 +61,9 @@ funList <-
       p = margMapP(), groupColour = TRUE, groupFill = TRUE,
       colour = "red", fill = "blue"
     ),
+    "subtitle but no title" = function() ggMarginal(
+      basicScatP() + ggplot2::labs(subtitle = "This should be above marginal")
+    ),
     "x-axis limits using scale_x_continuous" = 
       function() ggMarginal(basicScatPWithLims()),
     "axis limits using xlim and ylim" = 

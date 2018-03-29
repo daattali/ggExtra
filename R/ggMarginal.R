@@ -120,8 +120,10 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Decompose scatP to grab all sorts of information from it
   scatPbuilt <- ggplot2::ggplot_build(scatP)
 
-  # Pull out the plot title if one exists and save it as a grob for later use.
-  hasTitle <- (!is.null(scatPbuilt$plot$labels$title))
+  # Pull out the plot title/subtitle if one exists and save it as a grob for 
+  # later use
+  labels <- scatPbuilt$plot$labels
+  hasTitle <- (!is.null(labels$title) || !is.null(labels$subtitle))
   if (hasTitle) {
     titleGrobs <- getTitleGrobs(p = p)
     scatP$labels$title <- NULL

@@ -436,12 +436,12 @@ addRightMargPlot <- function(ggMargGrob, right, size) {
 # a little longer.
 getTitleGrobs <- function(p) {
   grobs <- ggplot2::ggplotGrob(p)$grobs
-  gindTitle <- sapply(grobs, function(x) {
+  gindTitle <- vapply(grobs, function(x) {
     grepl(pattern = "plot\\.title", x$name)
-  })
-  gindSub <- sapply(grobs, function(x) {
+  }, logical(1))
+  gindSub <- vapply(grobs, function(x) {
     grepl(pattern = "plot\\.subtitle", x$name)
-  })
+  }, logical(1))
   list(
     titleG = grobs[gindTitle][[1]],
     subTitleG = grobs[gindSub][[1]]
