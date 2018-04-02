@@ -29,7 +29,7 @@ ggMarginalGadgetAddin <- function() {
   context <- rstudioapi::getActiveDocumentContext()
   text <- context$selection[[1]]$text
   if (nchar(text) == 0) {
-    stop('Please highlight a ggplot2 plot before selecting this addin.')
+    stop("Please highlight a ggplot2 plot before selecting this addin.")
   }
   ggMarginalGadgetHelper(text, addin = TRUE)
 }
@@ -39,7 +39,8 @@ ggMarginalGadgetAddin <- function() {
 ggMarginalGadgetHelper <- function(origPlot, addin) {
   if (!requireNamespace("rstudioapi", quietly = TRUE)) {
     stop("You must have RStudio v0.99.878 or newer to use the colour picker",
-         call. = FALSE)
+      call. = FALSE
+    )
   }
 
   # Remove leading and trailing whitespace from input
@@ -76,7 +77,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
   }
 
   if (!ggplot2::is.ggplot(get(plotname)) &&
-      !ggplot2::is.ggplot(get(plotname, envir = .GlobalEnv))) {
+    !ggplot2::is.ggplot(get(plotname, envir = .GlobalEnv))) {
     stop("You did not provide a ggplot2 plot.", call. = FALSE)
   }
 
@@ -92,21 +93,28 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
                  });"),
 
     gadgetTitleBar(
-      span(strong("Add marginal plots to ggplot2"),
-           span(id = "author", "By",
-                a(href = "http://deanattali.com", "Dean Attali")))
+      span(
+        strong("Add marginal plots to ggplot2"),
+        span(
+          id = "author", "By",
+          a(href = "http://deanattali.com", "Dean Attali")
+        )
+      )
     ),
 
     shinyjs::hidden(
-      div(id = "error",
-          div("Error with the advanced options:"),
-          div(tags$i(id = "errorMsg"))
+      div(
+        id = "error",
+        div("Error with the advanced options:"),
+        div(tags$i(id = "errorMsg"))
       )
     ),
 
     plotOutput("plot", width = "60%", height = "auto"),
-    img(id = "plot-spinner",
-        src = file.path("ggm", "img", "ajax-loader.gif")),
+    img(
+      id = "plot-spinner",
+      src = file.path("ggm", "img", "ajax-loader.gif")
+    ),
 
     miniTabstripPanel(
       miniTabPanel(
@@ -120,11 +128,15 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
             fillCol(
               class = "left-panel-area",
               selectInput("type", "Plot type", c("density", "histogram", "boxplot", "violin")),
-              selectInput("margins", "Which margins?",
-                          c("both", "x axis only" = "x", "y axis only" = "y")),
-              sliderInput("size",
-                          "Size ratio of main plot:marginal plots",
-                          1, 5, 5, 0.5),
+              selectInput(
+                "margins", "Which margins?",
+                c("both", "x axis only" = "x", "y axis only" = "y")
+              ),
+              sliderInput(
+                "size",
+                "Size ratio of main plot:marginal plots",
+                1, 5, 5, 0.5
+              ),
               div()
             ),
             fillCol(
@@ -144,14 +156,18 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
             fillCol(
               class = "left-panel-area",
               colourpicker::colourInput("col", "Marginal plot colour", "black",
-                                   showColour = "background", returnName = TRUE,
-                                   allowTransparent = TRUE),
+                showColour = "background", returnName = TRUE,
+                allowTransparent = TRUE
+              ),
               colourpicker::colourInput("fill", "Marginal plot fill colour", "gray",
-                                        showColour = "background", returnName = TRUE,
-                                        allowTransparent = TRUE),
+                showColour = "background", returnName = TRUE,
+                allowTransparent = TRUE
+              ),
               div(
-                helpText("Colour must be mapped to a factor or character variable",
-                         "in order to use the two options below."),
+                helpText(
+                  "Colour must be mapped to a factor or character variable",
+                  "in order to use the two options below."
+                ),
                 checkboxInput("groupColour", "Show groups as 'colour'", FALSE),
                 checkboxInput("groupFill", "Show groups as 'fill'", FALSE)
               ),
@@ -174,12 +190,15 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
             fillCol(
               flex = c(NA, 1, 1, 1),
               class = "left-panel-area",
-              div(h3(style = "margin-top:0;", "Extra parameters to pass to the marginal plots"),
-              div("Any parameter that ",
+              div(
+                h3(style = "margin-top:0;", "Extra parameters to pass to the marginal plots"),
+                div(
+                  "Any parameter that ",
                   tags$code(textOutput("extraType", inline = TRUE)),
                   " accepts", br(),
-                  textOutput("extraExample", inline = TRUE), br(), tags$hr(),br()
-              )),
+                  textOutput("extraExample", inline = TRUE), br(), tags$hr(), br()
+                )
+              ),
               textInput("extraparams", "Parameters for both plots"),
               textInput("xparams", "X axis plot only"),
               textInput("yparams", "Y axis plot only")
@@ -248,9 +267,9 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
 
     output$extraExample <- renderText({
       if (input$type == "density") {
-        '(e.g. adjust = 3)'
+        "(e.g. adjust = 3)"
       } else if (input$type == "histogram") {
-        '(e.g. bins = 10)'
+        "(e.g. bins = 10)"
       } else {
         '(e.g. outlier.colour = "red")'
       }
@@ -279,7 +298,13 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
     output$plot <- renderPlot({
       if (is.null(input$plotHeight)) return(NULL)
       values$plot
-    }, height = function() { if (is.null(input$plotHeight)) { 0 } else { input$plotHeight } })
+    }, height = function() {
+      if (is.null(input$plotHeight)) {
+        0
+      } else {
+        input$plotHeight
+      }
+    })
 
     marginCode <- reactive({
       code <- ""
@@ -330,7 +355,6 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
     output$code <- renderText({
       completeCode()
     })
-
   }
 
   viewer <- dialogViewer("Add marginal plots to ggplot2", 1000, 630)

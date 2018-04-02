@@ -7,11 +7,11 @@ toParamList <- function(exPrm, xPrm, yPrm) {
 }
 
 reconcileScatPlot <- function(p, data, x, y) {
-
   if (missing(p)) {
     if (missing(data) || missing(x) || missing(y)) {
       stop("`data`, `x`, and `y` must be provided if `p` is not provided",
-           call. = FALSE)
+        call. = FALSE
+      )
     }
     p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) +
       ggplot2::geom_point()
@@ -25,20 +25,20 @@ wasFlipped <- function(scatPbuilt) {
 }
 
 getVarDf <- function(scatPbuilt, marg) {
-
   if (wasFlipped(scatPbuilt = scatPbuilt)) {
     marg <- switch(marg,
       "x" = "y",
       "y" = "x"
-      )
+    )
   }
 
   scatData <- scatPbuilt[["data"]]
 
   # Get data frame with geom_point layer data
-  dfBools <- vapply(scatData, function(x) {
-    "x" %in% colnames(x) && "y" %in% colnames(x)
-  }, logical(1))
+  dfBools <- vapply(
+    scatData, function(x) "x" %in% colnames(x) && "y" %in% colnames(x),
+    logical(1)
+  )
 
   if (!any(dfBools)) {
     stop("No geom_point layer was found in your scatter plot", call. = FALSE)
@@ -46,9 +46,9 @@ getVarDf <- function(scatPbuilt, marg) {
 
   scatDF <- scatData[dfBools][[1]]
 
-  # When points are excluded from the scatter plot via a limit on the x 
+  # When points are excluded from the scatter plot via a limit on the x
   # axis, the y values in the built scatter plot's "data" object will be NA (and
-  # visa-versa for the y axis/x values). Exclude these NA points from the data 
+  # visa-versa for the y axis/x values). Exclude these NA points from the data
   # frame ggMarginal uses to create the marginal plots, as they don't
   # actually show up in the scatter plot (and thus shouldn't be in the marginal
   # plots either).
@@ -69,7 +69,6 @@ needsFlip <- function(marg, type) {
 }
 
 margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
-
   mapping <- ggplot2::aes(x = var)
 
   haveMargMap <- groupColour || groupFill
@@ -81,7 +80,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
       stop(
         "Colour must be mapped to a factor or character variable ",
         "(not a numeric variable) in your scatter plot if you set ",
-         "groupColour = TRUE or groupFill = TRUE (i.e. use `aes(colour = ...)`)"
+        "groupColour = TRUE or groupFill = TRUE (i.e. use `aes(colour = ...)`)"
       )
     }
 
@@ -101,8 +100,9 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
       xtraMapNames <- c("fill", "group")
     }
 
-    xtraMap <- sapply(xtraMapNames, as.symbol, USE.NAMES = TRUE,
-                      simplify = FALSE)
+    xtraMap <- sapply(
+      xtraMapNames, as.symbol, USE.NAMES = TRUE, simplify = FALSE
+    )
     mapping <- structure(c(mapping, xtraMap), class = "uneval")
   }
 
@@ -130,9 +130,8 @@ utils::globalVariables("var")
 
 alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
                         groupFill) {
-
-  if (is.null(prmL$exPrm$colour) && !groupColour) { 
-    prmL$exPrm[['colour']] <- "black"
+  if (is.null(prmL$exPrm$colour) && !groupColour) {
+    prmL$exPrm[["colour"]] <- "black"
   }
 
   # default to an alpha of .5 if user specifies a margin mapping
@@ -175,12 +174,11 @@ reconcileColParamApply <- function(prmL) {
 }
 
 reconcileColParam <- function(paramEl) {
-  
   col_vrnts <- c("colour", "color", "col")
   vrnts_exts <- vapply(
     col_vrnts, function(x) !is.null(paramEl[[x]]), logical(1), USE.NAMES = TRUE
   )
-  
+
   if (any(vrnts_exts)) {
     paramEl$colour <- paramEl[[names(vrnts_exts[vrnts_exts])]]
     paramEl$col <- NULL
@@ -189,7 +187,7 @@ reconcileColParam <- function(paramEl) {
 
   paramEl
 }
-  
+
 getPanelScale <- function(marg, builtP) {
   above_221 <- utils::packageVersion("ggplot2") > "2.2.1"
   if (above_221) {
@@ -212,7 +210,7 @@ geom_density2 <- function(...) {
 }
 
 getGeomFun <- function(type) {
-  switch (type,
+  switch(type,
     "density" = geom_density2,
     "histogram" = ggplot2::geom_histogram,
     "boxplot" = ggplot2::geom_boxplot,
@@ -223,11 +221,10 @@ getGeomFun <- function(type) {
 # Wrapper function to create a "raw" marginal plot
 genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
                            groupFill) {
-
   data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
 
   noGeomPlot <- margPlotNoGeom(
-    data, type = type, scatPbuilt = scatPbuilt,
+    data, type = type, scatPbuilt = scatPbuilt, 
     groupColour = groupColour, groupFill = groupFill
   )
 
@@ -265,24 +262,24 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 # Wrapper function to create a "final" marginal plot
 genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
                              groupFill) {
-
   rawMarg <- genRawMargPlot(
     marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL,
     groupColour = groupColour, groupFill = groupFill
   )
 
-  margThemed <- addMainTheme(rawMarg = rawMarg, marg = marg,
-                             scatPTheme = scatPbuilt$plot$theme)
+  margThemed <- addMainTheme(
+    rawMarg = rawMarg, marg = marg, scatPTheme = scatPbuilt$plot$theme
+  )
 
   limits <- getLimits(marg, scatPbuilt)
 
-  # for plots with y aes we have to use scale_y_continuous instead of 
+  # for plots with y aes we have to use scale_y_continuous instead of
   # scale_x_continuous.
   if (type %in% c("boxplot", "violin")) {
-    margThemed + 
+    margThemed +
       ggplot2::scale_y_continuous(limits = limits, oob = scales::squish)
   } else {
-    margThemed + 
+    margThemed +
       ggplot2::scale_x_continuous(limits = limits, oob = scales::squish)
   }
 }
@@ -291,77 +288,75 @@ genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 # resemble each other more and look better beside each other, and also add
 # some common theme properties such as 0 margins and transparent text colour
 addMainTheme <- function(rawMarg, marg, scatPTheme) {
-  try(
-    {rawMarg <- rawMarg + ggplot2::theme_void()},
-    silent = TRUE
+  try(rawMarg <- rawMarg + ggplot2::theme_void(), silent = TRUE)
+
+  # copy theme from main plot
+  themeProps <- c(
+    "text",
+    "axis.text", "axis.text.x", "axis.text.y",
+    "axis.ticks", "axis.ticks.length",
+    "axis.title", "axis.title.x", "axis.title.y",
+    "plot.title"
+  )
+  for (property in themeProps) {
+    rawMarg$theme[[property]] <- scatPTheme[[property]]
+  }
+
+  # make text and line colours transparent
+  transparentProps <- c(
+    "text",
+    "axis.text", "axis.text.x", "axis.text.y",
+    "axis.ticks",
+    "axis.title", "axis.title.x", "axis.title.y",
+    "line"
   )
 
-    # copy theme from main plot
-    themeProps <- c("text",
-                    "axis.text","axis.text.x", "axis.text.y",
-                    "axis.ticks", "axis.ticks.length",
-                    "axis.title", "axis.title.x", "axis.title.y",
-                    "plot.title"
+  for (property in transparentProps) {
+    if (!is.null(rawMarg$theme[[property]])) {
+      rawMarg$theme[[property]]$colour <- "transparent"
+    } else if (property %in% c("axis.ticks", "line")) {
+      themePair <- list()
+      themePair[[property]] <- ggplot2::element_line(colour = "transparent")
+      rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
+    } else {
+      themePair <- list()
+      themePair[[property]] <- ggplot2::element_text(colour = "transparent")
+      rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
+    }
+  }
+
+  # some more theme properties
+  rawMarg <- rawMarg +
+    ggplot2::theme(
+      panel.background = ggplot2::element_blank(),
+      axis.ticks.length = grid::unit(0, "null")
     )
-    for(property in themeProps) {
-      rawMarg$theme[[property]] <- scatPTheme[[property]]
-    }
 
-    # make text and line colours transparent
-    transparentProps <- c("text",
-                          "axis.text", "axis.text.x", "axis.text.y",
-                          "axis.ticks",
-                          "axis.title", "axis.title.x", "axis.title.y",
-                          "line")
+  # since the tick marks are removed on the marginal plot, we need to add
+  # space for them so that the marginal plot will align with the main plot
+  if (is.null(scatPTheme$axis.ticks.length)) {
+    marginUnit <- "null"
+    marginLength <- 0
+  } else {
+    marginUnit <- attr(scatPTheme$axis.ticks.length, "unit")
+    marginLength <- as.numeric(scatPTheme$axis.ticks.length, "unit")
+  }
 
-    for(property in transparentProps) {
-
-      if (!is.null(rawMarg$theme[[property]])) {
-        rawMarg$theme[[property]]$colour <- "transparent"
-      } else if (property %in% c("axis.ticks", "line")) {
-        themePair <- list()
-        themePair[[property]] <- ggplot2::element_line(colour = "transparent")
-        rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
-      } else {
-        themePair <- list()
-        themePair[[property]] <- ggplot2::element_text(colour = "transparent")
-        rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
-      }
-
-    }
-
-    # some more theme properties
+  if (marg == "x") {
     rawMarg <- rawMarg +
       ggplot2::theme(
-        panel.background = ggplot2::element_blank(),
-        axis.ticks.length = grid::unit(0, "null")
+        axis.title.x = ggplot2::element_blank(),
+        axis.text.x = ggplot2::element_blank(),
+        plot.margin = grid::unit(c(0, 0, 0, marginLength), marginUnit)
       )
-
-    # since the tick marks are removed on the marginal plot, we need to add
-    # space for them so that the marginal plot will align with the main plot
-    if (is.null(scatPTheme$axis.ticks.length)) {
-      marginUnit <- "null"
-      marginLength <- 0
-    } else {
-      marginUnit <- attr(scatPTheme$axis.ticks.length, "unit")
-      marginLength <- as.numeric(scatPTheme$axis.ticks.length, "unit")
-    }
-
-    if (marg == "x") {
-      rawMarg <- rawMarg +
-        ggplot2::theme(
-          axis.title.x = ggplot2::element_blank(),
-          axis.text.x = ggplot2::element_blank(),
-          plot.margin = grid::unit(c(0, 0, 0, marginLength), marginUnit)
-        )
-    } else {
-      rawMarg <- rawMarg +
-        ggplot2::theme(
-          axis.title.y = ggplot2::element_blank(),
-          axis.text.y = ggplot2::element_blank(),
-          plot.margin = grid::unit(c(0, 0, marginLength, 0), marginUnit)
-        )
-    }
+  } else {
+    rawMarg <- rawMarg +
+      ggplot2::theme(
+        axis.title.y = ggplot2::element_blank(),
+        axis.text.y = ggplot2::element_blank(),
+        plot.margin = grid::unit(c(0, 0, marginLength, 0), marginUnit)
+      )
+  }
 
   rawMarg
 }
@@ -370,11 +365,10 @@ addMainTheme <- function(rawMarg, marg, scatPTheme) {
 # This is needed so that if the range of the plot is manually changed, the
 # marginal plots will use the same range
 getLimits <- function(marg, builtP) {
-  
   if (wasFlipped(builtP)) {
     marg <- switch(marg,
-                   "x" = "y",
-                   "y" = "x"
+      "x" = "y",
+      "y" = "x"
     )
   }
 
@@ -405,23 +399,31 @@ getMargGrob <- function(margPlot) {
 addTopMargPlot <- function(ggMargGrob, top, size) {
   panelPos <- getPanelPos(gtableGrob = ggMargGrob)
   topMargG <- getMargGrob(margPlot = top)
-  gt <- gtable::gtable_add_rows(x = ggMargGrob,
-                                heights = grid::unit(1/size, "null"), pos = 0)
-  gt <- gtable::gtable_add_grob(x = gt, grobs = topMargG, t = 1, b = 1,
-                                l = panelPos[["l"]], r = panelPos[["r"]],
-                                z = Inf, clip = "on", name = "topMargPlot")
+  gt <- gtable::gtable_add_rows(
+    x = ggMargGrob,
+    heights = grid::unit(1 / size, "null"), pos = 0
+  )
+  gt <- gtable::gtable_add_grob(
+    x = gt, grobs = topMargG, t = 1, b = 1,
+    l = panelPos[["l"]], r = panelPos[["r"]],
+    z = Inf, clip = "on", name = "topMargPlot"
+  )
   gt
 }
 
 addRightMargPlot <- function(ggMargGrob, right, size) {
   panelPos <- getPanelPos(gtableGrob = ggMargGrob)
   rightMargG <- getMargGrob(margPlot = right)
-  gt <- gtable::gtable_add_cols(x = ggMargGrob,
-                                widths = grid::unit(1/size, "null"),
-                                pos = -1)
-  gt <- gtable::gtable_add_grob(x = gt, grobs = rightMargG, t = panelPos[["t"]],
-                                b = panelPos[["b"]], r = ncol(gt), l = ncol(gt),
-                                z = Inf, clip = "on", name = "rightMargPlot")
+  gt <- gtable::gtable_add_cols(
+    x = ggMargGrob,
+    widths = grid::unit(1 / size, "null"),
+    pos = -1
+  )
+  gt <- gtable::gtable_add_grob(
+    x = gt, grobs = rightMargG, t = panelPos[["t"]],
+    b = panelPos[["b"]], r = ncol(gt), l = ncol(gt),
+    z = Inf, clip = "on", name = "rightMargPlot"
+  )
   gt
 }
 
@@ -436,12 +438,12 @@ addRightMargPlot <- function(ggMargGrob, right, size) {
 # a little longer.
 getTitleGrobs <- function(p) {
   grobs <- ggplot2::ggplotGrob(p)$grobs
-  gindTitle <- vapply(grobs, function(x) {
-    grepl(pattern = "plot\\.title", x$name)
-  }, logical(1))
-  gindSub <- vapply(grobs, function(x) {
-    grepl(pattern = "plot\\.subtitle", x$name)
-  }, logical(1))
+  gindTitle <- vapply(
+    grobs, function(x) grepl(pattern = "plot\\.title", x$name), logical(1)
+  )
+  gindSub <- vapply(
+    grobs, function(x) grepl(pattern = "plot\\.subtitle", x$name), logical(1)
+  )
   list(
     titleG = grobs[gindTitle][[1]],
     subTitleG = grobs[gindSub][[1]]
@@ -452,8 +454,10 @@ getTitleGrobs <- function(p) {
 rbindGrobs <- function(topGrob, gtable, l, r) {
   topH <- grid::grobHeight(topGrob)
   gt_t <- gtable::gtable_add_rows(x = gtable, heights = topH, pos = 0)
-  gtable::gtable_add_grob(x = gt_t, grobs = topGrob, t = 1, b = 1,
-                          l = l, r = r, z = Inf)
+  gtable::gtable_add_grob(
+    x = gt_t, grobs = topGrob, t = 1, b = 1,
+    l = l, r = r, z = Inf
+  )
 }
 
 # Add the title/subtitle grobs to the main ggextra plot, along with a little
@@ -461,12 +465,20 @@ rbindGrobs <- function(topGrob, gtable, l, r) {
 addTitleGrobs <- function(ggxtraNoTtl, titleGrobs) {
   layout <- ggxtraNoTtl$layout
   l <- layout[layout$name == "panel", "l"]
-  spacerGrob <- grid::rectGrob(height = grid::unit(.2, "cm"),
-                               gp = grid::gpar(col = "white", fill = NULL))
-  plotWSpace <- rbindGrobs(topGrob = spacerGrob, gtable = ggxtraNoTtl,
-                           l = l, r = l)
-  plotWSubTitle <- rbindGrobs(topGrob = titleGrobs$subTitleG,
-                              gtable = plotWSpace, l = l, r = l)
-  rbindGrobs(topGrob = titleGrobs$titleG,
-             gtable = plotWSubTitle, l = l, r = l)
+  spacerGrob <- grid::rectGrob(
+    height = grid::unit(.2, "cm"),
+    gp = grid::gpar(col = "white", fill = NULL)
+  )
+  plotWSpace <- rbindGrobs(
+    topGrob = spacerGrob, gtable = ggxtraNoTtl,
+    l = l, r = l
+  )
+  plotWSubTitle <- rbindGrobs(
+    topGrob = titleGrobs$subTitleG,
+    gtable = plotWSpace, l = l, r = l
+  )
+  rbindGrobs(
+    topGrob = titleGrobs$titleG,
+    gtable = plotWSubTitle, l = l, r = l
+  )
 }

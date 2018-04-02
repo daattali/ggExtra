@@ -15,15 +15,17 @@ runggplot2InternalsTests <- function(ggplot2Version) {
     )
 
     expect_true({
-      gTest <- sapply(titleList, function(x) {
-        length(ggExtra:::getTitleGrobs(titleP(x))) == 2
-      })
+      gTest <- sapply(
+        titleList, 
+        function(x) length(ggExtra:::getTitleGrobs(titleP(x))) == 2
+      )
       all(gTest)
     })
     expect_true({
-      gTest <- sapply(titleList, function(x) {
-        !is.null(ggplot2::ggplot_build(titleP(x))$plot$labels$title)
-      })
+      gTest <- sapply(
+        titleList, 
+        function(x) !is.null(ggplot2::ggplot_build(titleP(x))$plot$labels$title)
+      )
       all(gTest)
     })
 

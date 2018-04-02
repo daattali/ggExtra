@@ -2,7 +2,7 @@
 #'
 #' Remove grid lines from a ggplot2 plot, to have a cleaner and simpler
 #' plot
-#' 
+#'
 #' Minor grid lines are always removed.
 #'
 #' \code{removeGrid} removes the major grid lines from the x and/or y axis
@@ -36,7 +36,7 @@ removeGrid <- function(x = TRUE, y = TRUE) {
     p <- p +
       ggplot2::theme(panel.grid.major.y = ggplot2::element_blank())
   }
-  
+
   p
 }
 
