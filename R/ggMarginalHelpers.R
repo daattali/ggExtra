@@ -386,14 +386,12 @@ getLimits <- function(marg, builtP) {
 # one for the y margin (x margin = top plot, y margin = right plot)
 getPanelPos <- function(gtableGrob) {
   layDF <- gtableGrob$layout
-  panelPos <- layDF[layDF$name == "panel", c("t", "l", "b", "r")]
-  panelPos
+  layDF[layDF$name == "panel", c("t", "l", "b", "r")]
 }
 
 getMargGrob <- function(margPlot) {
   margG <- ggplot2::ggplotGrob(margPlot)
-  cleanMargG <- gtable::gtable_filter(margG, pattern = "panel")
-  cleanMargG
+  gtable::gtable_filter(margG, pattern = "panel")
 }
 
 addTopMargPlot <- function(ggMargGrob, top, size) {
@@ -403,12 +401,11 @@ addTopMargPlot <- function(ggMargGrob, top, size) {
     x = ggMargGrob,
     heights = grid::unit(1 / size, "null"), pos = 0
   )
-  gt <- gtable::gtable_add_grob(
+  gtable::gtable_add_grob(
     x = gt, grobs = topMargG, t = 1, b = 1,
     l = panelPos[["l"]], r = panelPos[["r"]],
     z = Inf, clip = "on", name = "topMargPlot"
   )
-  gt
 }
 
 addRightMargPlot <- function(ggMargGrob, right, size) {
@@ -419,12 +416,11 @@ addRightMargPlot <- function(ggMargGrob, right, size) {
     widths = grid::unit(1 / size, "null"),
     pos = -1
   )
-  gt <- gtable::gtable_add_grob(
+  gtable::gtable_add_grob(
     x = gt, grobs = rightMargG, t = panelPos[["t"]],
     b = panelPos[["b"]], r = ncol(gt), l = ncol(gt),
     z = Inf, clip = "on", name = "rightMargPlot"
   )
-  gt
 }
 
 # Pull out the title and subtitle grobs for a plot, after we have checked to
