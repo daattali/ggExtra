@@ -7,16 +7,14 @@ runMarginalTests <- function(ggplot2Version) {
     sapply(c(
       "basic density", "basic histogram", "basic boxplot",
       "basic violin plot", "scatter plot from data"
-    ), function(x)
-      expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+    ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
 
   test_that("ggMarginal's other params work", {
     sapply(c(
       "only x margin", "smaller marginal plots", "both hists red col",
       "top hist red col and fill"
-    ), function(x)
-      expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+    ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
 
   test_that("Misc. issues are solved", {
@@ -24,8 +22,7 @@ runMarginalTests <- function(ggplot2Version) {
       "theme bw", "legend and title",
       "flipped coord where x is drat and y is wt",
       "subtitle but no title"
-    ), function(x)
-      expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+    ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
 
   test_that("Grouping feature works as expected", {

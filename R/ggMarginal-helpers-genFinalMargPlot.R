@@ -1,27 +1,69 @@
-toParamList <- function(exPrm, xPrm, yPrm) {
-  list(
-    exPrm = exPrm,
-    xPrm = xPrm,
-    yPrm = yPrm
+# Main helper in ggMarginal to create marginal plots ---------------------------
+
+# Wrapper function to create a "final" marginal plot
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+                             groupFill) {
+  rawMarg <- genRawMargPlot(
+    marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL,
+    groupColour = groupColour, groupFill = groupFill
   )
-}
 
-reconcileScatPlot <- function(p, data, x, y) {
-  if (missing(p)) {
-    if (missing(data) || missing(x) || missing(y)) {
-      stop("`data`, `x`, and `y` must be provided if `p` is not provided",
-        call. = FALSE
-      )
-    }
-    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) +
-      ggplot2::geom_point()
+  margThemed <- addMainTheme(
+    rawMarg = rawMarg, marg = marg, scatPTheme = scatPbuilt$plot$theme
+  )
+
+  limits <- getLimits(marg, scatPbuilt)
+
+  # for plots with y aes we have to use scale_y_continuous instead of
+  # scale_x_continuous.
+  if (type %in% c("boxplot", "violin")) {
+    margThemed +
+      ggplot2::scale_y_continuous(limits = limits, oob = scales::squish)
+  } else {
+    margThemed +
+      ggplot2::scale_x_continuous(limits = limits, oob = scales::squish)
   }
-  p
 }
 
-wasFlipped <- function(scatPbuilt) {
-  classCoord <- class(scatPbuilt$plot$coordinates)
-  any(grepl("flip", classCoord, ignore.case = TRUE))
+# Function to create a "raw" marginal plot
+genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+                           groupFill) {
+  data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
+
+  noGeomPlot <- margPlotNoGeom(
+    data, type = type, scatPbuilt = scatPbuilt, 
+    groupColour = groupColour, groupFill = groupFill
+  )
+
+  finalParms <- alterParams(
+    marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt,
+    groupColour = groupColour, groupFill = groupFill
+  )
+
+  geomFun <- getGeomFun(type = type)
+
+  if (type == "density") {
+    density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
+    layer1 <- do.call(geomFun, density_parms)
+
+    # Don't need fill b/c we get fill from geom_density
+    # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
+    line_parms <- finalParms[!(names(finalParms) %in% c("fill", "alpha"))]
+
+    line_parms$stat <- "density"
+    layer2 <- do.call(ggplot2::geom_line, line_parms)
+
+    plot <- noGeomPlot + layer1 + layer2
+  } else {
+    layer <- do.call(geomFun, finalParms)
+    plot <- noGeomPlot + layer
+  }
+
+  if (needsFlip(marg = marg, type = type)) {
+    plot <- plot + ggplot2::coord_flip()
+  }
+
+  plot
 }
 
 getVarDf <- function(scatPbuilt, marg) {
@@ -58,14 +100,9 @@ getVarDf <- function(scatPbuilt, marg) {
   scatDF[, c("var", "fill", "colour", "group")]
 }
 
-needsFlip <- function(marg, type) {
-
-  # If the marginal plot is: (for the x margin (top) and is a boxplot) or
-  #                          (for the y margin (right) and is not a boxplot),
-  # ... then have to flip
-  topAndBoxP <- marg == "x" && type %in% c("boxplot", "violin")
-  rightAndNonBoxP <- marg == "y" && !(type %in% c("boxplot", "violin"))
-  topAndBoxP || rightAndNonBoxP
+wasFlipped <- function(scatPbuilt) {
+  classCoord <- class(scatPbuilt$plot$coordinates)
+  any(grepl("flip", classCoord, ignore.case = TRUE))
 }
 
 margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
@@ -157,37 +194,6 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   prmL$exPrm
 }
 
-overrideMappedParams <- function(prmL, paramName, groupVar) {
-  if (!is.null(prmL$exPrm[[paramName]]) && groupVar) {
-    message(
-      "You specified group", paramName, " = TRUE as well as a ", paramName,
-      " parameter for a marginal plot. The ", paramName, " parameter will be",
-      " ignored in favor of using ", paramName, "s mapped from the scatter plot."
-    )
-    prmL$exPrm[[paramName]] <- NULL
-  }
-  prmL
-}
-
-reconcileColParamApply <- function(prmL) {
-  lapply(prmL, reconcileColParam)
-}
-
-reconcileColParam <- function(paramEl) {
-  col_vrnts <- c("colour", "color", "col")
-  vrnts_exts <- vapply(
-    col_vrnts, function(x) !is.null(paramEl[[x]]), logical(1), USE.NAMES = TRUE
-  )
-
-  if (any(vrnts_exts)) {
-    paramEl$colour <- paramEl[[names(vrnts_exts[vrnts_exts])]]
-    paramEl$col <- NULL
-    paramEl$color <- NULL
-  }
-
-  paramEl
-}
-
 getPanelScale <- function(marg, builtP) {
   above_221 <- utils::packageVersion("ggplot2") > "2.2.1"
   if (above_221) {
@@ -205,8 +211,16 @@ getPanelScale <- function(marg, builtP) {
   }
 }
 
-geom_density2 <- function(...) {
-  ggplot2::geom_density(colour = "NA", ...)
+overrideMappedParams <- function(prmL, paramName, groupVar) {
+  if (!is.null(prmL$exPrm[[paramName]]) && groupVar) {
+    message(
+      "You specified group", paramName, " = TRUE as well as a ", paramName,
+      " parameter for a marginal plot. The ", paramName, " parameter will be",
+      " ignored in favor of using ", paramName, "s mapped from the scatter plot."
+    )
+    prmL$exPrm[[paramName]] <- NULL
+  }
+  prmL
 }
 
 getGeomFun <- function(type) {
@@ -218,70 +232,18 @@ getGeomFun <- function(type) {
   )
 }
 
-# Wrapper function to create a "raw" marginal plot
-genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
-                           groupFill) {
-  data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
-
-  noGeomPlot <- margPlotNoGeom(
-    data, type = type, scatPbuilt = scatPbuilt, 
-    groupColour = groupColour, groupFill = groupFill
-  )
-
-  finalParms <- alterParams(
-    marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt,
-    groupColour = groupColour, groupFill = groupFill
-  )
-
-  geomFun <- getGeomFun(type = type)
-
-  if (type == "density") {
-    density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
-    layer1 <- do.call(geomFun, density_parms)
-
-    # Don't need fill b/c we get fill from geom_density
-    # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
-    line_parms <- finalParms[!(names(finalParms) %in% c("fill", "alpha"))]
-
-    line_parms$stat <- "density"
-    layer2 <- do.call(ggplot2::geom_line, line_parms)
-
-    plot <- noGeomPlot + layer1 + layer2
-  } else {
-    layer <- do.call(geomFun, finalParms)
-    plot <- noGeomPlot + layer
-  }
-
-  if (needsFlip(marg = marg, type = type)) {
-    plot <- plot + ggplot2::coord_flip()
-  }
-
-  plot
+geom_density2 <- function(...) {
+  ggplot2::geom_density(colour = "NA", ...)
 }
 
-# Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
-                             groupFill) {
-  rawMarg <- genRawMargPlot(
-    marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL,
-    groupColour = groupColour, groupFill = groupFill
-  )
+needsFlip <- function(marg, type) {
 
-  margThemed <- addMainTheme(
-    rawMarg = rawMarg, marg = marg, scatPTheme = scatPbuilt$plot$theme
-  )
-
-  limits <- getLimits(marg, scatPbuilt)
-
-  # for plots with y aes we have to use scale_y_continuous instead of
-  # scale_x_continuous.
-  if (type %in% c("boxplot", "violin")) {
-    margThemed +
-      ggplot2::scale_y_continuous(limits = limits, oob = scales::squish)
-  } else {
-    margThemed +
-      ggplot2::scale_x_continuous(limits = limits, oob = scales::squish)
-  }
+  # If the marginal plot is: (for the x margin (top) and is a boxplot) or
+  #                          (for the y margin (right) and is not a boxplot),
+  # ... then have to flip
+  topAndBoxP <- marg == "x" && type %in% c("boxplot", "violin")
+  rightAndNonBoxP <- marg == "y" && !(type %in% c("boxplot", "violin"))
+  topAndBoxP || rightAndNonBoxP
 }
 
 # Given a plot, copy some theme properties from the main plot so that they will
@@ -379,102 +341,4 @@ getLimits <- function(marg, builtP) {
     range <- scale$range$range
   }
   range
-}
-
-# Helper functions for appending the tableGrob that represents the scatter-plot
-# (i.e., the main plot, p) with the marginal plots - one for the x margin and
-# one for the y margin (x margin = top plot, y margin = right plot)
-getPanelPos <- function(gtableGrob) {
-  layDF <- gtableGrob$layout
-  layDF[layDF$name == "panel", c("t", "l", "b", "r")]
-}
-
-getMargGrob <- function(margPlot) {
-  margG <- ggplot2::ggplotGrob(margPlot)
-  gtable::gtable_filter(margG, pattern = "panel")
-}
-
-addTopMargPlot <- function(ggMargGrob, top, size) {
-  panelPos <- getPanelPos(gtableGrob = ggMargGrob)
-  topMargG <- getMargGrob(margPlot = top)
-  gt <- gtable::gtable_add_rows(
-    x = ggMargGrob,
-    heights = grid::unit(1 / size, "null"), pos = 0
-  )
-  gtable::gtable_add_grob(
-    x = gt, grobs = topMargG, t = 1, b = 1,
-    l = panelPos[["l"]], r = panelPos[["r"]],
-    z = Inf, clip = "on", name = "topMargPlot"
-  )
-}
-
-addRightMargPlot <- function(ggMargGrob, right, size) {
-  panelPos <- getPanelPos(gtableGrob = ggMargGrob)
-  rightMargG <- getMargGrob(margPlot = right)
-  gt <- gtable::gtable_add_cols(
-    x = ggMargGrob,
-    widths = grid::unit(1 / size, "null"),
-    pos = -1
-  )
-  gtable::gtable_add_grob(
-    x = gt, grobs = rightMargG, t = panelPos[["t"]],
-    b = panelPos[["b"]], r = ncol(gt), l = ncol(gt),
-    z = Inf, clip = "on", name = "rightMargPlot"
-  )
-}
-
-# Pull out the title and subtitle grobs for a plot, after we have checked to
-# make sure there is a title. Note: plot.title and plot.subtitle will actually
-# always exist (I believe) in recent versions of ggplot2, even if the user
-# doesn't specify a title/subtitle. In these cases, the title/subtitle grobs
-# will be "zeroGrobs." However, a 'label' won't exist
-# (i.e, !is.null(pb$plot$labels$title) will be true) when there is no title,
-# so it's not like we will be needlessly adding zeroGrobs to our plot (though
-# it wouldn't be a problem, even if we did add the zeroGrobs - it would just take
-# a little longer.
-getTitleGrobs <- function(p) {
-  grobs <- ggplot2::ggplotGrob(p)$grobs
-  gindTitle <- vapply(
-    grobs, function(x) grepl(pattern = "plot\\.title", x$name), logical(1)
-  )
-  gindSub <- vapply(
-    grobs, function(x) grepl(pattern = "plot\\.subtitle", x$name), logical(1)
-  )
-  list(
-    titleG = grobs[gindTitle][[1]],
-    subTitleG = grobs[gindSub][[1]]
-  )
-}
-
-# Helper function for addTitleGrobs
-rbindGrobs <- function(topGrob, gtable, l, r) {
-  topH <- grid::grobHeight(topGrob)
-  gt_t <- gtable::gtable_add_rows(x = gtable, heights = topH, pos = 0)
-  gtable::gtable_add_grob(
-    x = gt_t, grobs = topGrob, t = 1, b = 1,
-    l = l, r = r, z = Inf
-  )
-}
-
-# Add the title/subtitle grobs to the main ggextra plot, along with a little
-# padding
-addTitleGrobs <- function(ggxtraNoTtl, titleGrobs) {
-  layout <- ggxtraNoTtl$layout
-  l <- layout[layout$name == "panel", "l"]
-  spacerGrob <- grid::rectGrob(
-    height = grid::unit(.2, "cm"),
-    gp = grid::gpar(col = "white", fill = NULL)
-  )
-  plotWSpace <- rbindGrobs(
-    topGrob = spacerGrob, gtable = ggxtraNoTtl,
-    l = l, r = l
-  )
-  plotWSubTitle <- rbindGrobs(
-    topGrob = titleGrobs$subTitleG,
-    gtable = plotWSpace, l = l, r = l
-  )
-  rbindGrobs(
-    topGrob = titleGrobs$titleG,
-    gtable = plotWSubTitle, l = l, r = l
-  )
 }
