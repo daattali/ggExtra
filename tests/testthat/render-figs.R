@@ -26,7 +26,6 @@ getFigDir <- function(ggplot2Version) {
 }
 
 asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
-
   figDir <- getFigDir(ggplot2Version = ggplot2Version)
 
   if (!dir.exists(figDir)) {
@@ -43,14 +42,19 @@ asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
 renderAllFigsApply <- function(ggplot2Versions) {
   sapply(ggplot2Versions, function(ggplot2Version) {
     withVersions(ggplot2 = ggplot2Version, code = {
-      sapply(names(funList), function(x)
-        writeSvg(p = funList[[x]](),
-                 file = asSvgFile(funName = x, ggplot2Version = ggplot2Version)))
+      sapply(
+        names(funList), function(x) {
+          writeSvg(
+            p = funList[[x]](),
+            file = asSvgFile(funName = x, ggplot2Version = ggplot2Version)
+          ) 
+        }
+      )
     })
   })
 }
 
-# This was called once to create all the expected versions of the test figures. 
-# It should be re-run each time a new test figure is added to the function list 
+# This was called once to create all the expected versions of the test figures.
+# It should be re-run each time a new test figure is added to the function list
 # (funList) in  helper-funs.R (funList contains the code to create the figures).
 renderAllFigsApply(c("2.2.0", "2.2.1", "latest"))

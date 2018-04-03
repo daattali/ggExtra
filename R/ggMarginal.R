@@ -110,7 +110,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   prmL <- toParamList(exPrm = list(...), xPrm = xparams, yPrm = yparams)
   # Reconcile different naming variants on "colour" param
   prmL <- reconcileColParamApply(prmL)
-  
+
   # Create one version of the scat plot (scatP), based on values of p, data, x,
   # and y...also remove all margin around plot so that it's easier to position
   # the density plots beside the main plot
@@ -120,7 +120,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Decompose scatP to grab all sorts of information from it
   scatPbuilt <- ggplot2::ggplot_build(scatP)
 
-  # Pull out the plot title/subtitle if one exists and save it as a grob for 
+  # Pull out the plot title/subtitle if one exists and save it as a grob for
   # later use
   labels <- scatPbuilt$plot$labels
   hasTitle <- (!is.null(labels$title) || !is.null(labels$subtitle))
@@ -133,26 +133,28 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Create the margin plots by calling genFinalMargPlot
   # In order to ensure the marginal plots line up nicely with the main plot,
   # several things are done:
-    # - Use the same label text size as the original
-    # - Remove the margins from all plots
-    # - Make all text in marginal plots transparent
-    # - Remove all lines and colours from marginal plots
-    # - Use the same axis range as the main plot
+  # - Use the same label text size as the original
+  # - Remove the margins from all plots
+  # - Make all text in marginal plots transparent
+  # - Remove all lines and colours from marginal plots
+  # - Use the same axis range as the main plot
 
   # If margins = x or 'both' (x and y), then you have to create top plot
   # Top plot = horizontal margin plot, which corresponds to x marg
   if (margins != "y") {
-    top <- genFinalMargPlot(marg = "x", type = type, scatPbuilt = scatPbuilt,
-                            prmL = prmL, groupColour = groupColour,
-                            groupFill = groupFill)
+    top <- genFinalMargPlot(
+      marg = "x", type = type, scatPbuilt = scatPbuilt, prmL = prmL, 
+      groupColour = groupColour, groupFill = groupFill
+    )
   }
 
   # If margins = y or 'both' (x and y), then you have to create right plot.
   # (right plot = vertical margin plot, which corresponds to y marg)
   if (margins != "x") {
-    right <- genFinalMargPlot(marg = "y", type = type, scatPbuilt = scatPbuilt,
-                              prmL = prmL, groupColour = groupColour,
-                              groupFill = groupFill)
+    right <- genFinalMargPlot(
+      marg = "y", type = type, scatPbuilt = scatPbuilt, prmL = prmL, 
+      groupColour = groupColour, groupFill = groupFill
+    )
   }
 
   # Now add the marginal plots to the scatter plot
@@ -162,31 +164,36 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
     suppressMessages({
       if (margins == "both") {
         ggxtraTmp <- addTopMargPlot(ggMargGrob = pGrob, top = top, size = size)
-        ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right,
-                                        size = size)
+        ggxtraNoTtl <- addRightMargPlot(
+          ggMargGrob = ggxtraTmp, right = right, size = size
+        )
       } else if (margins == "x") {
-        ggxtraTmp <- gtable::gtable_add_padding(x = pGrob,
-                                                grid::unit(c(0, 0.5, 0, 0),
-                                                           "lines"))
-        ggxtraNoTtl <- addTopMargPlot(ggMargGrob = ggxtraTmp, top = top,
-                                      size = size)
+        ggxtraTmp <- gtable::gtable_add_padding(
+          x = pGrob, grid::unit(c(0, 0.5, 0, 0), "lines")
+        )
+        ggxtraNoTtl <- addTopMargPlot(
+          ggMargGrob = ggxtraTmp, top = top, size = size
+        )
       } else if (margins == "y") {
-        ggxtraTmp <- gtable::gtable_add_padding(x = pGrob,
-                                                grid::unit(c(0.5, 0, 0, 0),
-                                                           "lines"))
-        ggxtraNoTtl <- addRightMargPlot(ggMargGrob = ggxtraTmp, right = right,
-                                        size = size)
+        ggxtraTmp <- gtable::gtable_add_padding(
+          x = pGrob, grid::unit(c(0.5, 0, 0, 0), "lines")
+        )
+        ggxtraNoTtl <- addRightMargPlot(
+          ggMargGrob = ggxtraTmp, right = right, size = size
+        )
       }
     })
   }, warning = function(w) {
-    if (grepl("did you forget aes", w, ignore.case = TRUE))
+    if (grepl("did you forget aes", w, ignore.case = TRUE)) {
       invokeRestart("muffleWarning")
+    }
   })
 
   # Add the title to the resulting ggExtra plot if it exists
   if (hasTitle) {
-    ggExtraPlot <- addTitleGrobs(ggxtraNoTtl = ggxtraNoTtl,
-                                 titleGrobs = titleGrobs)
+    ggExtraPlot <- addTitleGrobs(
+      ggxtraNoTtl = ggxtraNoTtl, titleGrobs = titleGrobs
+    )
   } else {
     ggExtraPlot <- ggxtraNoTtl
   }
