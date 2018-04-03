@@ -1,4 +1,4 @@
-# ggExtra 0.7.1.*
+# ggExtra 0.8
 
 NEW FEATURES
 
