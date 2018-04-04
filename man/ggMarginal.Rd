@@ -74,6 +74,7 @@ while \code{ggMarginal(p, xparams = list(size=2), yparams = list(size=2))}
 will make the density plot outline thicker.
 }
 \examples{
+\dontrun{
 library(ggplot2)
 
 # basic usage
@@ -122,6 +123,7 @@ p <- ggplot(mtcars, aes(x = wt, y = drat, colour = factor(vs))) +
      geom_point()
 ggMarginal(p, groupColour = TRUE)
 ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
+}
 
 }
 \seealso{

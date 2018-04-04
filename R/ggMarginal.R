@@ -46,6 +46,7 @@
 #' while \code{ggMarginal(p, xparams = list(size=2), yparams = list(size=2))}
 #' will make the density plot outline thicker.
 #' @examples
+#' \dontrun{
 #' library(ggplot2)
 #'
 #' # basic usage
@@ -94,6 +95,7 @@
 #'      geom_point()
 #' ggMarginal(p, groupColour = TRUE)
 #' ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
+#' }
 #'
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
@@ -143,7 +145,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Top plot = horizontal margin plot, which corresponds to x marg
   if (margins != "y") {
     top <- genFinalMargPlot(
-      marg = "x", type = type, scatPbuilt = scatPbuilt, prmL = prmL, 
+      marg = "x", type = type, scatPbuilt = scatPbuilt, prmL = prmL,
       groupColour = groupColour, groupFill = groupFill
     )
   }
@@ -152,7 +154,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # (right plot = vertical margin plot, which corresponds to y marg)
   if (margins != "x") {
     right <- genFinalMargPlot(
-      marg = "y", type = type, scatPbuilt = scatPbuilt, prmL = prmL, 
+      marg = "y", type = type, scatPbuilt = scatPbuilt, prmL = prmL,
       groupColour = groupColour, groupFill = groupFill
     )
   }
