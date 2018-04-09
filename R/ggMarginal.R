@@ -145,6 +145,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # Top plot = horizontal margin plot, which corresponds to x marg
   if (margins != "y") {
     top <- genFinalMargPlot(
+      data = data, varname = x,
       marg = "x", type = type, scatPbuilt = scatPbuilt, prmL = prmL,
       groupColour = groupColour, groupFill = groupFill
     )
@@ -154,6 +155,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   # (right plot = vertical margin plot, which corresponds to y marg)
   if (margins != "x") {
     right <- genFinalMargPlot(
+      data = data, varname = y,
       marg = "y", type = type, scatPbuilt = scatPbuilt, prmL = prmL,
       groupColour = groupColour, groupFill = groupFill
     )
