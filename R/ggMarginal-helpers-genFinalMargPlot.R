@@ -37,7 +37,11 @@ genRawMargPlot <- function(data, varname,
     if (missing(varname)) {
       varname <- as.character(scatPbuilt$plot$mapping[[marg]])
     }
-    # data <- subset(data, select = varname)
+    if (is.null(varname) || ! varname %in% names(data)) {
+      stop("Could not identify column corresponding to ", marg,
+           " in data.  I tried \"", format(varname), "\").")
+    }
+      # data <- subset(data, select = varname)
     # data$fill <- NA
     # data$colour <- "black"
     # data$group <- -1L
