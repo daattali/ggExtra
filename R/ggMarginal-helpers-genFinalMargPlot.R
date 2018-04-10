@@ -1,9 +1,11 @@
 # Main helper in ggMarginal to create marginal plots ---------------------------
 
 # Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+genFinalMargPlot <- function(data, varname,
+                             marg, type, scatPbuilt, prmL, groupColour,
                              groupFill) {
   rawMarg <- genRawMargPlot(
+    data = data, varname,
     marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL,
     groupColour = groupColour, groupFill = groupFill
   )
@@ -26,9 +28,30 @@ genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 }
 
 # Function to create a "raw" marginal plot
-genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+genRawMargPlot <- function(data, varname,
+                           marg, type, scatPbuilt, prmL, groupColour,
                            groupFill) {
-  data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
+  if (missing(data)) {
+    data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
+  } else {
+    if (missing(varname)) {
+      varname <- as.character(scatPbuilt$plot$mapping[[marg]])
+    }
+    if (is.null(varname) || ! varname %in% names(data)) {
+      stop("Could not identify column corresponding to ", marg,
+           " in data.  I tried \"", format(varname), "\").")
+    }
+      # data <- subset(data, select = varname)
+    # data$fill <- NA
+    # data$colour <- "black"
+    # data$group <- -1L
+    data <- data.frame(
+      var = data[[varname]],
+      fill <- NA,
+      colour <- "black",
+      group <- -1L,
+      stringsAsFactors = FALSE)
+  }
 
   noGeomPlot <- margPlotNoGeom(
     data, type = type, scatPbuilt = scatPbuilt, 
