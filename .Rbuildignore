@@ -4,4 +4,3 @@
 ^cran-comments\.md$
 ^Makefile$
 ^dockerfile$
-^tests$
