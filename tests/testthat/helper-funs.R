@@ -27,63 +27,61 @@ funList <-
     "basic violin plot" = function() ggMarg2("violin"),
     "scatter plot from data" = function() ggMarginal(
       data = mtcars, x = "mpg", y = "disp", type = "density"
-      ),
+    ),
     "only x margin" = function() ggMarg2("density", margins = "x"),
     "smaller marginal plots" = function() ggMarg2("density", size = 10),
     "both hists red col" = function() ggMarg2("histogram", colour = "red"),
     "top hist red col and fill" = function() ggMarg2(
       "histogram", xparams = list(colour = "red", fill = "red")
-      ),
+    ),
     "theme bw" = function() ggMarginal(
-        p = basicScatP() + ggplot2::theme_bw(), type = "density"
-      ),
+      p = basicScatP() + ggplot2::theme_bw(), type = "density"
+    ),
     "legend and title" = function() ggMarginal(
-        ggplot2::ggplot(data = mtcars) +
-          ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = gear)) +
-          ggplot2::ggtitle("pretty sweet title",
-            subtitle = "not a bad subtitle either"
-          ) +
-          ggplot2::theme(plot.title = ggplot2::element_text(colour = "red"))
-      ),
+      ggplot2::ggplot(data = mtcars) +
+        ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = gear)) +
+        ggplot2::ggtitle("pretty sweet title", "not a bad subtitle either") +
+        ggplot2::theme(plot.title = ggplot2::element_text(colour = "red"))
+    ),
     "flipped coord where x is drat and y is wt" = function() ggMarginal(
-        p = basicScatP() + ggplot2::coord_flip(), type = "density"
-      ),
+      p = basicScatP() + ggplot2::coord_flip(), type = "density"
+    ),
     "col and fill mapped" = function() ggMarginal(
-        p = margMapP(), groupColour = TRUE, groupFill = TRUE
-      ),
+      p = margMapP(), groupColour = TRUE, groupFill = TRUE
+    ),
     "fill mapped with low alpha" = function() ggMarginal(
-        p = margMapP(), groupFill = TRUE, alpha = .2
-      ),
+      p = margMapP(), groupFill = TRUE, alpha = .2
+    ),
     "colour mapped with grey fill" = function() ggMarginal(
-        p = margMapP(), groupColour = TRUE, fill = "grey"
-      ),
+      p = margMapP(), groupColour = TRUE, fill = "grey"
+    ),
     "colour mapped and colour param provided" = function() ggMarginal(
-        p = margMapP(), groupColour = TRUE, colour = "red"
-      ),
+      p = margMapP(), groupColour = TRUE, colour = "red"
+    ),
     "colour & fill mapped and both params provided" = function() ggMarginal(
-        p = margMapP(), groupColour = TRUE, groupFill = TRUE,
-        colour = "red", fill = "blue"
-      ),
+      p = margMapP(), groupColour = TRUE, groupFill = TRUE,
+      colour = "red", fill = "blue"
+    ),
     "subtitle but no title" = function() ggMarginal(
-        basicScatP() + ggplot2::labs(subtitle = "This should be above marginal")
-      ),
+      basicScatP() + ggplot2::labs(subtitle = "This should be above marginal")
+    ),
     "x-axis limits using scale_x_continuous" = function() ggMarginal(
-        basicScatPWithLims()
-      ),
+      basicScatPWithLims()
+    ),
     "axis limits using xlim and ylim" = function() ggMarginal(
-          basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
-      ),
+      basicScatP() + ggplot2::xlim(2, 5) + ggplot2::ylim(3, 4.5)
+    ),
     "x-axis limits for histograms" = function() ggMarginal(
-        basicScatPWithLims(), type = "histogram"
-      ),
+      basicScatPWithLims(), type = "histogram"
+    ),
     "x-axis limits for marginals with y aes" = function() ggMarginal(
-        basicScatPWithLims(), type = "violin"
-      ),
+      basicScatPWithLims(), type = "violin"
+    ),
     "x and y scale_reverse" = function() ggMarginal(
-          basicScatP() + ggplot2::scale_x_reverse() + ggplot2::scale_y_reverse()
-      ),
+      basicScatP() + ggplot2::scale_x_reverse() + ggplot2::scale_y_reverse()
+    ),
     "geom_smooth with aligned marg plots" = function() ggMarginal(
-          basicScatP() + ggplot2::geom_smooth(), type = "histogram"
+      basicScatP() + ggplot2::geom_smooth(), type = "histogram"
     ),
     "geom_line provided as first geom" = function() ggMarginal(
       ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = mpg)) + 
