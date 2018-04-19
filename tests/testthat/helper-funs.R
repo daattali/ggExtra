@@ -84,7 +84,12 @@ funList <-
       ),
     "geom_smooth with aligned marg plots" = function() ggMarginal(
           basicScatP() + ggplot2::geom_smooth(), type = "histogram"
-      )
+    ),
+    "geom_line provided as first geom" = function() ggMarginal(
+      ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = mpg)) + 
+        ggplot2::geom_line() + 
+        ggplot2::geom_point()
+    )
   )
 
 expectDopp2 <- function(funName, ggplot2Version) {
