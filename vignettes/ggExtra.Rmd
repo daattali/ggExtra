@@ -150,13 +150,13 @@ You can also create marginal box plots and violin plots. For more information, s
 If you try including a `ggMarginal()` plot inside an R Notebook or Rmarkdown code chunk, you'll notice that the plot doesn't get output. In order to get a `ggMarginal()` to show up in an these contexts, you need to save the ggMarginal plot as a variable in one code chunk, and explicitly print it using the `grid` package in another chunk, like this:
 
 ````
-```{r}
+\```{r}
 library(ggplot2)
 library(ggExtra)
 p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
 p <- ggMarginal(p)
 ```
-```{r}
+\```{r}
 grid::grid.newpage()
 grid::grid.draw(p)
 ```

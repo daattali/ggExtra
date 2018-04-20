@@ -170,20 +170,16 @@ to save the ggMarginal plot as a variable in one code chunk, and
 explicitly print it using the `grid` package in another chunk, like
 this:
 
-
-    ```r
+    ```{r}
     library(ggplot2)
     library(ggExtra)
     p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
     p <- ggMarginal(p)
     ```
-
-    ```r
+    ```{r}
     grid::grid.newpage()
     grid::grid.draw(p)
     ```
-
-    <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
 `removeGrid` - Remove grid lines from ggplot2
 ---------------------------------------------
