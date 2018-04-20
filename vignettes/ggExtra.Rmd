@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Package ggExtra}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
----
+---   
   
 ```{r setup, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
@@ -134,15 +134,7 @@ If you want to specify some parameter for only one of the marginal plots, you ca
 ggMarginal(p1, type = "histogram", xparams = list(binwidth = 1, fill = "orange"))
 ```
 
-You don't have to supply a ggplot2 scatterplot, you can also just tell ggMarginal
-what dataset and variables to use, but of course this way you lose the ability
-to customize the main plot (change text/font/theme/etc).
-
-```{r ggmarginal-manual}
-ggMarginal(data = mtcars, x = "wt", y = "mpg")
-```
-
-Last but not least - you can also save the output from `ggMarginal` and display
+Last but not least - you can also save the output from `ggMarginal()` and display
 it later. (This may sound trivial, but it was not an easy problem to solve
 - [see this discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
 
@@ -152,6 +144,23 @@ p
 ```
 
 You can also create marginal box plots and violin plots. For more information, see `?ggExtra::ggMarginal`.
+
+#### Using `ggMarginal()` in R Notebooks or Rmarkdown
+
+If you try including a `ggMarginal()` plot inside an R Notebook or Rmarkdown code chunk, you'll notice that the plot doesn't get output. In order to get a `ggMarginal()` to show up in an these contexts, you need to save the ggMarginal plot as a variable in one code chunk, and explicitly print it using the `grid` package in another chunk, like this:
+
+````
+```{r}
+library(ggplot2)
+library(ggExtra)
+p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
+p <- ggMarginal(p)
+```
+```{r}
+grid::grid.newpage()
+grid::grid.draw(p)
+```
+````
 
 ## `removeGrid` - Remove grid lines from ggplot2
 

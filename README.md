@@ -148,17 +148,8 @@ plots, you can use the `xparams` or `yparams` parameters, like this:
 
 <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-extraparams-1.png" style="display: block; margin: auto;" />
 
-You don’t have to supply a ggplot2 scatterplot, you can also just tell
-ggMarginal what dataset and variables to use, but of course this way you
-lose the ability to customize the main plot (change
-text/font/theme/etc).
-
-    ggMarginal(data = mtcars, x = "wt", y = "mpg")
-
-<img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/ggmarginal-manual-1.png" style="display: block; margin: auto;" />
-
-Last but not least - you can also save the output from `ggMarginal` and
-display it later. (This may sound trivial, but it was not an easy
+Last but not least - you can also save the output from `ggMarginal()`
+and display it later. (This may sound trivial, but it was not an easy
 problem to solve - [see this
 discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
 
@@ -169,6 +160,30 @@ discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridex
 
 You can also create marginal box plots and violin plots. For more
 information, see `?ggExtra::ggMarginal`.
+
+#### Using `ggMarginal()` in R Notebooks or Rmarkdown
+
+If you try including a `ggMarginal()` plot inside an R Notebook or
+Rmarkdown code chunk, you’ll notice that the plot doesn’t get output. In
+order to get a `ggMarginal()` to show up in an these contexts, you need
+to save the ggMarginal plot as a variable in one code chunk, and
+explicitly print it using the `grid` package in another chunk, like
+this:
+
+
+    ```r
+    library(ggplot2)
+    library(ggExtra)
+    p <- ggplot(mtcars, aes(wt, mpg)) + geom_point()
+    p <- ggMarginal(p)
+    ```
+
+    ```r
+    grid::grid.newpage()
+    grid::grid.draw(p)
+    ```
+
+    <img src="inst/vignette_files/ggExtra_files/figure-markdown_strict/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
 `removeGrid` - Remove grid lines from ggplot2
 ---------------------------------------------
