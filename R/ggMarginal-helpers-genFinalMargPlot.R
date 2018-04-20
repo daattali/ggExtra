@@ -74,19 +74,8 @@ getVarDf <- function(scatPbuilt, marg) {
     )
   }
 
-  scatData <- scatPbuilt[["data"]]
-
   # Get data frame with geom_point layer data
-  dfBools <- vapply(
-    scatData, function(x) "x" %in% colnames(x) && "y" %in% colnames(x),
-    logical(1)
-  )
-
-  if (!any(dfBools)) {
-    stop("No geom_point layer was found in your scatter plot", call. = FALSE)
-  }
-
-  scatDF <- scatData[dfBools][[1]]
+  scatDF <- getGeomPointDf(scatPbuilt)
 
   # When points are excluded from the scatter plot via a limit on the x
   # axis, the y values in the built scatter plot's "data" object will be NA (and
@@ -98,6 +87,20 @@ getVarDf <- function(scatPbuilt, marg) {
 
   colnames(scatDF)[colnames(scatDF) == marg] <- "var"
   scatDF[, c("var", "fill", "colour", "group")]
+}
+
+getGeomPointDf <- function(scatPbuilt) {
+  layerBool <- vapply(
+    scatPbuilt$plot$layers, 
+    function(x) grepl("geom_?point", class(x$geom)[1], ignore.case = TRUE),
+    logical(1)
+  )
+  
+  if (!any(layerBool)) {
+    stop("No geom_point layer was found in your scatter plot", call. = FALSE)
+  }
+  
+  scatPbuilt[["data"]][layerBool][[1]]
 }
 
 wasFlipped <- function(scatPbuilt) {

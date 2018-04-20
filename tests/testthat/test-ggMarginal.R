@@ -21,7 +21,8 @@ runMarginalTests <- function(ggplot2Version) {
     sapply(c(
       "theme bw", "legend and title",
       "flipped coord where x is drat and y is wt",
-      "subtitle but no title"
+      "subtitle but no title",
+      "geom_line provided as first geom"
     ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version))
   })
 
