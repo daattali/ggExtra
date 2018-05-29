@@ -55,7 +55,7 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
   plot
 }
 
-getVarDf <- function(scatPbuilt, marg) {
+getVarDf <- function(marg, scatPbuilt) {
   if (wasFlipped(scatPbuilt)) {
     marg <- switch(marg,
       "x" = "y",
