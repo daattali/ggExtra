@@ -66,8 +66,8 @@ getTitleGrobs <- function(p) {
 # Functions to add marginal plots to scatter plot ---------------------------
 
 addTopMargPlot <- function(ggMargGrob, top, size) {
-  panelPos <- getPanelPos(gtableGrob = ggMargGrob)
-  topMargG <- getMargGrob(margPlot = top)
+  panelPos <- getPanelPos(ggMargGrob)
+  topMargG <- getMargGrob(top)
   gt <- gtable::gtable_add_rows(
     x = ggMargGrob,
     heights = grid::unit(1 / size, "null"), pos = 0
@@ -80,8 +80,8 @@ addTopMargPlot <- function(ggMargGrob, top, size) {
 }
 
 addRightMargPlot <- function(ggMargGrob, right, size) {
-  panelPos <- getPanelPos(gtableGrob = ggMargGrob)
-  rightMargG <- getMargGrob(margPlot = right)
+  panelPos <- getPanelPos(ggMargGrob)
+  rightMargG <- getMargGrob(right)
   gt <- gtable::gtable_add_cols(
     x = ggMargGrob,
     widths = grid::unit(1 / size, "null"),

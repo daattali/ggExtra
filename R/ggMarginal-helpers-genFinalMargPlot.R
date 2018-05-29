@@ -3,14 +3,9 @@
 # Wrapper function to create a "final" marginal plot
 genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
                              groupFill) {
-  rawMarg <- genRawMargPlot(
-    marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL,
-    groupColour = groupColour, groupFill = groupFill
-  )
+  rawMarg <- genRawMargPlot(marg, type, scatPbuilt, prmL, groupColour, groupFill)
 
-  margThemed <- addMainTheme(
-    rawMarg = rawMarg, marg = marg, scatPTheme = scatPbuilt$plot$theme
-  )
+  margThemed <- addMainTheme(rawMarg, marg, scatPbuilt$plot$theme)
 
   limits <- getLimits(marg, scatPbuilt)
 
@@ -28,19 +23,13 @@ genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 # Function to create a "raw" marginal plot
 genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
                            groupFill) {
-  data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
+  data <- getVarDf(marg, scatPbuilt)
 
-  noGeomPlot <- margPlotNoGeom(
-    data, type = type, scatPbuilt = scatPbuilt, 
-    groupColour = groupColour, groupFill = groupFill
-  )
+  noGeomPlot <- margPlotNoGeom(data, type, scatPbuilt, groupColour, groupFill)
 
-  finalParms <- alterParams(
-    marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt,
-    groupColour = groupColour, groupFill = groupFill
-  )
+  finalParms <- alterParams(marg, type, prmL, scatPbuilt, groupColour, groupFill)
 
-  geomFun <- getGeomFun(type = type)
+  geomFun <- getGeomFun(type)
 
   if (type == "density") {
     density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
@@ -59,7 +48,7 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
     plot <- noGeomPlot + layer
   }
 
-  if (needsFlip(marg = marg, type = type)) {
+  if (needsFlip(marg, type)) {
     plot <- plot + ggplot2::coord_flip()
   }
 
@@ -67,7 +56,7 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 }
 
 getVarDf <- function(scatPbuilt, marg) {
-  if (wasFlipped(scatPbuilt = scatPbuilt)) {
+  if (wasFlipped(scatPbuilt)) {
     marg <- switch(marg,
       "x" = "y",
       "y" = "x"
@@ -153,7 +142,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   }
 
   # Build plot (sans geom)
-  plot <- ggplot2::ggplot(data = data, mapping = ggplot2::aes_all(mapping))
+  plot <- ggplot2::ggplot(data, mapping)
 
   if (haveMargMap) {
     if ("colour" %in% xtraMapNames) {
@@ -167,8 +156,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   plot
 }
 
-alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
-                        groupFill) {
+alterParams <- function(marg, type, prmL, scatPbuilt, groupColour, groupFill) {
   if (is.null(prmL$exPrm$colour) && !groupColour) {
     prmL$exPrm[["colour"]] <- "black"
   }
@@ -184,7 +172,7 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   prmL$exPrm <- prmL$exPrm[!duplicated(names(prmL$exPrm))]
 
   # pull out limit function and use if histogram
-  panScale <- getPanelScale(marg = marg, builtP = scatPbuilt)
+  panScale <- getPanelScale(marg, scatPbuilt)
   lim_fun <- panScale$get_limits
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
@@ -336,7 +324,7 @@ getLimits <- function(marg, builtP) {
     )
   }
 
-  scale <- getPanelScale(marg = marg, builtP = builtP)
+  scale <- getPanelScale(marg,builtP)
 
   range <- scale$get_limits()
   if (is.null(range)) {

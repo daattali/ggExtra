@@ -1,16 +1,14 @@
 basicScatP <- function() {
-  ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = drat)) +
+  ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = drat)) +
     ggplot2::geom_point()
 }
 
 ggMarg2 <- function(type, ...) {
-  ggMarginal(p = basicScatP(), type = type, ...)
+  ggMarginal(basicScatP(), type = type, ...)
 }
 
 margMapP <- function() {
-  ggplot2::ggplot(
-    data = mtcars, ggplot2::aes(x = wt, y = drat, colour = factor(vs))
-  ) +
+  ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = drat, colour = factor(vs))) +
     ggplot2::geom_point() +
     ggplot2::scale_colour_manual(values = c("green", "blue"))
 }
@@ -35,31 +33,31 @@ funList <-
       "histogram", xparams = list(colour = "red", fill = "red")
     ),
     "theme bw" = function() ggMarginal(
-      p = basicScatP() + ggplot2::theme_bw(), type = "density"
+      basicScatP() + ggplot2::theme_bw(), type = "density"
     ),
     "legend and title" = function() ggMarginal(
-      ggplot2::ggplot(data = mtcars) +
+      ggplot2::ggplot(mtcars) +
         ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = gear)) +
         ggplot2::ggtitle("pretty sweet title", "not a bad subtitle either") +
         ggplot2::theme(plot.title = ggplot2::element_text(colour = "red"))
     ),
     "flipped coord where x is drat and y is wt" = function() ggMarginal(
-      p = basicScatP() + ggplot2::coord_flip(), type = "density"
+      basicScatP() + ggplot2::coord_flip(), type = "density"
     ),
     "col and fill mapped" = function() ggMarginal(
-      p = margMapP(), groupColour = TRUE, groupFill = TRUE
+      margMapP(), groupColour = TRUE, groupFill = TRUE
     ),
     "fill mapped with low alpha" = function() ggMarginal(
-      p = margMapP(), groupFill = TRUE, alpha = .2
+      margMapP(), groupFill = TRUE, alpha = .2
     ),
     "colour mapped with grey fill" = function() ggMarginal(
       p = margMapP(), groupColour = TRUE, fill = "grey"
     ),
     "colour mapped and colour param provided" = function() ggMarginal(
-      p = margMapP(), groupColour = TRUE, colour = "red"
+      margMapP(), groupColour = TRUE, colour = "red"
     ),
     "colour & fill mapped and both params provided" = function() ggMarginal(
-      p = margMapP(), groupColour = TRUE, groupFill = TRUE,
+      margMapP(), groupColour = TRUE, groupFill = TRUE, 
       colour = "red", fill = "blue"
     ),
     "subtitle but no title" = function() ggMarginal(
@@ -141,7 +139,7 @@ installVersion2 <- function(package, version) {
   if (package == "ggplot2" && version == "latest") {
     devtools::install_github("tidyverse/ggplot2", force = TRUE)
   } else if (currentVersion != version) {
-    repos <- getSnapShotRepo(package = package, version = version)
+    repos <- getSnapShotRepo(package, version)
     devtools::install_version(package, version, repos = repos)
   } else {
     return()
@@ -150,7 +148,7 @@ installVersion2 <- function(package, version) {
 
 getSnapShotRepo <- function(package, version) {
   tryCatch(
-    attemptRepoDate(package = package, version = version),
+    attemptRepoDate(package, version),
     error = function(e) "https://cloud.r-project.org"
   )
 }

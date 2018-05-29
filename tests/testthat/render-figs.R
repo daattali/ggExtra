@@ -15,7 +15,7 @@ writeSvg <- function(p, file) {
   aliases <- fontquiver::font_families("Liberation")
   aliases$symbol$symbol <- fontquiver::font_symbol("Symbola")
   user_fonts <- aliases
-  svglite::svglite(file = file, user_fonts = user_fonts)
+  svglite::svglite(file, user_fonts = user_fonts)
   on.exit(grDevices::dev.off())
   printMuffled(p)
 }
@@ -26,7 +26,7 @@ getFigDir <- function(ggplot2Version) {
 }
 
 asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
-  figDir <- getFigDir(ggplot2Version = ggplot2Version)
+  figDir <- getFigDir(ggplot2Version)
 
   if (!dir.exists(figDir)) {
     dir.create(figDir, recursive = TRUE)
@@ -48,7 +48,7 @@ renderAllFigsApply <- function(ggplot2Versions) {
             names(funList), function(x) {
               writeSvg(
                 p = funList[[x]](),
-                file = asSvgFile(funName = x, ggplot2Version = ggplot2Version)
+                file = asSvgFile(x, ggplot2Version)
               ) 
             }
           )
