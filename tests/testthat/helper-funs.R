@@ -113,17 +113,15 @@ expectDopp2 <- function(funName, ggplot2Version) {
 # to fail.
 withVersions <- function(..., code) {
   packageVersions <- list(...)
+  packages <- names(packageVersions)
 
-  unloadPackages(packages = names(packageVersions))
-  on.exit(unloadPackages(packages = names(packageVersions)))
-
+  unloadPackages(packages)
+  on.exit(unloadPackages(packages))
+  
   withr::with_temp_libpaths({
-    mapply(
-      installVersion2, package = names(packageVersions), 
-      version = packageVersions
-    )
+    mapply(installVersion2, package = packages, version = packageVersions)
     force(code)
-  })
+  }, action = "prefix")
 }
 
 unloadPackages <- function(packages) {
