@@ -139,19 +139,7 @@ installVersion2 <- function(package, version) {
   )
 
   if (package == "ggplot2" && version == "latest") {
-    # rlang v0.1.6 is loaded in memory at this point (due to various library
-    # calls earlier in execution). The latest version of ggplot2 needs at least
-    # rlang v0.1.6.9002. For some reason, install_github() doesn't want to
-    # reload rlang after it installs the new version...This results in failure
-    # of install_github. To fix this, we have to manually unload rlang
-    # (which requires unloading various other packages), install ggplot2,
-    # then reattach vidffr/testthat to search path
-    unloadPackages(
-      c("vdiffr", "purrr", "ggplot2", "tibble", "testthat", "pillar", "rlang")
-    )
     devtools::install_github("tidyverse/ggplot2", force = TRUE)
-    library(vdiffr)
-    library(testthat)
   } else if (currentVersion != version) {
     repos <- getSnapShotRepo(package = package, version = version)
     devtools::install_version(package, version, repos = repos)
