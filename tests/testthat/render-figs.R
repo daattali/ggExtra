@@ -32,7 +32,7 @@ asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
     dir.create(figDir, recursive = TRUE)
   }
 
-  fileName <- paste0(gsub(" ", "-", funName), ".svg")
+  fileName <- paste0(vdiffr:::str_standardise(funName), ".svg")
   file.path(figDir, fileName)
 }
 
