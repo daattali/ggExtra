@@ -1,11 +1,11 @@
 # Main helper in ggMarginal to create marginal plots ---------------------------
 
 # Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour, 
                              groupFill) {
   rawMarg <- genRawMargPlot(marg, type, scatPbuilt, prmL, groupColour, groupFill)
 
-  margThemed <- addMainTheme(rawMarg, marg, scatPbuilt$plot$theme)
+  margThemed <- rawMarg + ggplot2::theme_void()
 
   limits <- getLimits(marg, scatPbuilt)
 
@@ -234,83 +234,6 @@ needsFlip <- function(marg, type) {
   topAndBoxP <- marg == "x" && type %in% c("boxplot", "violin")
   rightAndNonBoxP <- marg == "y" && !(type %in% c("boxplot", "violin"))
   topAndBoxP || rightAndNonBoxP
-}
-
-# Given a plot, copy some theme properties from the main plot so that they will
-# resemble each other more and look better beside each other, and also add
-# some common theme properties such as 0 margins and transparent text colour
-addMainTheme <- function(rawMarg, marg, scatPTheme) {
-  try(rawMarg <- rawMarg + ggplot2::theme_void(), silent = TRUE)
-
-  # copy theme from main plot
-  themeProps <- c(
-    "text",
-    "axis.text", "axis.text.x", "axis.text.y",
-    "axis.ticks", "axis.ticks.length",
-    "axis.title", "axis.title.x", "axis.title.y",
-    "plot.title"
-  )
-  for (property in themeProps) {
-    rawMarg$theme[[property]] <- scatPTheme[[property]]
-  }
-
-  # make text and line colours transparent
-  transparentProps <- c(
-    "text",
-    "axis.text", "axis.text.x", "axis.text.y",
-    "axis.ticks",
-    "axis.title", "axis.title.x", "axis.title.y",
-    "line"
-  )
-
-  for (property in transparentProps) {
-    if (!is.null(rawMarg$theme[[property]])) {
-      rawMarg$theme[[property]]$colour <- "transparent"
-    } else if (property %in% c("axis.ticks", "line")) {
-      themePair <- list()
-      themePair[[property]] <- ggplot2::element_line(colour = "transparent")
-      rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
-    } else {
-      themePair <- list()
-      themePair[[property]] <- ggplot2::element_text(colour = "transparent")
-      rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
-    }
-  }
-
-  # some more theme properties
-  rawMarg <- rawMarg +
-    ggplot2::theme(
-      panel.background = ggplot2::element_blank(),
-      axis.ticks.length = grid::unit(0, "null")
-    )
-
-  # since the tick marks are removed on the marginal plot, we need to add
-  # space for them so that the marginal plot will align with the main plot
-  if (is.null(scatPTheme$axis.ticks.length)) {
-    marginUnit <- "null"
-    marginLength <- 0
-  } else {
-    marginUnit <- attr(scatPTheme$axis.ticks.length, "unit")
-    marginLength <- as.numeric(scatPTheme$axis.ticks.length, "unit")
-  }
-
-  if (marg == "x") {
-    rawMarg <- rawMarg +
-      ggplot2::theme(
-        axis.title.x = ggplot2::element_blank(),
-        axis.text.x = ggplot2::element_blank(),
-        plot.margin = grid::unit(c(0, 0, 0, marginLength), marginUnit)
-      )
-  } else {
-    rawMarg <- rawMarg +
-      ggplot2::theme(
-        axis.title.y = ggplot2::element_blank(),
-        axis.text.y = ggplot2::element_blank(),
-        plot.margin = grid::unit(c(0, 0, marginLength, 0), marginUnit)
-      )
-  }
-
-  rawMarg
 }
 
 # Get the axis range of the x or y axis of the given ggplot build object

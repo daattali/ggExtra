@@ -133,13 +133,6 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   }
 
   # Create the margin plots by calling genFinalMargPlot
-  # In order to ensure the marginal plots line up nicely with the main plot,
-  # several things are done:
-  # - Use the same label text size as the original
-  # - Remove the margins from all plots
-  # - Make all text in marginal plots transparent
-  # - Remove all lines and colours from marginal plots
-  # - Use the same axis range as the main plot
 
   # If margins = x or 'both' (x and y), then you have to create top plot
   # Top plot = horizontal margin plot, which corresponds to x marg
