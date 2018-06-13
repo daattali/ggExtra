@@ -110,6 +110,7 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
 
   # Fill in param defaults and consolidate params into single list (prmL).
   prmL <- toParamList(list(...), xparams, yparams)
+  
   # Reconcile different naming variants on "colour" param
   prmL <- reconcileColParamApply(prmL)
 
@@ -133,22 +134,15 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   }
 
   # Create the margin plots by calling genFinalMargPlot
-
-  # If margins = x or 'both' (x and y), then you have to create top plot
-  # Top plot = horizontal margin plot, which corresponds to x marg
   if (margins != "y") {
     top <- genFinalMargPlot("x", type, scatPbuilt, prmL, groupColour, groupFill)
   }
-
-  # If margins = y or 'both' (x and y), then you have to create right plot.
-  # (right plot = vertical margin plot, which corresponds to y marg)
   if (margins != "x") {
     right <- genFinalMargPlot("y", type, scatPbuilt, prmL, groupColour, groupFill)
   }
 
   # Now add the marginal plots to the scatter plot
   pGrob <- ggplot2::ggplotGrob(scatP)
-
   withCallingHandlers({
     suppressMessages({
       if (margins == "both") {
@@ -178,8 +172,10 @@ ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot"
   } else {
     ggExtraPlot <- ggxtraNoTtl
   }
+  
   # Add a class for S3 method dispatch for printing the ggExtra plot
   class(ggExtraPlot) <- c("ggExtraPlot", class(ggExtraPlot))
+  
   ggExtraPlot
 }
 
