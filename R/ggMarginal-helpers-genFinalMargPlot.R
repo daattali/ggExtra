@@ -142,7 +142,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   }
 
   # Build plot (sans geom)
-  plot <- ggplot2::ggplot(data, mapping)
+  plot <- ggplot2::ggplot(data, ggplot2::aes_all(mapping))
 
   if (haveMargMap) {
     if ("colour" %in% xtraMapNames) {
