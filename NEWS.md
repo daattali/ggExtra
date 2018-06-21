@@ -1,3 +1,8 @@
+# ggExtra 0.9
+
+- Fix #109: using ggMarginal on a plot where geom_point was not the first layer was buggy (#116)
+- Add documentation about how to use ggMarginal in R Notebooks or Rmarkdown
+
 # ggExtra 0.8
 
 NEW FEATURES
