@@ -91,7 +91,14 @@ funList <-
   )
 
 expectDopp2 <- function(funName, ggplot2Version) {
+
+  # make sure expected figure already exists on disk...that way, tests will 
+  # never pass when a test case is skipped if the expected fig doesn't exist
   path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
+  fileName <- paste0(vdiffr:::str_standardise(funName), ".svg")
+  file <- file.path("../figs", path, fileName)
+  stopifnot(file.exists(file))
+  
   vdiffr::expect_doppelganger(
     funName, printMuffled(funList[[funName]]()), path = path
   )
@@ -106,17 +113,15 @@ expectDopp2 <- function(funName, ggplot2Version) {
 # to fail.
 withVersions <- function(..., code) {
   packageVersions <- list(...)
+  packages <- names(packageVersions)
 
-  unloadPackages(packages = names(packageVersions))
-  on.exit(unloadPackages(packages = names(packageVersions)))
-
+  unloadPackages(packages)
+  on.exit(unloadPackages(packages))
+  
   withr::with_temp_libpaths({
-    mapply(
-      installVersion2, package = names(packageVersions), 
-      version = packageVersions
-    )
+    mapply(installVersion2, package = packages, version = packageVersions)
     force(code)
-  })
+  }, action = "prefix")
 }
 
 unloadPackages <- function(packages) {
@@ -134,19 +139,7 @@ installVersion2 <- function(package, version) {
   )
 
   if (package == "ggplot2" && version == "latest") {
-    # rlang v0.1.6 is loaded in memory at this point (due to various library
-    # calls earlier in execution). The latest version of ggplot2 needs at least
-    # rlang v0.1.6.9002. For some reason, install_github() doesn't want to
-    # reload rlang after it installs the new version...This results in failure
-    # of install_github. To fix this, we have to manually unload rlang
-    # (which requires unloading various other packages), install ggplot2,
-    # then reattach vidffr/testthat to search path
-    unloadPackages(
-      c("vdiffr", "purrr", "ggplot2", "tibble", "testthat", "pillar", "rlang")
-    )
     devtools::install_github("tidyverse/ggplot2", force = TRUE)
-    library(vdiffr)
-    library(testthat)
   } else if (currentVersion != version) {
     repos <- getSnapShotRepo(package = package, version = version)
     devtools::install_version(package, version, repos = repos)

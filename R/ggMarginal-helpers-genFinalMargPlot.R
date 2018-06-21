@@ -85,8 +85,12 @@ getVarDf <- function(scatPbuilt, marg) {
   # plots either).
   scatDF <- scatDF[!(is.na(scatDF$x) | is.na(scatDF$y)), ]
 
-  colnames(scatDF)[colnames(scatDF) == marg] <- "var"
-  scatDF[, c("var", "fill", "colour", "group")]
+  if (marg == "y") {
+    scatDF$x <- scatDF$y
+  }
+
+  scatDF$y <- scatDF$x
+  scatDF[, c("x", "y", "fill", "colour", "group")]
 }
 
 getGeomPointDf <- function(scatPbuilt) {
@@ -109,7 +113,7 @@ wasFlipped <- function(scatPbuilt) {
 }
 
 margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
-  mapping <- ggplot2::aes(x = var)
+  mapping <- "x"
 
   haveMargMap <- groupColour || groupFill
 
@@ -124,7 +128,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
       )
     }
 
-    data <- data[, c("var", "colour", "group"), drop = FALSE]
+    data <- data[, c("x", "y", "colour", "group"), drop = FALSE]
     if (groupFill) {
       data[, "fill"] <- data[, "colour"]
     }
@@ -139,20 +143,17 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
     } else {
       xtraMapNames <- c("fill", "group")
     }
-
-    xtraMap <- sapply(
-      xtraMapNames, as.symbol, USE.NAMES = TRUE, simplify = FALSE
-    )
-    mapping <- structure(c(mapping, xtraMap), class = "uneval")
+    
+    mapping <- c(mapping, xtraMapNames)
   }
 
   # Boxplot and violin plots need y aes
   if (type %in% c("boxplot", "violin")) {
-    mapping$y <- as.symbol("var")
+    mapping <- c(mapping, "y")
   }
 
   # Build plot (sans geom)
-  plot <- ggplot2::ggplot(data = data, mapping = mapping)
+  plot <- ggplot2::ggplot(data = data, mapping = ggplot2::aes_all(mapping))
 
   if (haveMargMap) {
     if ("colour" %in% xtraMapNames) {
@@ -165,8 +166,6 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
 
   plot
 }
-
-utils::globalVariables("var")
 
 alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
                         groupFill) {
