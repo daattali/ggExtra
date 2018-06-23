@@ -1,16 +1,11 @@
 # Main helper in ggMarginal to create marginal plots ---------------------------
 
 # Wrapper function to create a "final" marginal plot
-genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
+genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour, 
                              groupFill) {
-  rawMarg <- genRawMargPlot(
-    marg, type = type, scatPbuilt = scatPbuilt, prmL = prmL,
-    groupColour = groupColour, groupFill = groupFill
-  )
+  rawMarg <- genRawMargPlot(marg, type, scatPbuilt, prmL, groupColour, groupFill)
 
-  margThemed <- addMainTheme(
-    rawMarg = rawMarg, marg = marg, scatPTheme = scatPbuilt$plot$theme
-  )
+  margThemed <- rawMarg + ggplot2::theme_void()
 
   limits <- getLimits(marg, scatPbuilt)
 
@@ -28,19 +23,13 @@ genFinalMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 # Function to create a "raw" marginal plot
 genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
                            groupFill) {
-  data <- getVarDf(marg = marg, scatPbuilt = scatPbuilt)
+  data <- getVarDf(marg, scatPbuilt)
 
-  noGeomPlot <- margPlotNoGeom(
-    data, type = type, scatPbuilt = scatPbuilt, 
-    groupColour = groupColour, groupFill = groupFill
-  )
+  noGeomPlot <- margPlotNoGeom(data, type, scatPbuilt, groupColour, groupFill)
 
-  finalParms <- alterParams(
-    marg = marg, type = type, prmL = prmL, scatPbuilt = scatPbuilt,
-    groupColour = groupColour, groupFill = groupFill
-  )
+  finalParms <- alterParams(marg, type, prmL, scatPbuilt, groupColour, groupFill)
 
-  geomFun <- getGeomFun(type = type)
+  geomFun <- getGeomFun(type)
 
   if (type == "density") {
     density_parms <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
@@ -59,15 +48,15 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
     plot <- noGeomPlot + layer
   }
 
-  if (needsFlip(marg = marg, type = type)) {
+  if (needsFlip(marg, type)) {
     plot <- plot + ggplot2::coord_flip()
   }
 
   plot
 }
 
-getVarDf <- function(scatPbuilt, marg) {
-  if (wasFlipped(scatPbuilt = scatPbuilt)) {
+getVarDf <- function(marg, scatPbuilt) {
+  if (wasFlipped(scatPbuilt)) {
     marg <- switch(marg,
       "x" = "y",
       "y" = "x"
@@ -153,7 +142,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   }
 
   # Build plot (sans geom)
-  plot <- ggplot2::ggplot(data = data, mapping = ggplot2::aes_all(mapping))
+  plot <- ggplot2::ggplot(data, ggplot2::aes_all(mapping))
 
   if (haveMargMap) {
     if ("colour" %in% xtraMapNames) {
@@ -167,8 +156,7 @@ margPlotNoGeom <- function(data, type, scatPbuilt, groupColour, groupFill) {
   plot
 }
 
-alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
-                        groupFill) {
+alterParams <- function(marg, type, prmL, scatPbuilt, groupColour, groupFill) {
   if (is.null(prmL$exPrm$colour) && !groupColour) {
     prmL$exPrm[["colour"]] <- "black"
   }
@@ -184,7 +172,7 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour,
   prmL$exPrm <- prmL$exPrm[!duplicated(names(prmL$exPrm))]
 
   # pull out limit function and use if histogram
-  panScale <- getPanelScale(marg = marg, builtP = scatPbuilt)
+  panScale <- getPanelScale(marg, scatPbuilt)
   lim_fun <- panScale$get_limits
   if (type == "histogram" && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
@@ -248,83 +236,6 @@ needsFlip <- function(marg, type) {
   topAndBoxP || rightAndNonBoxP
 }
 
-# Given a plot, copy some theme properties from the main plot so that they will
-# resemble each other more and look better beside each other, and also add
-# some common theme properties such as 0 margins and transparent text colour
-addMainTheme <- function(rawMarg, marg, scatPTheme) {
-  try(rawMarg <- rawMarg + ggplot2::theme_void(), silent = TRUE)
-
-  # copy theme from main plot
-  themeProps <- c(
-    "text",
-    "axis.text", "axis.text.x", "axis.text.y",
-    "axis.ticks", "axis.ticks.length",
-    "axis.title", "axis.title.x", "axis.title.y",
-    "plot.title"
-  )
-  for (property in themeProps) {
-    rawMarg$theme[[property]] <- scatPTheme[[property]]
-  }
-
-  # make text and line colours transparent
-  transparentProps <- c(
-    "text",
-    "axis.text", "axis.text.x", "axis.text.y",
-    "axis.ticks",
-    "axis.title", "axis.title.x", "axis.title.y",
-    "line"
-  )
-
-  for (property in transparentProps) {
-    if (!is.null(rawMarg$theme[[property]])) {
-      rawMarg$theme[[property]]$colour <- "transparent"
-    } else if (property %in% c("axis.ticks", "line")) {
-      themePair <- list()
-      themePair[[property]] <- ggplot2::element_line(colour = "transparent")
-      rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
-    } else {
-      themePair <- list()
-      themePair[[property]] <- ggplot2::element_text(colour = "transparent")
-      rawMarg <- rawMarg + do.call(ggplot2::theme, themePair)
-    }
-  }
-
-  # some more theme properties
-  rawMarg <- rawMarg +
-    ggplot2::theme(
-      panel.background = ggplot2::element_blank(),
-      axis.ticks.length = grid::unit(0, "null")
-    )
-
-  # since the tick marks are removed on the marginal plot, we need to add
-  # space for them so that the marginal plot will align with the main plot
-  if (is.null(scatPTheme$axis.ticks.length)) {
-    marginUnit <- "null"
-    marginLength <- 0
-  } else {
-    marginUnit <- attr(scatPTheme$axis.ticks.length, "unit")
-    marginLength <- as.numeric(scatPTheme$axis.ticks.length, "unit")
-  }
-
-  if (marg == "x") {
-    rawMarg <- rawMarg +
-      ggplot2::theme(
-        axis.title.x = ggplot2::element_blank(),
-        axis.text.x = ggplot2::element_blank(),
-        plot.margin = grid::unit(c(0, 0, 0, marginLength), marginUnit)
-      )
-  } else {
-    rawMarg <- rawMarg +
-      ggplot2::theme(
-        axis.title.y = ggplot2::element_blank(),
-        axis.text.y = ggplot2::element_blank(),
-        plot.margin = grid::unit(c(0, 0, marginLength, 0), marginUnit)
-      )
-  }
-
-  rawMarg
-}
-
 # Get the axis range of the x or y axis of the given ggplot build object
 # This is needed so that if the range of the plot is manually changed, the
 # marginal plots will use the same range
@@ -336,7 +247,7 @@ getLimits <- function(marg, builtP) {
     )
   }
 
-  scale <- getPanelScale(marg = marg, builtP = builtP)
+  scale <- getPanelScale(marg, builtP)
 
   range <- scale$get_limits()
   if (is.null(range)) {

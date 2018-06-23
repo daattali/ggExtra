@@ -7,14 +7,14 @@ runMarginalTests <- function(ggplot2Version) {
     sapply(c(
       "basic density", "basic histogram", "basic boxplot",
       "basic violin plot", "scatter plot from data"
-    ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+    ), function(x) expectDopp2(x, ggplot2Version))
   })
 
   test_that("ggMarginal's other params work", {
     sapply(c(
       "only x margin", "smaller marginal plots", "both hists red col",
       "top hist red col and fill"
-    ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+    ), function(x) expectDopp2(x, ggplot2Version))
   })
 
   test_that("Misc. issues are solved", {
@@ -23,7 +23,7 @@ runMarginalTests <- function(ggplot2Version) {
       "flipped coord where x is drat and y is wt",
       "subtitle but no title",
       "geom_line provided as first geom"
-    ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version))
+    ), function(x) expectDopp2(x, ggplot2Version))
   })
 
   test_that("Grouping feature works as expected", {
@@ -33,7 +33,7 @@ runMarginalTests <- function(ggplot2Version) {
         "colour mapped with grey fill",
         "colour mapped and colour param provided",
         "colour & fill mapped and both params provided"
-      ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version)
+      ), function(x) expectDopp2(x, ggplot2Version)
     )
   })
 
@@ -44,7 +44,7 @@ runMarginalTests <- function(ggplot2Version) {
         "axis limits using xlim and ylim", "x-axis limits for histograms",
         "x-axis limits for marginals with y aes", "x and y scale_reverse",
         "geom_smooth with aligned marg plots"
-      ), function(x) expectDopp2(funName = x, ggplot2Version = ggplot2Version)
+      ), function(x) expectDopp2(x, ggplot2Version)
     )
   })
 }
