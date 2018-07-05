@@ -32,12 +32,12 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
   geomFun <- getGeomFun(type)
 
   if (type == "density") {
-    densityParams <- finalParms[!(names(finalParms) == "colour")]
+    densityParams <- dropParams(finalParms, "colour")
     layer1 <- do.call(geomFun, densityParams)
 
     # Don't need fill b/c we get fill from geom_density
     # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
-    lineParams <- finalParms[!(names(finalParms) %in% c("fill", "alpha"))]
+    lineParams <- dropParams(finalParms, c("fill", "alpha"))
 
     lineParams$stat <- "density"
     layer2 <- do.call(ggplot2::geom_line, lineParams)
@@ -224,6 +224,10 @@ getGeomFun <- function(type) {
 
 geom_density2 <- function(...) {
   ggplot2::geom_density(colour = "NA", ...)
+}
+
+dropParams <- function(finalParams, toDrop) {
+  finalParams[!names(finalParams) %in% toDrop]
 }
 
 needsFlip <- function(marg, type) {
