@@ -38,15 +38,16 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
     # Don't need fill b/c we get fill from geom_density
     # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
     lineParams <- dropParams(finalParms, c("fill", "alpha"))
-
     lineParams$stat <- "density"
-    layer2 <- do.call(ggplot2::geom_line, lineParams)
-
-    plot <- noGeomPlot + layer1 + layer2
+    layer2 <- do.call(ggplot2::geom_line, lineParms)
+    
+    layers <- list(layer1, layer2)
   } else {
     layer <- do.call(geomFun, finalParms)
-    plot <- noGeomPlot + layer
+    layers <- list(layer)
   }
+  
+  plot <- Reduce(`+`, c(list(noGeomPlot), layers))
 
   if (needsFlip(marg, type)) {
     plot <- plot + ggplot2::coord_flip()
