@@ -216,7 +216,7 @@ overrideMappedParams <- function(prmL, paramName, groupVar) {
 getGeomFun <- function(type) {
   switch(type,
     "density" = geom_density2,
-    "histogram" = ggplot2::geom_histogram,
+    "histogram" = geom_histogram2,
     "boxplot" = ggplot2::geom_boxplot,
     "violin" = ggplot2::geom_violin
   )
@@ -224,6 +224,10 @@ getGeomFun <- function(type) {
 
 geom_density2 <- function(...) {
   ggplot2::geom_density(colour = "NA", ...)
+}
+
+geom_histogram2 <- function(...) {
+  ggplot2::geom_histogram(ggplot2::aes(y = ..density..), ...)
 }
 
 dropParams <- function(finalParams, toDrop) {
