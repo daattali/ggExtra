@@ -44,8 +44,8 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
     # now create geom_line layer
     # we have to drop alpha param b/c of issue mentioned at
     # https://github.com/rstudio/rstudio/issues/2196
-    lineParams <- dropParams(finalParms, c("fill", "alpha"))
-    lineParams$stat <- "density"
+    lineParms <- dropParams(finalParms, c("fill", "alpha"))
+    lineParms$stat <- "density"
     layer2 <- do.call(ggplot2::geom_line, lineParms)
     
     layers <- list(layer1, layer2)
