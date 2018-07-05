@@ -31,24 +31,37 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
 
   geomFun <- getGeomFun(type)
 
-  if (type == "density") {
+  if (type %in% c("density", "densigram")) {
     # to create a density plot, we use both geom_density geom_line b/c of issue
     # mentioned at https://twitter.com/winston_chang/status/957057715750166528.
     # also note that we get the colour of the density plot from geom_line and
-    # the fill from geom_density (hence the calls to dropParams)
+    # the fill from geom_density (hence the calls to dropParams when creating
+    # densityParams and lineParams)
+    
+    # we get a boundary param added in alterParams if the type is either 
+    # histogram or densigram, but we don't want this param to be used when 
+    # creating the density plot component of the densigram (only the histogram
+    # component needs it), so drop it here
+    finalParmsDplot <- dropParams(finalParms, "boundary")
     
     # first create geom_density layer
-    densityParms <- dropParams(finalParms, "colour")
+    densityParms <- dropParams(finalParmsDplot, "colour")
     layer1 <- do.call(geomFun, densityParms)
 
     # now create geom_line layer
     # we have to drop alpha param b/c of issue mentioned at
     # https://github.com/rstudio/rstudio/issues/2196
-    lineParms <- dropParams(finalParms, c("fill", "alpha"))
+    lineParms <- dropParams(finalParmsDplot, c("fill", "alpha"))
     lineParms$stat <- "density"
     layer2 <- do.call(ggplot2::geom_line, lineParms)
     
     layers <- list(layer1, layer2)
+    
+    if (type == "densigram") {
+      # if type is densigram, have to add a histogram layer to layers list
+      layer3 <- do.call(geom_histogram2, finalParms)
+      layers <- list(layer3, layers)
+    }
   } else {
     layer <- do.call(geomFun, finalParms)
     layers <- list(layer)
@@ -182,7 +195,7 @@ alterParams <- function(marg, type, prmL, scatPbuilt, groupColour, groupFill) {
   # pull out limit function and use if histogram
   panScale <- getPanelScale(marg, scatPbuilt)
   lim_fun <- panScale$get_limits
-  if (type == "histogram" && !is.null(lim_fun)) {
+  if (type %in% c("histogram", "densigram") && !is.null(lim_fun)) {
     prmL$exPrm[["boundary"]] <- lim_fun()[1]
   }
 
@@ -224,6 +237,7 @@ overrideMappedParams <- function(prmL, paramName, groupVar) {
 getGeomFun <- function(type) {
   switch(type,
     "density" = geom_density2,
+    "densigram" = geom_density2,
     "histogram" = geom_histogram2,
     "boxplot" = ggplot2::geom_boxplot,
     "violin" = ggplot2::geom_violin

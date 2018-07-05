@@ -99,7 +99,9 @@
 #'
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
-ggMarginal <- function(p, data, x, y, type = c("density", "histogram", "boxplot", "violin"),
+ggMarginal <- function(p, data, x, y, 
+                       type = c("density", "histogram",  "boxplot", "violin", 
+                                "densigram"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams = list(), yparams = list(),
                        groupColour = FALSE, groupFill = FALSE) {
