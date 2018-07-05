@@ -32,7 +32,7 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
   geomFun <- getGeomFun(type)
 
   if (type == "density") {
-    densityParams <- finalParms[!(names(finalParms) %in% c("colour", "color", "col"))]
+    densityParams <- finalParms[!(names(finalParms) == "colour")]
     layer1 <- do.call(geomFun, densityParams)
 
     # Don't need fill b/c we get fill from geom_density
