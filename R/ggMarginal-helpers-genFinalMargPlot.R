@@ -32,11 +32,18 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
   geomFun <- getGeomFun(type)
 
   if (type == "density") {
-    densityParams <- dropParams(finalParms, "colour")
-    layer1 <- do.call(geomFun, densityParams)
+    # to create a density plot, we use both geom_density geom_line b/c of issue
+    # mentioned at https://twitter.com/winston_chang/status/957057715750166528.
+    # also note that we get the colour of the density plot from geom_line and
+    # the fill from geom_density (hence the calls to dropParams)
+    
+    # first create geom_density layer
+    densityParms <- dropParams(finalParms, "colour")
+    layer1 <- do.call(geomFun, densityParms)
 
-    # Don't need fill b/c we get fill from geom_density
-    # Have to drop alpha b/c of https://github.com/rstudio/rstudio/issues/2196
+    # now create geom_line layer
+    # we have to drop alpha param b/c of issue mentioned at
+    # https://github.com/rstudio/rstudio/issues/2196
     lineParams <- dropParams(finalParms, c("fill", "alpha"))
     lineParams$stat <- "density"
     layer2 <- do.call(ggplot2::geom_line, lineParms)
