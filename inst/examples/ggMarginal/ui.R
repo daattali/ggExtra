@@ -72,7 +72,7 @@ shinyUI(fluidPage(
       checkboxInput("show_marginal", "Show marginal plots", TRUE),
 
       div(id = "marginal-settings",
-        selectInput("type", NULL, c("density", "histogram", "boxplot", "violin")),
+        selectInput("type", NULL, c("density", "histogram", "boxplot", "violin", "densigram")),
         selectInput("margins", "Which margins?", c("both", "x", "y")),
         conditionalPanel(
           condition = "input.margins != 'y'",

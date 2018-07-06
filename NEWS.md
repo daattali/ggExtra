@@ -2,6 +2,7 @@
 
 - Fix #109: using ggMarginal on a plot where geom_point was not the first layer was buggy (#116)
 - Add documentation about how to use ggMarginal in R Notebooks or Rmarkdown
+- Added support for densigram plots (#118)
 
 # ggExtra 0.8
 
