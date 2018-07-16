@@ -46,6 +46,10 @@ genRawMargPlot <- function(marg, type, scatPbuilt, prmL, groupColour,
     
     # first create geom_density layer
     densityParms <- dropParams(finalParmsDplot, "colour")
+    if (type == "densigram") {
+      # drop fill b/c of https://github.com/daattali/ggExtra/issues/123
+      densityParms <- dropParams(densityParms, "fill")
+    }
     layer1 <- do.call(geomFun, densityParms)
 
     # now create geom_line layer
