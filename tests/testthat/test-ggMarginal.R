@@ -22,7 +22,8 @@ runMarginalTests <- function(ggplot2Version) {
       "theme bw", "legend and title",
       "flipped coord where x is drat and y is wt",
       "subtitle but no title",
-      "geom_line provided as first geom"
+      "geom_line provided as first geom",
+      "no density fill for densigrams"
     ), function(x) expectDopp2(x, ggplot2Version))
   })
 
