@@ -86,6 +86,9 @@ funList <-
       ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = mpg)) + 
         ggplot2::geom_line() + 
         ggplot2::geom_point()
+    ),
+    "no density fill for densigrams" = function() ggMarginal(
+      basicScatP(), type = "densigram", fill = "blue"
     )
   )
 
