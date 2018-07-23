@@ -61,4 +61,4 @@ renderAllFigsApply <- function(ggplot2Versions) {
 # This was called once to create all the expected versions of the test figures.
 # It should be re-run each time a new test figure is added to the function list
 # (funList) in  helper-funs.R (funList contains the code to create the figures).
-renderAllFigsApply(c("2.2.0", "2.2.1", "latest"))
+renderAllFigsApply(c("2.2.0", "2.2.1", "3.0.0", "latest"))
