@@ -54,7 +54,7 @@ runMarginalTests <- function(ggplot2Version) {
 runMarginalTestsApply <- function() {
   withVersions(
     vdiffr = "0.1.1", fontquiver = "0.2.1", svglite = "1.2.0", code = {
-      sapply(c("2.2.0", "2.2.1", "latest"), function(ggplot2Version) {
+      sapply(c("2.2.0", "2.2.1", "3.0.0", "latest"), function(ggplot2Version) {
         withVersions(ggplot2 = ggplot2Version, code = {
           runMarginalTests(ggplot2Version)
         })
