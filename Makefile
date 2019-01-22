@@ -6,7 +6,7 @@ all: README.md
 clean:
 	Rscript -e 'suppressWarnings(file.remove("README.md", "vignettes/ggExtra.md"))'
 
-.PHONY: all clean build render-figs test
+.PHONY: all clean build-image render-figs test
 .DELETE_ON_ERROR:
 .SECONDARY:
 
@@ -33,4 +33,4 @@ render-figs:
 
 test:
 	docker run -v `pwd`:/home/ggExtra ggextra-image \
-	/bin/bash -c 'cd .. && R CMD build ggExtra && R CMD check $(ls | grep "tar\\.gz") --as-cran --no-manual'
+		/bin/bash -c 'cd .. && R CMD build ggExtra && R CMD check $(ls | grep "tar\\.gz") --as-cran --no-manual'
