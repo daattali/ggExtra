@@ -6,7 +6,7 @@ all: README.md
 clean:
 	Rscript -e 'suppressWarnings(file.remove("README.md", "vignettes/ggExtra.md"))'
 
-.PHONY: all clean
+.PHONY: all clean build render-figs test
 .DELETE_ON_ERROR:
 .SECONDARY:
 
@@ -23,3 +23,14 @@ README.md : vignettes/ggExtra.Rmd
 #	cp vignettes/ggExtra.md README.md
 	Rscript -e 'file.copy("vignettes/ggExtra.md", "README.md", overwrite = TRUE)'
 	Rscript -e 'suppressWarnings(file.remove("vignettes/ggExtra.md"))'
+
+build-image:
+	docker build -t ggextra-image .
+
+render-figs:
+	docker run --rm -v `pwd`:/home/ggExtra ggextra-image \
+		Rscript -e "devtools::load_all(); source('tests/testthat/render-figs.R')"
+
+test:
+	docker run -v `pwd`:/home/ggExtra ggextra-image \
+	/bin/bash -c 'cd .. && R CMD build ggExtra && R CMD check $(ls | grep "tar\\.gz") --as-cran --no-manual'
