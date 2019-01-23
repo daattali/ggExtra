@@ -7,8 +7,9 @@ before_install:
   - docker build -t ggextra-image .
 
 script:
-  - docker run -v `pwd`/ggExtra.Rcheck:/home/ggExtra.Rcheck ggextra-image /bin/bash -c 'cd .. && R CMD build ggExtra && R CMD check $(ls | grep "tar\\.gz") --as-cran --no-manual'
+  - rm -rf ggExtra.Rcheck
+  - docker run -v `pwd`/ggExtra.Rcheck:/home/ggExtra.Rcheck ggextra-image /bin/bash -c 'R CMD build ../ggExtra && R CMD check ggExtra_* --as-cran --no-manual'
 
-after_script:
-  - cat ggExtra.Rcheck/`ls ggExtra.Rcheck | grep "\\.log"`
+after_failure:
+  - cat ggExtra.Rcheck/tests/testthat.Rout
   
