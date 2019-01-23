@@ -74,5 +74,5 @@ runInternalTestsApply <- function(ggplot2Versions) {
 }
 
 if (shouldTest()) {
-  runInternalTestsApply(c("2.2.0", "2.2.1", "latest"))
+  runInternalTestsApply(ggplot2Versions)
 }
