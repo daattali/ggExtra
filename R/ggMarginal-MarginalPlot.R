@@ -303,3 +303,5 @@ geom_density2 <- function(...) {
 geom_histogram2 <- function(...) {
   ggplot2::geom_histogram(ggplot2::aes(y = ..density..), ...)
 }
+
+utils::globalVariables("..density..")
