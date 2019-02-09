@@ -22,7 +22,8 @@ Imports:
     scales (>= 0.2.0),
     shiny (>= 0.13.0),
     shinyjs (>= 0.5.2),
-    utils
+    utils,
+    R6
 Suggests:
     knitr (>= 1.7),
     rmarkdown,

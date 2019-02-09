@@ -141,10 +141,12 @@ ggMarginal <- function(p, data, x, y,
 
   # Create the margin plots by calling genFinalMargPlot
   if (margins != "y") {
-    top <- genFinalMargPlot("x", type, scatPbuilt, prmL, groupColour, groupFill)
+    plt <- MarginalPlot$new("x", type, scatPbuilt, prmL, groupColour, groupFill)
+    top <- plt$build()
   }
   if (margins != "x") {
-    right <- genFinalMargPlot("y", type, scatPbuilt, prmL, groupColour, groupFill)
+    plt <- MarginalPlot$new("y", type, scatPbuilt, prmL, groupColour, groupFill)
+    right <- plt$build()
   }
 
   # Now add the marginal plots to the scatter plot
