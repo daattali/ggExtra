@@ -176,19 +176,11 @@ attemptRepoDate <- function(package, version) {
   sprintf("https://mran.microsoft.com/snapshot/%s", dateString)
 }
 
-## By default, do not run the tests (which also means do not run on CRAN)
+# RunGgplot2Tests is set to "yes" in dockerfile, which means shouldTest()
+# will return TRUE only when it's run inside a docker container (i.e., it will 
+# return FALSE on CRAN).
 shouldTest <- function() {
-  if (
-    ## Use the Travis / GitHub integrations as we set this environment variable
-    ## to "yes" in .travis.yml
-    Sys.getenv("RunGgplot2Tests") == "yes" ||
-      ## Also run the tests when building on Dean or Chris' machine
-      Sys.info()["user"] %in% c("cbaker", "Dean")
-  ) {
-    TRUE
-  } else {
-    FALSE
-  }
+  Sys.getenv("RunGgplot2Tests") == "yes"
 }
 
 # Misc function to drop muffle a particular warning that occurs whenever a
