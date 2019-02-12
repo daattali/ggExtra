@@ -1,3 +1,5 @@
+# Wrappers around ggMarginal and ggplot function calls ------------------------
+
 basicScatP <- function() {
   ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = drat)) +
     ggplot2::geom_point()
@@ -16,6 +18,8 @@ margMapP <- function() {
 basicScatPWithLims <- function() {
   basicScatP() + ggplot2::scale_x_continuous(limits = c(0, 2))
 }
+
+# functions that plot the test figs -------------------------------------------
 
 basic_marginals <- list(
   "basic density" = function() ggMarg2("density"),
@@ -106,6 +110,8 @@ funList <- list(
   grouping_feature = grouping_feature,
   transforms = transforms
 )
+
+# functions that help with running tests against specific package versions ----
 
 expectDopp2 <- function(funName, ggplot2Version) {
 
