@@ -113,20 +113,6 @@ funList <- list(
 
 # functions that help with running tests against specific package versions ----
 
-expectDopp2 <- function(funName, ggplot2Version) {
-  
-  # make sure expected figure already exists on disk...that way, tests will 
-  # never pass when a test case is skipped if the expected fig doesn't exist
-  path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
-  fileName <- paste0(vdiffr:::str_standardise(funName), ".svg")
-  file <- file.path("../figs", path, fileName)
-  stopifnot(file.exists(file))
-  
-  vdiffr::expect_doppelganger(
-    funName, printMuffled(funList[[funName]]()), path = path
-  )
-}
-
 # withVersions is essentially the same function as with_pkg_version that
 # appears here: https://gist.github.com/jimhester/d7aeb95bbed02f2985a87c2a3ede19f5.
 # This function allows us to run unit tests under different versions of ggplot2,

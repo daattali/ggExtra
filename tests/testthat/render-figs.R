@@ -44,11 +44,13 @@ renderAllFigsApply <- function(ggplot2Versions) {
     vdiffr = "0.1.1", fontquiver = "0.2.1", svglite = "1.2.0", code = {
       sapply(ggplot2Versions, function(ggplot2Version) {
         withVersions(ggplot2 = ggplot2Version, code = {
+          funList <- unlist(funList)
           sapply(
             names(funList), function(x) {
+              nm <- gsub(".*\\.", "", x)
               writeSvg(
                 p = funList[[x]](),
-                file = asSvgFile(x, ggplot2Version)
+                file = asSvgFile(nm, ggplot2Version)
               ) 
             }
           )
