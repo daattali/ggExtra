@@ -32,4 +32,5 @@ render-figs:
 		Rscript -e "devtools::load_all(); source('tests/testthat/render-figs.R')"
 
 test:
-	docker run ggextra-image /bin/bash -c 'R CMD build ../ggExtra && R CMD check ggExtra_* --as-cran --no-manual'
+	docker run --rm -v `pwd`:/home/ggExtra ggextra-image \
+		/bin/bash -c 'R CMD build ../ggExtra && R CMD check ggExtra_* --as-cran --no-manual'
