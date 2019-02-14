@@ -21,7 +21,7 @@ basicScatPWithLims <- function() {
 
 # functions that plot the test figs -------------------------------------------
 
-basic_marginals <- list(
+basicMarginals <- list(
   "basic density" = function() ggMarg2("density"),
   "basic histogram" = function() ggMarg2("histogram"),
   "basic boxplot" = function() ggMarg2("boxplot"),
@@ -31,7 +31,7 @@ basic_marginals <- list(
     data = mtcars, x = "mpg", y = "disp", type = "density"
   )
 )
-other_params <- list(
+otherParams <- list(
   "only x margin" = function() ggMarg2("density", margins = "x"),
   "smaller marginal plots" = function() ggMarg2("density", size = 10),
   "both hists red col" = function() ggMarg2("histogram", colour = "red"),
@@ -39,7 +39,7 @@ other_params <- list(
     "histogram", xparams = list(colour = "red", fill = "red")
   )
 )
-misc_issues <- list(
+miscIssues <- list(
   "theme bw" = function() ggMarginal(
     basicScatP() + ggplot2::theme_bw(), type = "density"
   ),
@@ -64,7 +64,7 @@ misc_issues <- list(
     basicScatP(), type = "densigram", fill = "blue"
   )
 )
-grouping_feature <- list(
+groupingFeature <- list(
   "col and fill mapped" = function() ggMarginal(
     margMapP(), groupColour = TRUE, groupFill = TRUE
   ),
@@ -104,17 +104,17 @@ transforms <- list(
 )
 
 funList <- list(
-  basic_marginals = basic_marginals,
-  other_params = other_params,
-  misc_issues = misc_issues,
-  grouping_feature = grouping_feature,
-  transforms = transforms
+  "ggMarginal can produce basic marginal plots" = basicMarginals,
+  "ggMarginal's other params work" = otherParams,
+  "Misc issues are solved" = miscIssues,
+  "Grouping feature works as expected" = groupingFeature,
+  "Transforms to scatter plot scales are reflected in marginals" = transforms
 )
 
 # functions that help with running tests against specific package versions ----
 
 expectDopp2 <- function(funName, ggplot2Version) {
-
+  
   # make sure expected figure already exists on disk...that way, tests will 
   # never pass when a test case is skipped if the expected fig doesn't exist
   path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
@@ -178,7 +178,7 @@ getSnapShotRepo <- function(package, version) {
   )
 }
 
-is_current_version <- function(version, versions) {
+isCurrentVersion <- function(version, versions) {
   all(
     vapply(
       versions, function(x) utils::compareVersion(version, x) == 1, logical(1)
@@ -190,7 +190,7 @@ attemptRepoDate <- function(package, version) {
   arch <- devtools:::package_find_repo(package, "https://cloud.r-project.org")
   versions <- gsub(".*/[^_]+_([^[:alpha:]]+)\\.tar\\.gz", "\\1", arch$path)
   date <- arch[versions == version, "mtime", drop = TRUE]
-  if (length(date) == 0 && is_current_version(version, versions)) {
+  if (length(date) == 0 && isCurrentVersion(version, versions)) {
     return("https://cloud.r-project.org")
   }
   dateString <- as.character(as.Date(date, format = "%Y/%m/%d") + 2)
