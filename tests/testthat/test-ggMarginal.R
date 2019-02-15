@@ -1,4 +1,4 @@
-expectDopp2 <- function(testName, funName, ggplot2Version) {
+expectDoppelganger2 <- function(testName, funName, ggplot2Version) {
   
   path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
   
@@ -21,7 +21,10 @@ runMarginalTests <- function(ggplot2Version) {
   testNames <- names(funList)
   sapply(testNames, function(x) {
     test_that(x, {
-      sapply(names(funList[[x]]), function(y) expectDopp2(x, y, ggplot2Version))
+      sapply(
+        names(funList[[x]]), 
+        function(y) expectDoppelganger2(x, y, ggplot2Version)
+      )
     })
   })
 }
