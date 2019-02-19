@@ -8,7 +8,7 @@ before_install:
 
 script:
   - rm -rf ggExtra.Rcheck
-  - docker run -v `pwd`/ggExtra.Rcheck:/home/ggExtra/ggExtra.Rcheck ggextra-image /bin/bash -c 'R CMD build ../ggExtra && R CMD check ggExtra_* --as-cran --no-manual'
+  - travis_wait 40 docker run -v `pwd`/ggExtra.Rcheck:/home/ggExtra/ggExtra.Rcheck ggextra-image /bin/bash -c 'R CMD build ../ggExtra && R CMD check ggExtra_* --as-cran --no-manual'
 
-after_failure:
-  - cat ggExtra.Rcheck/tests/testthat.Rout
+after_failure:	
+  - cat ggExtra.Rcheck/tests/testthat.Rout.fail

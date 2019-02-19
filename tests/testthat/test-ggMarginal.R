@@ -1,52 +1,31 @@
+expectDoppelganger2 <- function(testName, funName, ggplot2Version) {
+  
+  path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
+  
+  # make sure expected figure already exists on disk...that way, tests will 
+  # never pass when a test case is skipped if the expected fig doesn't exist
+  fileName <- paste0(vdiffr:::str_standardise(funName), ".svg")
+  file <- file.path("../figs", path, fileName)
+  stopifnot(file.exists(file))
+  
+  vdiffr::expect_doppelganger(
+    funName, printMuffled(funList[[testName]][[funName]]()), path = path
+  )
+}
+
 runMarginalTests <- function(ggplot2Version) {
+  
   context <- paste("ggMarginal under ggplot2 version", ggplot2Version)
-
   context(context)
-
-  test_that("ggMarginal can produce basic marginal plots", {
-    sapply(c(
-      "basic density", "basic histogram", "basic boxplot", "basic densigram",
-      "basic violin plot", "scatter plot from data"
-    ), function(x) expectDopp2(x, ggplot2Version))
-  })
-
-  test_that("ggMarginal's other params work", {
-    sapply(c(
-      "only x margin", "smaller marginal plots", "both hists red col",
-      "top hist red col and fill"
-    ), function(x) expectDopp2(x, ggplot2Version))
-  })
-
-  test_that("Misc. issues are solved", {
-    sapply(c(
-      "theme bw", "legend and title",
-      "flipped coord where x is drat and y is wt",
-      "subtitle but no title",
-      "geom_line provided as first geom",
-      "no density fill for densigrams"
-    ), function(x) expectDopp2(x, ggplot2Version))
-  })
-
-  test_that("Grouping feature works as expected", {
-    sapply(
-      c(
-        "col and fill mapped", "fill mapped with low alpha",
-        "colour mapped with grey fill",
-        "colour mapped and colour param provided",
-        "colour & fill mapped and both params provided"
-      ), function(x) expectDopp2(x, ggplot2Version)
-    )
-  })
-
-  test_that("Transforms to scatter plot scales are reflected in marginals", {
-    sapply(
-      c(
-        "x-axis limits using scale_x_continuous",
-        "axis limits using xlim and ylim", "x-axis limits for histograms",
-        "x-axis limits for marginals with y aes", "x and y scale_reverse",
-        "geom_smooth with aligned marg plots"
-      ), function(x) expectDopp2(x, ggplot2Version)
-    )
+  
+  testNames <- names(funList)
+  sapply(testNames, function(x) {
+    test_that(x, {
+      sapply(
+        names(funList[[x]]), 
+        function(y) expectDoppelganger2(x, y, ggplot2Version)
+      )
+    })
   })
 }
 
