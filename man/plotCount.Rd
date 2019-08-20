@@ -25,11 +25,11 @@ The argument to this function is expected to be either a data.frame or a
 table.
 
 If a data.frame is provided, it must have exactly two columns:
-the first column contains the of unique values in the data, and the second 
+the first column contains the unique values in the data, and the second
 column is the corresponding integer frequencies to each value.
 
-If a table is provided, it must have exactly one row: the rownames are the 
-unique values in the data, and the row values are the  corresponding integer 
+If a table is provided, it must have exactly one row: the rownames are the
+unique values in the data, and the row values are the corresponding integer
 frequencies to each value.
 }
 \examples{
