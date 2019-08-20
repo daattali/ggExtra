@@ -7,11 +7,11 @@
 #' table.
 #'
 #' If a data.frame is provided, it must have exactly two columns:
-#' the first column contains the of unique values in the data, and the second
+#' the first column contains the unique values in the data, and the second
 #' column is the corresponding integer frequencies to each value.
 #'
 #' If a table is provided, it must have exactly one row: the rownames are the
-#' unique values in the data, and the row values are the  corresponding integer
+#' unique values in the data, and the row values are the corresponding integer
 #' frequencies to each value.
 #'
 #' @param x A data.frame or table. See 'Details' for more information.

@@ -5,7 +5,7 @@
 #'
 #' @note The \code{grid} and \code{gtable} packages are required for this
 #' function.
-#' @param p A ggplot2 scatterplot to add marginal plots to.  If \code{p} is
+#' @param p A ggplot2 scatterplot to add marginal plots to. If \code{p} is
 #' not provided, then all of \code{data}, \code{x}, and \code{y} must be
 #' provided.
 #' @param data The data.frame to use for creating the marginal plots. Optional
