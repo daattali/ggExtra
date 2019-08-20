@@ -202,5 +202,13 @@ ggMarginal <- function(p, data, x, y,
 #' @keywords internal
 print.ggExtraPlot <- function(x, newpage = grDevices::dev.interactive(), ...) {
   if (newpage) grid::grid.newpage()
-  grid::grid.draw(x)
+  if (isTRUE(getOption("rstudio.notebook.executing"))) {
+    x <- ggplot2::ggplot() +
+      ggplot2::geom_blank() +
+      ggplot2::annotation_custom(x) +
+      ggplot2::theme_void()
+    print(x)
+  } else {
+    grid::grid.draw(x)
+  }
 }
