@@ -2,7 +2,9 @@
 
 - Fix #109: using ggMarginal on a plot where geom_point was not the first layer was buggy (#116)
 - Add documentation about how to use ggMarginal in R Notebooks or Rmarkdown
-- Added support for densigram plots (#118)
+- Added support for densigram (density+histogram) plots (#118)
+- Lots of internal refactoring (thanks @crew102)
+- Fix the "two chunk" requirement for rendering ggMarginalPlots in Rmd (#148)
 
 # ggExtra 0.8
 
