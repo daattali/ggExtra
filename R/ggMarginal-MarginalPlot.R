@@ -225,7 +225,7 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       switch(self$type,
              "density" = geom_density2,
              "densigram" = geom_density2,
-             "histogram" = geom_histogram2,
+             "histogram" = ggplot2::geom_histogram,
              "boxplot" = ggplot2::geom_boxplot,
              "violin" = ggplot2::geom_violin
       )

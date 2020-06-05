@@ -80,6 +80,13 @@ groupingFeature <- list(
   "colour & fill mapped and both params provided" = function() ggMarginal(
     margMapP(), groupColour = TRUE, groupFill = TRUE, 
     colour = "red", fill = "blue"
+  ),
+  "groupFill doesn't impact hist heights - no fill" = function() ggMarginal(
+    margMapP(), type = "histogram", xparams = list(binwidth = .3)
+  ),
+  "groupFill doesn't impact hist heights - with fill" = function() ggMarginal(
+    margMapP(), type = "histogram", xparams = list(binwidth = .3),
+    groupFill = TRUE
   )
 )
 transforms <- list(
