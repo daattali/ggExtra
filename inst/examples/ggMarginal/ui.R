@@ -6,7 +6,8 @@ share <- list(
   twitter_user = "daattali"
 )
 
-shinyUI(fluidPage(
+fluidPage(
+  shinydisconnect::disconnectMessage2(),
   title = "ggMarginal - add marginal plots to ggplot2",
   tags$head(
     includeCSS(file.path('www', 'style.css')),
@@ -99,4 +100,4 @@ shinyUI(fluidPage(
       pre(id = "code")
     )
   )
-))
+)
