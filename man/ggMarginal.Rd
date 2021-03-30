@@ -4,10 +4,20 @@
 \alias{ggMarginal}
 \title{Add marginal density/histogram to ggplot2 scatterplots}
 \usage{
-ggMarginal(p, data, x, y, type = c("density", "histogram", "boxplot",
-  "violin", "densigram"), margins = c("both", "x", "y"), size = 5, ...,
-  xparams = list(), yparams = list(), groupColour = FALSE,
-  groupFill = FALSE)
+ggMarginal(
+  p,
+  data,
+  x,
+  y,
+  type = c("density", "histogram", "boxplot", "violin", "densigram"),
+  margins = c("both", "x", "y"),
+  size = 5,
+  ...,
+  xparams = list(),
+  yparams = list(),
+  groupColour = FALSE,
+  groupFill = FALSE
+)
 }
 \arguments{
 \item{p}{A ggplot2 scatterplot to add marginal plots to. If \code{p} is

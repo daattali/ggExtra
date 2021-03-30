@@ -4,8 +4,7 @@
 \alias{print.ggExtraPlot}
 \title{Print a ggExtraPlot object}
 \usage{
-\method{print}{ggExtraPlot}(x, newpage = grDevices::dev.interactive(),
-  ...)
+\method{print}{ggExtraPlot}(x, newpage = grDevices::dev.interactive(), ...)
 }
 \arguments{
 \item{x}{ggExtraPlot object.}

@@ -5,6 +5,7 @@ body {
   position: absolute;
   left: 40%;
   z-index: 2;
+  top: 45px;
 }
 #plot.recalculating {
   z-index: -1;

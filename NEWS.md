@@ -1,3 +1,7 @@
+# ggExtra 0.9.1
+
+- Fix #158: addin didn't work when called with variable named `plot`
+
 # ggExtra 0.9
 
 - Fix #109: using ggMarginal on a plot where geom_point was not the first layer was buggy (#116)

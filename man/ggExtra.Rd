@@ -3,7 +3,6 @@
 \docType{package}
 \name{ggExtra}
 \alias{ggExtra}
-\alias{ggExtra-package}
 \title{ggExtra}
 \description{
 Collection of functions and layers to enhance \code{ggplot2}. The main
