@@ -14,8 +14,8 @@
 #' @export
 #' @examples
 #' if (interactive()) {
-#'   myplot <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
-#'   plot2 <- ggMarginalGadget(myplot)
+#'   plot <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+#'   plot2 <- ggMarginalGadget(plot)
 #' }
 ggMarginalGadget <- function(plot) {
   if (missing(plot)) {
@@ -68,7 +68,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
     }
 
     tryCatch(
-      assign(plotname, eval(parse(text = origPlot))),
+      assign(plotname, eval(parse(text = origPlot)), envir = .GlobalEnv),
       error = function(err) {
         stop("You did not provide a valid ggplot2 plot.", call. = FALSE)
       }
@@ -76,8 +76,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
     baseCode <- paste0(plotname, " <- ", origPlot, "\n\n")
   }
 
-  if (!ggplot2::is.ggplot(get(plotname)) &&
-    !ggplot2::is.ggplot(get(plotname, envir = .GlobalEnv))) {
+  if (!ggplot2::is.ggplot(get(plotname, envir = .GlobalEnv))) {
     stop("You did not provide a ggplot2 plot.", call. = FALSE)
   }
 
@@ -288,7 +287,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
 
     observeEvent(marginCode(), {
       tryCatch({
-        values$plot <- eval(parse(text = marginCode()))
+        values$plot <- eval(parse(text = marginCode()), envir = .GlobalEnv)
         values$error <- NULL
       }, error = function(err) {
         values$error <- as.character(err$message)

@@ -1,6 +1,6 @@
 # ggExtra 0.9.1
 
-- Fix #158: addin didn't work when called with variable named `plot`
+- Fix #158: addin didn't work when called with a variable name that was also a function (such as `plot`)
 
 # ggExtra 0.9
 
