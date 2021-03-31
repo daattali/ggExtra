@@ -299,7 +299,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
       values$plot
     }, height = function() {
       if (is.null(input$plotHeight)) {
-        0
+        1
       } else {
         input$plotHeight
       }

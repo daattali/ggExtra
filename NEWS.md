@@ -1,6 +1,7 @@
 # ggExtra 0.9.1
 
-- Fix #158: addin didn't work when called with a variable name that was also a function (such as `plot`)
+- Addin now works when called with a variable name that was also a function (such as `plot`) (#158)
+- Addin no longer throws error messages in the console for "figure margins too large" (#159)
 
 # ggExtra 0.9
 
