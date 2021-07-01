@@ -1,10 +1,9 @@
 ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
 ===========================================================================
 
-[![Build
-Status](https://travis-ci.org/daattali/ggExtra.svg?branch=master)](https://travis-ci.org/daattali/ggExtra)
 [![CRAN
 version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
+[![CI build](https://github.com/daattali/ggExtra/actions/workflows/build.yml/badge.svg)](https://github.com/daattali/ggExtra/actions/workflows/build.yml)
 
 > *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under
 > the MIT license.*
