@@ -155,10 +155,16 @@ installVersion2 <- function(package, version) {
   )
 
   if (package == "ggplot2" && version == "latest") {
-    devtools::install_github("tidyverse/ggplot2", force = TRUE)
+    cat("\nInstalling ggplot2 from Github\n")
+    devtools::install_github(
+      "tidyverse/ggplot2", force = TRUE, quiet = TRUE, upgrade = FALSE
+    )
   } else if (currentVersion != version) {
     repos <- getSnapShotRepo(package, version)
-    devtools::install_version(package, version, repos = repos)
+    cat("\nInstalling", package, version, "using repo", repos, "\n")
+    devtools::install_version(
+      package, version, repos = repos, quiet = TRUE, upgrade = FALSE
+    )
   } else {
     return()
   }

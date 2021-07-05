@@ -1,0 +1,13 @@
+name: CI build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker build -t ggextra-image .
+      - name: Run tests inside container
+        run: docker run ggextra-image /bin/bash -c 'R CMD build ../ggExtra && R CMD check ggExtra_* --as-cran --no-manual'
