@@ -145,11 +145,20 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       prmL2$exPrm <- append(prmL2[[paste0(self$marg, "Prm")]], prmL2$exPrm)
       prmL2$exPrm <- prmL2$exPrm[!duplicated(names(prmL2$exPrm))]
       
-      # pull out limit function and use if histogram
+      # In order to get the marginal plots to align with the scatter plot, we
+      # have to apply limits on the marginal plot in addLimits. This can result
+      # in bidwidths being cut for bins towards the limits, hence we apply
+      # `boundary` below, which will fix the issue for the casual user. Users 
+      # who pass in either `center` or `boundary` are on their own.
       panScale <- private$getPanelScale(self$marg)
-      lim_fun <- panScale$get_limits
-      if (self$type %in% c("histogram", "densigram") && !is.null(lim_fun)) {
-        prmL2$exPrm[["boundary"]] <- lim_fun()[1]
+      limFun <- panScale$get_limits
+      binPositionParams <- c("center", "boundary")
+      binPositionParamsNotSet <- !any(binPositionParams %in% names(prmL2$exPrm))
+      if (
+        self$type %in% c("histogram", "densigram") &&
+          !is.null(limFun) &&
+          binPositionParamsNotSet) {
+        prmL2$exPrm[["boundary"]] <- limFun()[1]
       }
       
       prmL2 <- private$overrideMappedParams(prmL2, "colour", self$groupColour)
