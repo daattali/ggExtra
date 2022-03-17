@@ -8,13 +8,13 @@
 #' @param p A ggplot2 scatterplot to add marginal plots to. If \code{p} is
 #' not provided, then all of \code{data}, \code{x}, and \code{y} must be
 #' provided.
-#' @param data The data.frame to use for creating the marginal plots. Optional
-#' if \code{p} is provided and the marginal plots are reflecting the same data.
-#' @param x The name of the variable along the x axis. Optional if \code{p} is
-#' provided and the \code{x} aesthetic is set in the main plot.
-#' @param y The name of the variable along the y axis. Optional if \code{p} is
-#' provided and the \code{y} aesthetic is set in the main plot.
-#' @param type What type of marginal plot to show. One of: [density, histogram, boxplot, violin, densigram] 
+#' @param data The data.frame to use for creating the marginal plots. Ignored
+#' if \code{p} is provided.
+#' @param x The name of the variable along the x axis. Ignored if \code{p} is
+#' provided.
+#' @param y The name of the variable along the y axis. Ignored if \code{p} is
+#' provided.
+#' @param type What type of marginal plot to show. One of: [density, histogram, boxplot, violin, densigram]
 #' (a "densigram" is when a density plot is overlaid on a histogram).
 #' @param margins Along which margins to show the plots. One of: [both, x, y].
 #' @param size Integer describing the relative size of the marginal plots
@@ -68,7 +68,7 @@
 #'
 #' # Using violin plot
 #' ggMarginal(p2, type = "violin")
-#' 
+#'
 #' # Using a "densigram" plot
 #' ggMarginal(p2, type = "densigram")
 #'
@@ -103,8 +103,8 @@
 #'
 #' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
-ggMarginal <- function(p, data, x, y, 
-                       type = c("density", "histogram",  "boxplot", "violin", 
+ggMarginal <- function(p, data, x, y,
+                       type = c("density", "histogram",  "boxplot", "violin",
                                 "densigram"),
                        margins = c("both", "x", "y"), size = 5,
                        ..., xparams = list(), yparams = list(),
@@ -116,7 +116,7 @@ ggMarginal <- function(p, data, x, y,
 
   # Fill in param defaults and consolidate params into single list (prmL).
   prmL <- toParamList(list(...), xparams, yparams)
-  
+
   # Reconcile different naming variants on "colour" param
   prmL <- reconcileColParamApply(prmL)
 
@@ -180,10 +180,10 @@ ggMarginal <- function(p, data, x, y,
   } else {
     ggExtraPlot <- ggxtraNoTtl
   }
-  
+
   # Add a class for S3 method dispatch for printing the ggExtra plot
   class(ggExtraPlot) <- c("ggExtraPlot", class(ggExtraPlot))
-  
+
   ggExtraPlot
 }
 
