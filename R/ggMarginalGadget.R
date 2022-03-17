@@ -126,10 +126,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
             flex = c(2, 3),
             fillCol(
               class = "left-panel-area",
-              selectInput(
-                "type", "Plot type",
-                c("density", "histogram", "boxplot", "violin", "densigram")
-              ),
+              selectInput("type", "Plot type", c("density", "histogram", "boxplot", "violin")),
               selectInput(
                 "margins", "Which margins?",
                 c("both", "x axis only" = "x", "y axis only" = "y")
