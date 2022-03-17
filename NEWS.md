@@ -1,10 +1,13 @@
-# ggExtra 0.9.1
+# Unreleased version
 
+- Fix histograms to have consistent height when grouped vs ungrouped (#151)
 - Addin now works when called with a variable name that was also a function (such as `plot`) (#158)
 - Addin no longer throws error messages in the console for "figure margins too large" (#159)
 - Allow users to pass in custom boundary or center param (#164)
 
 # ggExtra 0.9
+
+2019-08-27
 
 - Fix #109: using ggMarginal on a plot where geom_point was not the first layer was buggy (#116)
 - Add documentation about how to use ggMarginal in R Notebooks or Rmarkdown
@@ -13,6 +16,8 @@
 - Fix the "two chunk" requirement for rendering ggMarginalPlots in Rmd (#148)
 
 # ggExtra 0.8
+
+2018-04-04
 
 NEW FEATURES
 
