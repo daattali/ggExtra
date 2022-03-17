@@ -2,6 +2,7 @@
 
 - Addin now works when called with a variable name that was also a function (such as `plot`) (#158)
 - Addin no longer throws error messages in the console for "figure margins too large" (#159)
+- Allow users to pass in custom boundary or center param (#164)
 
 # ggExtra 0.9
 
