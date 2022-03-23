@@ -31,7 +31,6 @@ Suggests:
     testthat,
     vdiffr,
     fontquiver,
-    shinydisconnect,
     svglite,
     withr,
     devtools
