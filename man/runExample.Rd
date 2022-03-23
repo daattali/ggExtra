@@ -12,7 +12,7 @@ Launch a Shiny app that shows a demo of what can be done with
 }
 \details{
 This example is also
-\href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{available online}.
+\href{https://daattali.com/shiny/ggExtra-ggMarginal-demo/}{available online}.
 }
 \examples{
 ## Only run this example in interactive R sessions

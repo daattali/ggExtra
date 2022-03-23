@@ -101,7 +101,7 @@
 #' ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
 #' }
 #'
-#' @seealso \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
+#' @seealso \href{https://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 #' @export
 ggMarginal <- function(p, data, x, y,
                        type = c("density", "histogram",  "boxplot", "violin",

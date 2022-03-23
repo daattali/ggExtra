@@ -19,18 +19,18 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>", fig.width = 6,
 
 # ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
 
-[![CRAN version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
+[![CRAN version](https:/www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
 [![CI build](https://github.com/daattali/ggExtra/actions/workflows/build.yml/badge.svg)](https://github.com/daattali/ggExtra/actions/workflows/build.yml)
 
-> *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under the MIT license.*
+> *Copyright 2016 [Dean Attali](https:/deanattali.com). Licensed under the MIT license.*
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2. The flagship function is `ggMarginal`, which can be used to add marginal histograms/boxplots/density plots to ggplot2 scatterplots. You can view a 
-[live interactive demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/)
+[live interactive demo](https:/daattali.com/shiny/ggExtra-ggMarginal-demo/)
 to test it out!
 
 Most other functions/layers are quite simple but are useful because they are fairly common ggplot2 operations that are a bit verbose.
 
-This is an instructional document, but I also wrote [a blog post](http://deanattali.com/2015/03/29/ggExtra-r-package/) about the reasoning
+This is an instructional document, but I also wrote [a blog post](https:/deanattali.com/2015/03/29/ggExtra-r-package/) about the reasoning
 behind and development of this package.
 
 Note: it was brought to my attention that several years ago there was a different package called `ggExtra`, by Baptiste (the author of `gridExtra`). That old `ggExtra` package was deleted in 2011 (two years before I even knew what R is!), and this package has nothing to do with the old one. 
@@ -135,7 +135,7 @@ ggMarginal(p1, type = "histogram", xparams = list(binwidth = 1, fill = "orange")
 
 Last but not least - you can also save the output from `ggMarginal()` and display
 it later. (This may sound trivial, but it was not an easy problem to solve
-- [see this discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
+- [see this discussion](https:/stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
 
 ```{r ggmarginal-save}
 p <- ggMarginal(p1)

@@ -1,4 +1,6 @@
-# Unreleased version
+# ggExtra 0.10.0
+
+2022-03-22
 
 - Fix histograms to have consistent height when grouped vs ungrouped (#151)
 - Addin now works when called with a variable name that was also a function (such as `plot`) (#158)

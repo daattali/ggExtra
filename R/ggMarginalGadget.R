@@ -96,7 +96,7 @@ ggMarginalGadgetHelper <- function(origPlot, addin) {
         strong("Add marginal plots to ggplot2"),
         span(
           id = "author", "By",
-          a(href = "http://deanattali.com", "Dean Attali")
+          a(href = "https://deanattali.com", "Dean Attali")
         )
       )
     ),

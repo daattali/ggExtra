@@ -1,7 +1,7 @@
 share <- list(
   title = "ggMarginal (from ggExtra package)",
-  url = "http://daattali.com/shiny/ggExtra-ggMarginal-demo/",
-  image = "http://daattali.com/shiny/img/ggmarginal.png",
+  url = "https://daattali.com/shiny/ggExtra-ggMarginal-demo/",
+  image = "https://daattali.com/shiny/img/ggmarginal.png",
   description = "Add marginal plots to ggplot2.",
   twitter_user = "daattali"
 )
@@ -13,7 +13,7 @@ fluidPage(
     includeCSS(file.path('www', 'style.css')),
 
     # Favicon
-    tags$link(rel = "shortcut icon", type="image/x-icon", href="http://daattali.com/shiny/img/favicon.ico"),
+    tags$link(rel = "shortcut icon", type="image/x-icon", href="https://daattali.com/shiny/img/favicon.ico"),
 
     # Facebook OpenGraph tags
     tags$meta(property = "og:title", content = share$title),
@@ -46,12 +46,12 @@ fluidPage(
           "Add marginal plots to ggplot2 (from ggExtra package)"),
       div(id = "subsubtitle",
           "By",
-          tags$a(href = "http://deanattali.com/", "Dean Attali"),
+          tags$a(href = "https://deanattali.com/", "Dean Attali"),
           HTML("&bull;"),
           "Package available",
           tags$a(href = "https://github.com/daattali/ggExtra", "on GitHub"),
           HTML("&bull;"),
-          tags$a(href = "http://daattali.com/shiny/", "More apps"), "by Dean"
+          tags$a(href = "https://daattali.com/shiny/", "More apps"), "by Dean"
       )
   ),
 

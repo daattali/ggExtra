@@ -1,25 +1,25 @@
-ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
-===========================================================================
+# ggExtra - Add marginal histograms to ggplot2, and more ggplot2 enhancements
 
 [![CRAN
-version](http://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
-[![CI build](https://github.com/daattali/ggExtra/actions/workflows/build.yml/badge.svg)](https://github.com/daattali/ggExtra/actions/workflows/build.yml)
+version](https:/www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
+[![CI
+build](https://github.com/daattali/ggExtra/actions/workflows/build.yml/badge.svg)](https://github.com/daattali/ggExtra/actions/workflows/build.yml)
 
-> *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under
+> *Copyright 2016 [Dean Attali](https:/deanattali.com). Licensed under
 > the MIT license.*
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 The flagship function is `ggMarginal`, which can be used to add marginal
 histograms/boxplots/density plots to ggplot2 scatterplots. You can view
 a [live interactive
-demo](http://daattali.com/shiny/ggExtra-ggMarginal-demo/) to test it
+demo](https:/daattali.com/shiny/ggExtra-ggMarginal-demo/) to test it
 out!
 
 Most other functions/layers are quite simple but are useful because they
 are fairly common ggplot2 operations that are a bit verbose.
 
 This is an instructional document, but I also wrote [a blog
-post](http://deanattali.com/2015/03/29/ggExtra-r-package/) about the
+post](https:/deanattali.com/2015/03/29/ggExtra-r-package/) about the
 reasoning behind and development of this package.
 
 Note: it was brought to my attention that several years ago there was a
@@ -28,8 +28,7 @@ different package called `ggExtra`, by Baptiste (the author of
 before I even knew what R is!), and this package has nothing to do with
 the old one.
 
-Installation
-------------
+## Installation
 
 `ggExtra` is available through both CRAN and GitHub.
 
@@ -42,8 +41,7 @@ To install the latest development version from GitHub:
     install.packages("devtools")
     devtools::install_github("daattali/ggExtra")
 
-Marginal plots RStudio addin/gadget
------------------------------------
+## Marginal plots RStudio addin/gadget
 
 `ggExtra` comes with an addin for `ggMarginal()`, which lets you
 interactively add marginal plots to a scatter plot. To use it, simply
@@ -54,8 +52,7 @@ a ggplot2 plot.
 
 ![ggMarginal gadget screenshot](inst/img/ggmarginal-gadget.png)
 
-Usage
------
+## Usage
 
 We’ll first load the package and ggplot2, and then see how all the
 functions work.
@@ -63,8 +60,7 @@ functions work.
     library("ggExtra")
     library("ggplot2")
 
-`ggMarginal` - Add marginal histograms/boxplots/density plots to ggplot2 scatterplots
--------------------------------------------------------------------------------------
+## `ggMarginal` - Add marginal histograms/boxplots/density plots to ggplot2 scatterplots
 
 `ggMarginal()` is an easy drop-in solution for adding marginal density
 plots/histograms/boxplots to a ggplot2 scatterplot. The easiest way to
@@ -149,7 +145,7 @@ plots, you can use the `xparams` or `yparams` parameters, like this:
 Last but not least - you can also save the output from `ggMarginal()`
 and display it later. (This may sound trivial, but it was not an easy
 problem to solve - [see this
-discussion](http://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
+discussion](https:/stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
 
     p <- ggMarginal(p1)
     p
@@ -179,8 +175,7 @@ this:
     grid::grid.draw(p)
     ```
 
-`removeGrid` - Remove grid lines from ggplot2
----------------------------------------------
+## `removeGrid` - Remove grid lines from ggplot2
 
 This is just a convenience function to save a bit of typing and
 memorization. Minor grid lines are always removed, and the major x or y
@@ -198,8 +193,7 @@ grid lines can be removed as well (default is to remove both).
 
 For more information, see `?ggExtra::removeGrid`.
 
-`rotateTextX` - Rotate x axis labels
-------------------------------------
+## `rotateTextX` - Rotate x axis labels
 
 Often times it is useful to rotate the x axis labels to be vertical if
 there are too many labels and they overlap. This function accomplishes
@@ -215,8 +209,7 @@ tick line.
 
 For more information, see `?ggExtra::rotateTextX`.
 
-`plotCount` - Plot count data with ggplot2
-------------------------------------------
+## `plotCount` - Plot count data with ggplot2
 
 This is a convenience function to quickly plot a bar plot of count
 (frequency) data. The input must be either a frequency table (obtained

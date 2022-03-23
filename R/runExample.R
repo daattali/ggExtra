@@ -4,7 +4,7 @@
 #' \code{ggExtra::ggMarginal}.
 #'
 #' This example is also
-#' \href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{available online}.
+#' \href{https://daattali.com/shiny/ggExtra-ggMarginal-demo/}{available online}.
 #'
 #' @examples
 #' ## Only run this example in interactive R sessions

@@ -141,5 +141,5 @@ ggMarginal(p, groupColour = TRUE, groupFill = TRUE)
 
 }
 \seealso{
-\href{http://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
+\href{https://daattali.com/shiny/ggExtra-ggMarginal-demo/}{Demo Shiny app}
 }
