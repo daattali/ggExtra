@@ -9,7 +9,7 @@ expectDoppelganger2 <- function(testName, funName, ggplot2Version) {
   stopifnot(file.exists(file))
   
   vdiffr::expect_doppelganger(
-    funName, printMuffled(funList[[testName]][[funName]]()), path = path
+    funName, print(funList[[testName]][[funName]]()), path = path
   )
 }
 
@@ -32,7 +32,7 @@ runMarginalTests <- function(ggplot2Version) {
 # Function to run all visual regression tests across all ggplot2 versions
 runMarginalTestsApply <- function() {
   withVersions(
-    vdiffr = "0.1.1", fontquiver = "0.2.1", svglite = "1.2.0", code = {
+    vdiffr = "0.3.0", fontquiver = "0.2.1", svglite = "2.1.0", code = {
       sapply(ggplot2Versions, function(ggplot2Version) {
         withVersions(ggplot2 = ggplot2Version, code = {
           runMarginalTests(ggplot2Version)
