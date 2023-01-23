@@ -12,12 +12,14 @@ source("tests/testthat/helper-funs.R")
 # in tests/figs) are rendered in exactly the same way that vdiffr when it runs
 # the visual regression tests.
 writeSvg <- function(p, file) {
+  # TODO(cbaker): Look into why we specify where to find these functions via :: 
+  # below, given we load them above.
   aliases <- fontquiver::font_families("Liberation")
   aliases$symbol$symbol <- fontquiver::font_symbol("Symbola")
   user_fonts <- aliases
   svglite::svglite(file, user_fonts = user_fonts)
   on.exit(grDevices::dev.off())
-  printMuffled(p)
+  print(p)
 }
 
 getFigDir <- function(ggplot2Version) {
@@ -25,7 +27,7 @@ getFigDir <- function(ggplot2Version) {
   file.path("tests/figs/ggMarginal", ggDir)
 }
 
-asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
+asSvgFile <- function(funName, ggplot2Version = "3.4.0") {
   figDir <- getFigDir(ggplot2Version)
 
   if (!dir.exists(figDir)) {
@@ -41,7 +43,7 @@ asSvgFile <- function(funName, ggplot2Version = "2.2.1") {
 # figures to render correctly.
 renderFigsApply <- function(ggplot2Versions) {
   withVersions(
-    vdiffr = "0.1.1", fontquiver = "0.2.1", svglite = "1.2.0", code = {
+    vdiffr = "0.3.0", fontquiver = "0.2.1", svglite = "2.1.0", code = {
       sapply(ggplot2Versions, function(ggplot2Version) {
         withVersions(ggplot2 = ggplot2Version, code = {
           funList <- unlist(funList)

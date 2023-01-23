@@ -3,3 +3,5 @@
 .RData
 *.Rproj
 inst/doc
+*.Rcheck
+*.tar.gz

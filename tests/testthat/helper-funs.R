@@ -162,13 +162,7 @@ installVersion2 <- function(package, version) {
     error = function(e) ""
   )
 
-  if (package == "ggplot2" && version == "latest") {
-    cat("\nInstalling ggplot2 from Github\n")
-    devtools::install_github(
-      "tidyverse/ggplot2", force = TRUE, quiet = TRUE, upgrade = FALSE,
-      ref = "main"
-    )
-  } else if (currentVersion != version) {
+  if (currentVersion != version) {
     repos <- getSnapShotRepo(package, version)
     cat("\nInstalling", package, version, "using repo", repos, "\n")
     devtools::install_version(
@@ -212,19 +206,7 @@ shouldTest <- function() {
   Sys.getenv("RunGgplot2Tests") == "yes"
 }
 
-# Misc function to drop muffle a particular warning that occurs whenever a
-# ggplot2 plot is printed under version 2.2.0...This warning clogs up the
-# output of devtools::test(), because we test under ggplot 2.2.0.
-printMuffled <- function(plot) {
-  withCallingHandlers({
-    print(plot)
-  }, warning = function(w) {
-    if (grepl("structure", w, ignore.case = TRUE)) {
-      invokeRestart("muffleWarning")
-    }
-  })
-}
-
-ggplot2Versions <- c(
-  "2.2.0", "2.2.1", "3.0.0", "3.1.0", "3.1.1", "3.2.0", "latest"
-)
+# We test the latest CRAN version plus the *oldest* version with the previous 
+# major or minor number. Example: If current version is 3.4.0 then test 3.4.0
+# and 3.3.0 (not 3.3.6)
+ggplot2Versions <- c("3.3.0", "3.4.0")

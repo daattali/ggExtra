@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:3.5.3
+FROM rocker/tidyverse:4
 
 ADD . /home/ggExtra
 
