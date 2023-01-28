@@ -53,7 +53,11 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
         scatDF$x <- scatDF$y
       }
       
-      scatDF$y <- scatDF$x
+      # We never want to actually use the y aesthetic when creating the marginal
+      # plots, but geom_violin requires it. Also note that, in order to make the
+      # widths of violin and boxplots the same in the marginal plots, we need a
+      # constant y.
+      scatDF$y <- 1
       scatDF[, c("x", "y", "fill", "colour", "group")]
     },
     
@@ -246,15 +250,8 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
     
     addLimits = function(margThemed) {
       limits <- private$getLimits()
-      # for plots with y aes we have to use scale_y_continuous instead of
-      # scale_x_continuous.
-      if (self$type %in% c("boxplot", "violin")) {
-        margThemed +
-          ggplot2::scale_y_continuous(limits = limits, oob = scales::squish)
-      } else {
-        margThemed +
-          ggplot2::scale_x_continuous(limits = limits, oob = scales::squish)
-      }
+      margThemed + 
+        ggplot2::scale_x_continuous(limits = limits, oob = scales::squish)
     },
 
     getPanelScale = function(marg) {
@@ -275,13 +272,7 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
     },
     
     needsFlip = function() {
-      # If the marginal plot is: (for the x margin (top) and is a boxplot) or
-      #                          (for the y margin (right) and is not a boxplot),
-      # ... then have to flip
-      topAndBoxP <- self$marg == "x" && self$type %in% c("boxplot", "violin")
-      rightAndNonBoxP <- 
-        self$marg == "y" && !(self$type %in% c("boxplot", "violin"))
-      topAndBoxP || rightAndNonBoxP
+      self$marg == "y"
     },
     
     # Get the axis range of the x or y axis of the given ggplot build object

@@ -95,6 +95,9 @@ groupingFeature <- list(
   "groupFill doesn't impact hist heights - with fill" = function() ggMarginal(
     margMapP(), type = "histogram", xparams = list(binwidth = .3),
     groupFill = TRUE
+  ),
+  "widths of boxplots are the same within a marginal" = function() ggMarginal(
+    margMapP(), type = "boxplot", groupColour = TRUE
   )
 )
 transforms <- list(
