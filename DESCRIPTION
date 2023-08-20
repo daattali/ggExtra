@@ -8,7 +8,7 @@ Authors@R: c(
 Description: Collection of functions and layers to enhance 'ggplot2'. The 
     flagship function is 'ggMarginal()', which can be used to add marginal
     histograms/boxplots/density plots to 'ggplot2' scatterplots.
-URL: https://github.com/daattali/ggExtra
+URL: https://github.com/daattali/ggExtra, https://daattali.com/shiny/ggExtra-ggMarginal-demo/
 BugReports: https://github.com/daattali/ggExtra/issues
 Depends:
     R (>= 3.1.0)
@@ -37,4 +37,4 @@ Suggests:
 License: MIT + file LICENSE
 SystemRequirements: pandoc with https support
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
