@@ -1,6 +1,6 @@
-# ggExtra 0.10.9000
+# ggExtra 0.10.1
 
-2023-01-27
+2023-08-19
 
 - Fixed issue where grouped boxplots and violin plots were variable widths (#173)
 
