@@ -1,3 +1,7 @@
+# Unreleased
+
+- Removed deprecated call to ggplot2's `..density..` (#175)
+
 # ggExtra 0.10.1
 
 2023-08-19

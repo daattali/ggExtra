@@ -1,15 +1,15 @@
 MarginalPlot <- R6::R6Class("MarginalPlot",
-                            
+
   public = list(
-    
+
     marg = NULL,
-    type = NULL, 
+    type = NULL,
     scatPbuilt = NULL,
     prmL = NULL,
     groupColour = NULL,
     groupFill = NULL,
-    
-    initialize = function(marg, type, scatPbuilt, prmL, groupColour, 
+
+    initialize = function(marg, type, scatPbuilt, prmL, groupColour,
                           groupFill) {
       self$marg <- marg
       self$type <- type
@@ -18,7 +18,7 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       self$groupColour <- groupColour
       self$groupFill <- groupFill
     },
-    
+
     build = function() {
       data <- private$getVarDf()
       noGeomPlot <- private$margPlotNoGeom(data)
@@ -28,9 +28,9 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       private$addLimits(margThemed)
     }
   ),
-  
+
   private = list(
-    
+
     getVarDf = function() {
       marg <- self$marg
       if (private$wasFlipped()) {
@@ -41,18 +41,18 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       }
       # Get data frame with geom_point layer data
       scatDF <- private$getGeomPointDf()
-      
+
       # When points are excluded from the scatter plot via a limit on the x
-      # axis, the y values in the built scatter plot's `data`` object will be NA 
+      # axis, the y values in the built scatter plot's `data`` object will be NA
       # (and visa-versa for the y axis/x values). Exclude these NA points from
-      # the data, as they don't actually show up in the scatter plot (and thus 
+      # the data, as they don't actually show up in the scatter plot (and thus
       # shouldn't be in the marginal plots either).
       scatDF <- scatDF[!(is.na(scatDF$x) | is.na(scatDF$y)), ]
-      
+
       if (marg == "y") {
         scatDF$x <- scatDF$y
       }
-      
+
       # We never want to actually use the y aesthetic when creating the marginal
       # plots, but geom_violin requires it. Also note that, in order to make the
       # widths of violin and boxplots the same in the marginal plots, we need a
@@ -60,15 +60,15 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       scatDF$y <- 1
       scatDF[, c("x", "y", "fill", "colour", "group")]
     },
-    
+
     wasFlipped = function() {
       classCoord <- class(self$scatPbuilt$plot$coordinates)
       any(grepl("flip", classCoord, ignore.case = TRUE))
     },
-    
+
     getGeomPointDf = function() {
       layerBool <- vapply(
-        self$scatPbuilt$plot$layers, 
+        self$scatPbuilt$plot$layers,
         function(x) grepl("geom_?point", class(x$geom)[1], ignore.case = TRUE),
         logical(1)
       )
@@ -77,11 +77,11 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       }
       self$scatPbuilt[["data"]][layerBool][[1]]
     },
-    
+
     margPlotNoGeom = function(data) {
       mapping <- "x"
       haveMargMap <- self$groupColour || self$groupFill
-      
+
       if (haveMargMap) {
         # Make sure user hasn't mapped a non-factor
         if (data[["group"]][1] < 0) {
@@ -92,15 +92,15 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
             "`aes(colour = ...)`)"
           )
         }
-        
+
         data <- data[, c("x", "y", "colour", "group"), drop = FALSE]
         if (self$groupFill) {
           data[, "fill"] <- data[, "colour"]
         }
-        
+
         values <- unique(data$colour)
         names(values) <- values
-        
+
         if (self$groupColour && !self$groupFill) {
           xtraMapNames <- c("colour", "group")
         } else if (self$groupColour && self$groupFill) {
@@ -108,18 +108,18 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
         } else {
           xtraMapNames <- c("fill", "group")
         }
-        
+
         mapping <- c(mapping, xtraMapNames)
       }
-      
+
       # Boxplot and violin plots need y aes
       if (self$type %in% c("boxplot", "violin")) {
         mapping <- c(mapping, "y")
       }
-      
+
       # Build plot (sans geom)
       plot <- ggplot2::ggplot(data, ggplot2::aes_all(mapping))
-      
+
       if (haveMargMap) {
         if ("colour" %in% xtraMapNames) {
           plot <- plot + ggplot2::scale_colour_manual(values = values)
@@ -128,31 +128,31 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
           plot <- plot + ggplot2::scale_fill_manual(values = values)
         }
       }
-      
+
       plot
     },
-    
+
     alterParams = function() {
       prmL2 <- self$prmL
       if (is.null(prmL2$exPrm$colour) && !self$groupColour) {
         prmL2$exPrm[["colour"]] <- "black"
       }
-      
+
       # default to an alpha of .5 if user specifies a margin mapping
-      if (is.null(prmL2$exPrm[["alpha"]]) && 
+      if (is.null(prmL2$exPrm[["alpha"]]) &&
           (self$groupColour || self$groupFill)) {
         prmL2$exPrm[["alpha"]] <- .5
       }
-      
+
       # merge the parameters in an order that ensures that marginal plot params
       # overwrite general params
       prmL2$exPrm <- append(prmL2[[paste0(self$marg, "Prm")]], prmL2$exPrm)
       prmL2$exPrm <- prmL2$exPrm[!duplicated(names(prmL2$exPrm))]
-      
+
       # In order to get the marginal plots to align with the scatter plot, we
       # have to apply limits on the marginal plot in addLimits. This can result
       # in bidwidths being cut for bins towards the limits, hence we apply
-      # `boundary` below, which will fix the issue for the casual user. Users 
+      # `boundary` below, which will fix the issue for the casual user. Users
       # who pass in either `center` or `boundary` are on their own.
       panScale <- private$getPanelScale(self$marg)
       limFun <- panScale$get_limits
@@ -164,13 +164,13 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
           binPositionParamsNotSet) {
         prmL2$exPrm[["boundary"]] <- limFun()[1]
       }
-      
+
       prmL2 <- private$overrideMappedParams(prmL2, "colour", self$groupColour)
       prmL2 <- private$overrideMappedParams(prmL2, "fill", self$groupFill)
-      
+
       prmL2$exPrm
     },
-    
+
     overrideMappedParams = function(prmL2, paramName, groupVar) {
       if (!is.null(prmL2$exPrm[[paramName]]) && groupVar) {
         message(
@@ -183,7 +183,7 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
       }
       prmL2
     },
-    
+
     addLayers = function(noGeomPlot, finalParms) {
       geomFun <- private$getGeomFun()
       if (self$type %in% c("density", "densigram")) {
@@ -192,13 +192,13 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
         # also note that we get the colour of the density plot from geom_line and
         # the fill from geom_density (hence the calls to dropParams when creating
         # densityParams and lineParams)
-        
-        # we get a boundary param added in alterParams if the type is either 
-        # histogram or densigram, but we don't want this param to be used when 
+
+        # we get a boundary param added in alterParams if the type is either
+        # histogram or densigram, but we don't want this param to be used when
         # creating the density plot component of the densigram (only the histogram
         # component needs it), so drop it here
         finalParmsDplot <- private$dropParams(finalParms, "boundary")
-        
+
         # first create geom_density layer
         densityParms <- private$dropParams(finalParmsDplot, "colour")
         if (self$type == "densigram") {
@@ -206,16 +206,16 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
           densityParms <- private$dropParams(densityParms, "fill")
         }
         layer1 <- do.call(geomFun, densityParms)
-        
+
         # now create geom_line layer
         # we have to drop alpha param b/c of issue mentioned at
         # https://github.com/rstudio/rstudio/issues/2196
         lineParms <- private$dropParams(finalParmsDplot, c("fill", "alpha"))
         lineParms$stat <- "density"
         layer2 <- do.call(ggplot2::geom_line, lineParms)
-        
+
         layers <- list(layer1, layer2)
-        
+
         if (self$type == "densigram") {
           # if type is densigram, have to add a histogram layer to layers list
           layer3 <- do.call(geom_histogram2, finalParms)
@@ -225,15 +225,15 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
         layer <- do.call(geomFun, finalParms)
         layers <- list(layer)
       }
-      
+
       plot <- Reduce(`+`, c(list(noGeomPlot), layers))
-      
+
       if (private$needsFlip()) {
         plot <- plot + ggplot2::coord_flip()
       }
       plot
     },
-    
+
     getGeomFun = function() {
       switch(self$type,
              "density" = geom_density2,
@@ -243,14 +243,14 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
              "violin" = ggplot2::geom_violin
       )
     },
-    
+
     dropParams = function(finalParams, toDrop) {
       finalParams[!names(finalParams) %in% toDrop]
     },
-    
+
     addLimits = function(margThemed) {
       limits <- private$getLimits()
-      margThemed + 
+      margThemed +
         ggplot2::scale_x_continuous(limits = limits, oob = scales::squish)
     },
 
@@ -270,11 +270,11 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
         }
       }
     },
-    
+
     needsFlip = function() {
       self$marg == "y"
     },
-    
+
     # Get the axis range of the x or y axis of the given ggplot build object
     # This is needed so that if the range of the plot is manually changed, the
     # marginal plots will use the same range
@@ -301,7 +301,5 @@ geom_density2 <- function(...) {
 }
 
 geom_histogram2 <- function(...) {
-  ggplot2::geom_histogram(ggplot2::aes(y = ..density..), ...)
+  ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), ...)
 }
-
-utils::globalVariables("..density..")
