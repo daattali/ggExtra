@@ -5,21 +5,21 @@ version](https://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.o
 [![CI
 build](https://github.com/daattali/ggExtra/actions/workflows/build.yml/badge.svg)](https://github.com/daattali/ggExtra/actions/workflows/build.yml)
 
-> *Copyright 2016 [Dean Attali](https:/deanattali.com). Licensed under
+> *Copyright 2016 [Dean Attali](https://deanattali.com). Licensed under
 > the MIT license.*
 
 `ggExtra` is a collection of functions and layers to enhance ggplot2.
 The flagship function is `ggMarginal`, which can be used to add marginal
 histograms/boxplots/density plots to ggplot2 scatterplots. You can view
 a [live interactive
-demo](https:/daattali.com/shiny/ggExtra-ggMarginal-demo/) to test it
+demo](https://daattali.com/shiny/ggExtra-ggMarginal-demo/) to test it
 out!
 
 Most other functions/layers are quite simple but are useful because they
 are fairly common ggplot2 operations that are a bit verbose.
 
 This is an instructional document, but I also wrote [a blog
-post](https:/deanattali.com/2015/03/29/ggExtra-r-package/) about the
+post](https://deanattali.com/2015/03/29/ggExtra-r-package/) about the
 reasoning behind and development of this package.
 
 Note: it was brought to my attention that several years ago there was a
@@ -145,7 +145,7 @@ plots, you can use the `xparams` or `yparams` parameters, like this:
 Last but not least - you can also save the output from `ggMarginal()`
 and display it later. (This may sound trivial, but it was not an easy
 problem to solve - [see this
-discussion](https:/stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
+discussion](https://stackoverflow.com/questions/29062766/store-output-from-gridextragrid-arrange-into-an-object)).
 
     p <- ggMarginal(p1)
     p
