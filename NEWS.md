@@ -1,5 +1,6 @@
 # Unreleased
 
+- **DEPRECATION NOTICE** The `runExample()` function is no longer required since {shiny} version 1.8.1 (March 2024). You can now use `shiny::runExample("ggMarginal", package = "ggExtra")` instead of `ggExtra::runExample()`. (#180)
 - Removed deprecated call to ggplot2's `..density..` (#175)
 
 # ggExtra 0.10.1
