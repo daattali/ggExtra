@@ -70,12 +70,12 @@ function(input, output, session) {
     html("code", code())
 
     p <-
-      ggplot(dataset, aes_string(input$x_var, input$y_var)) +
+      ggplot(dataset, aes(.data[[input$x_var]], .data[[input$y_var]])) +
       geom_point() +
       theme_bw(fontSize())
 
     if (use_colour_var()) {
-      p <- p + aes_string(colour = input$col_var)
+      p <- p + aes(colour = .data[[input$col_var]])
     }
 
     # apply axis transformations to ensure marginal plots still work
@@ -117,12 +117,12 @@ function(input, output, session) {
   # the code to reproduce the plot
   code <- reactive({
     code <- sprintf(paste0(
-      "p <- ggplot(`%s`, aes_string('%s', '%s')) +\n"),
+      "p <- ggplot(`%s`, aes(.data[['%s']], .data[['%s']])) +\n"),
       input$dataset, input$x_var, input$y_var
     )
 
     if (use_colour_var()) {
-      code <- paste0(code, "  aes_string(colour = '", input$col_var, "') +\n")
+      code <- paste0(code, "  aes(colour = .data[['", input$col_var, "']]) +\n")
     }
 
     code <- paste0(code, "  geom_point() + theme_bw(", fontSize(), ")")

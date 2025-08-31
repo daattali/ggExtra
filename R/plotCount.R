@@ -37,7 +37,7 @@ plotCount <- function(x, ...) {
 
   p <-
     ggplot2::ggplot(x) +
-    ggplot2::aes_string(colnames(x)[1], colnames(x)[2]) +
+    ggplot2::aes(.data[[colnames(x)[1]]], .data[[colnames(x)[2]]]) +
     ggplot2::geom_bar(stat = "identity", ...)
 
   p

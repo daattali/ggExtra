@@ -34,7 +34,7 @@ reconcileScatPlot <- function(p, data, x, y) {
         call. = FALSE
       )
     }
-    p <- ggplot2::ggplot(data, ggplot2::aes_string(x, y)) +
+    p <- ggplot2::ggplot(data, ggplot2::aes(.data[[x]], .data[[y]])) +
       ggplot2::geom_point()
   }
   p
