@@ -148,7 +148,7 @@ function(input, output, session) {
         "  type = '%s',\n",
         "  margins = '%s',\n",
         "  size = %s,\n"),
-        input$type, input$margins, size(), input$fill))
+        input$type, input$margins, size()))
       if (use_colour_var() && input$groupColour) {
         code <- paste0(code, "  groupColour = TRUE,\n")
       } else {
