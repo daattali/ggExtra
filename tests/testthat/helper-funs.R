@@ -42,7 +42,7 @@ otherParams <- list(
       ggplot2::ggplot(mtcars, ggplot2::aes(x = cyl, y = carb)) +
         ggplot2::geom_point() +
         ggplot2::xlim(0, 10),
-      type = "histogram", 
+      type = "histogram",
       xparams = list(center = 0, binwidth = 0.5),
       yparams = list(boundary = 0, binwidth = 1),
     )
@@ -64,8 +64,8 @@ miscIssues <- list(
     basicScatP() + ggplot2::labs(subtitle = "This should be above marginal")
   ),
   "geom_line provided as first geom" = function() ggMarginal(
-    ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = mpg)) + 
-      ggplot2::geom_line() + 
+    ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = mpg)) +
+      ggplot2::geom_line() +
       ggplot2::geom_point()
   ),
   "no density fill for densigrams" = function() ggMarginal(
@@ -86,7 +86,7 @@ groupingFeature <- list(
     margMapP(), groupColour = TRUE, colour = "red"
   ),
   "colour & fill mapped and both params provided" = function() ggMarginal(
-    margMapP(), groupColour = TRUE, groupFill = TRUE, 
+    margMapP(), groupColour = TRUE, groupFill = TRUE,
     colour = "red", fill = "blue"
   ),
   "groupFill doesn't impact hist heights - no fill" = function() ggMarginal(
@@ -129,87 +129,14 @@ funList <- list(
   "Transforms to scatter plot scales are reflected in marginals" = transforms
 )
 
-# functions that help with running tests against specific package versions ----
-
-# withVersions is essentially the same function as with_pkg_version that
-# appears here: https://gist.github.com/jimhester/d7aeb95bbed02f2985a87c2a3ede19f5.
-# This function allows us to run unit tests under different versions of ggplot2,
-# confirming that ggMarginal works under all versions >= 2.2.0. We also set
-# the package versions of three packages (vdiffr, fontquiver, and svglite)
-# that could slightly effect the rendering of the SVGs, thus causing the tests
-# to fail.
-withVersions <- function(..., code) {
-  packageVersions <- list(...)
-  packages <- names(packageVersions)
-
-  unloadPackages(packages)
-  on.exit(unloadPackages(packages))
-  
-  withr::with_temp_libpaths({
-    mapply(installVersion2, package = packages, version = packageVersions)
-    force(code)
-  }, action = "prefix")
-}
-
-unloadPackages <- function(packages) {
-  lapply(packages, function(x) {
-    if (isNamespaceLoaded(x)) {
-      unloadNamespace(x)
-    }
-  })
-}
-
-installVersion2 <- function(package, version) {
-  currentVersion <- tryCatch(
-    utils::packageVersion(package),
-    error = function(e) ""
-  )
-
-  if (currentVersion != version) {
-    repos <- getSnapShotRepo(package, version)
-    cat("\nInstalling", package, version, "using repo", repos, "\n")
-    devtools::install_version(
-      package, version, repos = repos, quiet = TRUE, upgrade = FALSE
-    )
-  } else {
-    return()
-  }
-}
-
-getSnapShotRepo <- function(package, version) {
-  tryCatch(
-    attemptRepoDate(package, version),
-    error = function(e) "https://cloud.r-project.org"
-  )
-}
-
-isCurrentVersion <- function(version, versions) {
-  all(
-    vapply(
-      versions, function(x) utils::compareVersion(version, x) == 1, logical(1)
-    )
-  )
-}
-
-attemptRepoDate <- function(package, version) {
-  arch <- devtools:::package_find_repo(package, "https://cloud.r-project.org")
-  versions <- gsub(".*/[^_]+_([^[:alpha:]]+)\\.tar\\.gz", "\\1", arch$path)
-  date <- arch[versions == version, "mtime", drop = TRUE]
-  if (length(date) == 0 && isCurrentVersion(version, versions)) {
-    return("https://cloud.r-project.org")
-  }
-  dateString <- as.character(as.Date(date, format = "%Y/%m/%d") + 2)
-  sprintf("https://mran.microsoft.com/snapshot/%s", dateString)
-}
-
-# RunGgplot2Tests is set to "yes" in dockerfile, which means shouldTest()
-# will return TRUE only when it's run inside a docker container (i.e., it will 
+# RunVisualTests is set to "yes" in dockerfile, which means shouldTestVisual()
+# will return TRUE only when it's run inside a docker container (i.e., it will
 # return FALSE on CRAN).
-shouldTest <- function() {
-  Sys.getenv("RunGgplot2Tests") == "yes"
+shouldTestVisual <- function() {
+  Sys.getenv("RunVisualTests") == "yes"
 }
 
-# We test the latest CRAN version plus the *oldest* version with the previous 
+# We test the latest CRAN version plus the *oldest* version with the previous
 # major or minor number. Example: If current version is 3.4.0 then test 3.4.0
 # and 3.3.0 (not 3.3.6)
 ggplot2Versions <- c("3.3.0", "3.4.0")
