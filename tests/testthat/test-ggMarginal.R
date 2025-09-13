@@ -8,10 +8,6 @@ if (shouldTestVisual()) {
 }
 
 runMarginalTests <- function(ggplot2Version) {
-
-  context <- paste("ggMarginal under ggplot2 version", ggplot2Version)
-  context(context)
-
   sapply(names(funList), function(x) {
     test_that(x, {
       sapply(

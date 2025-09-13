@@ -1,9 +1,5 @@
 runggplot2InternalsTests <- function(ggplot2Version) {
 
-  context <- paste("ggplot2 internals under ggplot2 version", ggplot2Version)
-
-  context(context)
-
   test_that("ggExtra's accession of ggplot2 title grobs works" , {
 
     titleP <- function(title) {
