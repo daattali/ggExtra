@@ -55,7 +55,7 @@ miscIssues <- list(
     ggplot2::ggplot(mtcars) +
       ggplot2::geom_point(ggplot2::aes(x = wt, y = drat, colour = gear)) +
       ggplot2::ggtitle("pretty sweet title", "not a bad subtitle either") +
-      ggplot2::theme(plot.title = ggplot2::element_text(colour = "blue"))
+      ggplot2::theme(plot.title = ggplot2::element_text(colour = "red"))
   ),
   "flipped coord where x is drat and y is wt" = function() ggMarginal(
     basicScatP() + ggplot2::coord_flip(), type = "density"
@@ -64,7 +64,7 @@ miscIssues <- list(
     basicScatP() + ggplot2::labs(subtitle = "This should be above marginal")
   ),
   "geom_line provided as first geom" = function() ggMarginal(
-    ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = mpg)) +
+    ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = disp)) +
       ggplot2::geom_line() +
       ggplot2::geom_point()
   ),
