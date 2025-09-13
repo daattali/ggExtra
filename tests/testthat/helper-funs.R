@@ -64,7 +64,7 @@ miscIssues <- list(
     basicScatP() + ggplot2::labs(subtitle = "This should be above marginal")
   ),
   "geom_line provided as first geom" = function() ggMarginal(
-    ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = disp)) +
+    ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = mpg)) +
       ggplot2::geom_line() +
       ggplot2::geom_point()
   ),
