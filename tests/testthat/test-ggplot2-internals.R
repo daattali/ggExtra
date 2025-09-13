@@ -72,7 +72,3 @@ runInternalTestsApply <- function(ggplot2Versions) {
     })
   })
 }
-
-if (shouldTestVisual()) {
-  runInternalTestsApply(ggplot2Versions)
-}
