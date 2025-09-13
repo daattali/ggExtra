@@ -1,12 +1,3 @@
-if (shouldTestVisual()) {
-  runMarginalTestsApply()
-} else {
-  names <- list.files(test_path("_snaps"), pattern = "\\.svg$", recursive = TRUE)
-  names <- unique(basename(names))
-  for(nm in names) announce_snapshot_file(name = nm)  # announce the snapshots so they don't get deleted
-  skip()
-}
-
 runMarginalTests <- function(ggplot2Version) {
   sapply(names(funList), function(x) {
     test_that(x, {
@@ -36,3 +27,12 @@ runMarginalTestsApply <- function() {
 }
 
 runMarginalTestsApply()
+
+if (shouldTestVisual()) {
+  runMarginalTestsApply()
+} else {
+  names <- list.files(test_path("_snaps"), pattern = "\\.svg$", recursive = TRUE)
+  names <- unique(basename(names))
+  for(nm in names) announce_snapshot_file(name = nm)  # announce the snapshots so they don't get deleted
+  skip()
+}
