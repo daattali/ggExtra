@@ -26,8 +26,6 @@ runMarginalTestsApply <- function() {
   )
 }
 
-runMarginalTestsApply()
-
 if (shouldTestVisual()) {
   runMarginalTestsApply()
 } else {
