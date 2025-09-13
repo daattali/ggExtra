@@ -8,7 +8,9 @@ runMarginalTests <- function(ggplot2Version) {
         function(y) vdiffr::expect_doppelganger(
           title = y,
           fig = funList[[x]][[y]](),
-          variant = ggplot2Version
+          variant = ggplot2Version,
+          cran = TRUE  # this is needed so that it will run with `R CMD check --as-cran`, but it
+                       # will not run on CRAN because we have our own check using `shouldTestVisual()`
         )
       )
     })
@@ -28,7 +30,7 @@ runMarginalTestsApply <- function() {
   )
 }
 
-if (shouldTestVisual() || T) {
+if (shouldTestVisual()) {
   runMarginalTestsApply()
 } else {
   names <- list.files(test_path("_snaps"), pattern = "\\.svg$", recursive = TRUE)

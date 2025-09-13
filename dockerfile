@@ -5,6 +5,7 @@ ADD . /home/ggExtra
 WORKDIR /home/ggExtra
 
 ENV RunVisualTests=yes
+ENV _R_CHECK_TESTS_NLINES_=0
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends libfreetype6 && \
