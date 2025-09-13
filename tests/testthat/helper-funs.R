@@ -136,7 +136,7 @@ shouldTestVisual <- function() {
   Sys.getenv("RunVisualTests") == "yes"
 }
 
-# We test the latest CRAN version plus the *oldest* version with the previous
-# major or minor number. Example: If current version is 3.4.0 then test 3.4.0
-# and 3.3.0 (not 3.3.6)
-ggplot2Versions <- c("3.3.0", "3.4.0")
+# We test the latest CRAN version plus the two *oldest* version with the previous
+# major or minor number. Example: If current version is 3.4.5 then test 3.4.5
+# and 3.3.0 and 3.2.0
+ggplot2Versions <- c("3.4.0", "3.5.0")
