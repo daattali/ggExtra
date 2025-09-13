@@ -28,7 +28,7 @@ runMarginalTestsApply <- function() {
   )
 }
 
-if (shouldTestVisual()) {
+if (shouldTestVisual() || T) {
   runMarginalTestsApply()
 } else {
   names <- list.files(test_path("_snaps"), pattern = "\\.svg$", recursive = TRUE)
