@@ -1,4 +1,6 @@
 runMarginalTests <- function(ggplot2Version) {
+  withr::local_envvar(GGEXTRA_QUIET = "1")
+
   sapply(names(funList), function(x) {
     test_that(x, {
       sapply(

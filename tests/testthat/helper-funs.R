@@ -2,7 +2,7 @@
 
 basicScatP <- function() {
   ggplot2::ggplot(mtcars, ggplot2::aes(x = wt, y = drat)) +
-    ggplot2::geom_point()
+    ggplot2::geom_point(na.rm = TRUE)
 }
 
 ggMarg2 <- function(type, ...) {
@@ -117,7 +117,7 @@ transforms <- list(
     basicScatP() + ggplot2::scale_x_reverse() + ggplot2::scale_y_reverse()
   ),
   "geom_smooth with aligned marg plots" = function() ggMarginal(
-    basicScatP() + ggplot2::geom_smooth(), type = "histogram"
+    basicScatP() + ggplot2::geom_smooth(method = "loess", formula = y ~ x), type = "histogram"
   )
 )
 
