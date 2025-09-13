@@ -6,7 +6,7 @@ all: README.md
 clean:
 	Rscript -e 'suppressWarnings(file.remove("README.md", "vignettes/ggExtra.md"))'
 
-.PHONY: all clean build-image render-figs test
+.PHONY: all clean build-image test
 .DELETE_ON_ERROR:
 .SECONDARY:
 
@@ -26,10 +26,6 @@ README.md : vignettes/ggExtra.Rmd
 
 build-image:
 	docker build -t ggextra-image .
-
-render-figs:
-	docker run --rm -v `pwd`:/home/ggExtra ggextra-image \
-		Rscript -e "devtools::load_all(); source('tests/testthat/render-figs.R')"
 
 test:
 	docker run --rm -v `pwd`:/home/ggExtra ggextra-image \
