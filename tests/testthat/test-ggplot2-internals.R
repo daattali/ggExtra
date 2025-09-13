@@ -72,3 +72,5 @@ runInternalTestsApply <- function(ggplot2Versions) {
     })
   })
 }
+
+runInternalTestsApply(ggplot2Versions)
