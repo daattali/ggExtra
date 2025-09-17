@@ -1,3 +1,9 @@
+# Unreleased
+
+TBD
+
+- Completely update the testing framework, so that the unit tests only test using currently installed packages and a GitHub Actions workflow uss a docker container to test multiple ggplot2 versions
+
 # ggExtra 0.11.0
 
 2025-09-01
