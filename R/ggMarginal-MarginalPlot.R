@@ -173,12 +173,14 @@ MarginalPlot <- R6::R6Class("MarginalPlot",
 
     overrideMappedParams = function(prmL2, paramName, groupVar) {
       if (!is.null(prmL2$exPrm[[paramName]]) && groupVar) {
-        message(
-          "You specified group", paramName, " = TRUE as well as a ", paramName,
-          " parameter for a marginal plot. The ", paramName, " parameter will ",
-          " be ignored in favor of using ", paramName, "s mapped from the ",
-          "scatter plot."
-        )
+        if (Sys.getenv("GGEXTRA_QUIET") != "1") {
+          message(
+            "You specified group", paramName, " = TRUE as well as a ", paramName,
+            " parameter for a marginal plot. The ", paramName, " parameter will",
+            " be ignored in favor of using ", paramName, "s mapped from the",
+            " scatter plot."
+          )
+        }
         prmL2$exPrm[[paramName]] <- NULL
       }
       prmL2

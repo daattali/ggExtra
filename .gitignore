@@ -5,3 +5,5 @@
 inst/doc
 *.Rcheck
 *.tar.gz
+Rplots.pdf
+.Renviron

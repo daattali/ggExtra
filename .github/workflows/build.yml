@@ -1,13 +1,34 @@
-name: CI build
+name: Test ggExtra with multiple ggplot2 versions
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  build:
+  test-ggplot2-versions:
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ggplot2_version: ["3.5.0", "3.5.1"]
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Build Docker image
-        run: docker build -t ggextra-image .
-      - name: Run tests inside container
-        run: docker run ggextra-image /bin/bash -c 'R CMD build ../ggExtra && R CMD check ggExtra_* --as-cran --no-manual'
+        run: |
+          docker build -t ggextra-test-${{ matrix.ggplot2_version }} \
+            --build-arg GGPLOT2_VERSION=${{ matrix.ggplot2_version }} .
+
+      - name: Run tests
+        run: |
+          docker run --rm ggextra-test-${{ matrix.ggplot2_version }}
+
+      - name: Upload test results (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-ggplot2-${{ matrix.ggplot2_version }}
+          path: |
+            tests/testthat/
+          retention-days: 7

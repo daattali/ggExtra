@@ -1,6 +1,6 @@
 Package: ggExtra
 Title: Add Marginal Histograms to 'ggplot2', and More 'ggplot2' Enhancements
-Version: 0.11.0
+Version: 0.11.0.9000
 Authors@R: c(
     person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre")),
     person("Christopher", "Baker", , "chriscrewbaker@gmail.com", role = "aut")
@@ -28,7 +28,7 @@ Suggests:
     knitr (>= 1.7),
     rmarkdown,
     rstudioapi (>= 0.5),
-    testthat,
+    testthat (>= 3.0.0),
     vdiffr,
     fontquiver,
     svglite,
@@ -39,3 +39,4 @@ SystemRequirements: pandoc with https support
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 Encoding: UTF-8
+Config/testthat/edition: 3

@@ -1,47 +1,34 @@
-expectDoppelganger2 <- function(testName, funName, ggplot2Version) {
-  
-  path <- paste0("ggMarginal/ggplot2-", ggplot2Version)
-  
-  # make sure expected figure already exists on disk...that way, tests will 
-  # never pass when a test case is skipped if the expected fig doesn't exist
-  fileName <- paste0(vdiffr:::str_standardise(funName), ".svg")
-  file <- file.path("../figs", path, fileName)
-  stopifnot(file.exists(file))
-  
-  vdiffr::expect_doppelganger(
-    funName, print(funList[[testName]][[funName]]()), path = path
-  )
-}
+runMarginalTests <- function() {
+  withr::local_envvar(GGEXTRA_QUIET = "1")
 
-runMarginalTests <- function(ggplot2Version) {
-  
-  context <- paste("ggMarginal under ggplot2 version", ggplot2Version)
-  context(context)
-  
-  testNames <- names(funList)
-  sapply(testNames, function(x) {
+  sapply(names(funList), function(x) {
     test_that(x, {
       sapply(
-        names(funList[[x]]), 
-        function(y) expectDoppelganger2(x, y, ggplot2Version)
+        names(funList[[x]]),
+        function(y) vdiffr::expect_doppelganger(
+          title = y,
+          fig = funList[[x]][[y]](),
+          variant = as.character(utils::packageVersion('ggplot2')),
+          cran = TRUE  # this is needed so that it will run with `R CMD check --as-cran`, but it
+                       # will not run on CRAN because we have our own check using `shouldTestVisual()`
+        )
       )
     })
   })
 }
 
-# Function to run all visual regression tests across all ggplot2 versions
-runMarginalTestsApply <- function() {
-  withVersions(
-    vdiffr = "0.3.0", fontquiver = "0.2.1", svglite = "2.1.0", code = {
-      sapply(ggplot2Versions, function(ggplot2Version) {
-        withVersions(ggplot2 = ggplot2Version, code = {
-          runMarginalTests(ggplot2Version)
-        })
-      })
-    }
-  )
+# RunVisualTests is set to "yes" in dockerfile, which means shouldTestVisual()
+# will return TRUE only when it's run inside a docker container (i.e., it will
+# return FALSE on CRAN).
+shouldTestVisual <- function() {
+  Sys.getenv("RunVisualTests") == "yes"
 }
 
-if (shouldTest()) {
-  runMarginalTestsApply()
+if (shouldTestVisual()) {
+  runMarginalTests()
+} else {
+  names <- list.files(test_path("_snaps"), pattern = "\\.svg$", recursive = TRUE)
+  names <- unique(basename(names))
+  for(nm in names) announce_snapshot_file(name = nm)  # announce the snapshots so they don't get deleted
+  skip()
 }
