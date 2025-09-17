@@ -2,8 +2,7 @@
 
 [![CRAN
 version](https://www.r-pkg.org/badges/version/ggExtra)](https://cran.r-project.org/package=ggExtra)
-[![CI
-build](https://github.com/daattali/ggExtra/actions/workflows/build.yml/badge.svg)](https://github.com/daattali/ggExtra/actions/workflows/build.yml)
+[![R-CMD-check](https://github.com/daattali/ggExtra/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/daattali/ggExtra/actions/workflows/R-CMD-check.yaml)
 
 > *Copyright 2016 [Dean Attali](https://deanattali.com). Licensed under
 > the MIT license.*
