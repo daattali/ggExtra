@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^cran-comments\.md$
 ^Makefile$
 ^dockerfile$
 ^\.github$
