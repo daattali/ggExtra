@@ -1,6 +1,6 @@
 name: Test ggExtra with multiple ggplot2 versions
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   test-ggplot2-versions:
