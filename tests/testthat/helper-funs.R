@@ -33,7 +33,7 @@ basicMarginals <- list(
 )
 otherParams <- list(
   "only x margin" = function() ggMarg2("density", margins = "x"),
-  "smaller marginal plots" = function() ggMarg2("density", size = 10),
+  "smaller marginal plots" = function() ggMarg2("density", size = 20),
   "both hists red col" = function() ggMarg2("histogram", colour = "red"),
   "top hist red col and fill" = function() ggMarg2(
     "histogram", xparams = list(colour = "red", fill = "red")
