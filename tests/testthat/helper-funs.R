@@ -128,15 +128,3 @@ funList <- list(
   "Grouping feature works as expected" = groupingFeature,
   "Transforms to scatter plot scales are reflected in marginals" = transforms
 )
-
-# RunVisualTests is set to "yes" in dockerfile, which means shouldTestVisual()
-# will return TRUE only when it's run inside a docker container (i.e., it will
-# return FALSE on CRAN).
-shouldTestVisual <- function() {
-  Sys.getenv("RunVisualTests") == "yes"
-}
-
-# We test the latest CRAN version plus the two *oldest* version with the previous
-# major or minor number. Example: If current version is 3.4.5 then test 3.4.5
-# and 3.3.0 and 3.2.0
-ggplot2Versions <- c("3.4.0", "3.5.0")
