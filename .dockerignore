@@ -1,0 +1,11 @@
+.git
+.gitignore
+.github/
+
+dockerfile
+.dockerignore
+
+.Rproj.user
+*.Rproj
+.RData
+.Rhistory
