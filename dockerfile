@@ -19,4 +19,4 @@ RUN if [ ! -z "$GGPLOT2_VERSION" ]; then \
 ENV RunVisualTests=yes
 ENV _R_CHECK_TESTS_NLINES_=0
 
-CMD ["R", "-e", "setwd('/pkg'); devtools::test()"]
+CMD ["R", "-e", "setwd('/pkg'); devtools::test(stop_on_failure = TRUE)"]
