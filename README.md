@@ -231,20 +231,21 @@ An example using a data.frame:
 
 For more information, see `?ggExtra::plotCount`.
 
-## Testing `ggMarginal()`
+## Testing `ggMarginal()` visual output
 
-When running `devtools::test()` to test the package, visual tests (creating a plot and automatically inspecting it against an expected plot) will not get run by default. Visual tests only get run if the `RunVisualTests` envvar is set to `"yes"`. Because different operating systems and environments can produce slightly different plots, running the visual tests may result in many failures even if the plots seem identical to the naked eye. For this reason, we test the visual tests inside a docker container that can provide a reproducible environment. This docker container explicitly installs fixed versions of packages that can affect the visuals, and it can install any version of {ggplot2} so that you can run the tests against different {ggplot2} versions.
+Visual tests (comparing plot output against expected snapshots) are essential for ensuring `ggMarginal()` produces correct plots. However, these tests are very sensitive to operating system and environment differences, which can cause test failures even when plots seem to be visually identical. To solve this, we use Docker containers to provide a reproducible testing environment with pinned package versions.
 
-To run the tests, first build the container:
+When tests are run outside of Docker, the visual tests will be skipped by default unless you set the `RunVisualTests` environment variable to `"yes"`. To run the visual tests, first build a Docker container and then run it:
 
     docker build -t ggextra-test --build-arg GGPLOT2_VERSION=3.5.0 .
-    
-You can provide any {ggplot2} version, or you can omit the build argument entirely to use the latest CRAN version. Then run the container in order to run the tests:
-
     docker run --rm ggextra-test
 
-If you added new `ggMarginal()` plot tests (in [`tests/testthat/helper-funs.R`](tests/testthat/helper-funs.R)), you will need to generate the expected plot because there is nothing to test against yet. Run the same `docker build` command, but add an argument to the `run` command that will mount the container's folder onto your file system, so that the snapshots will get saved on your computer.
+If you want to run the tests against the latest version of {ggplot2}, simply omit the build argument from the `docker build` command.
+
+When adding new `ggMarginal()` tests (in [`tests/testthat/helper-funs.R`](tests/testthat/helper-funs.R)), you'll need to first generate the expected plots because there is nothing to test against yet. Use the same `docker build` command, but add an argument to the `run` command that will mount the container's folder onto your file system:
 
     docker run --rm -v "$(pwd):/pkg" ggextra-test
 
-When adding a new test, make sure to build and run docker containers for each of the {ggplot2} versions that are being tested in [the GitHub Action workflow](.github/workflows/test-ggplot2-versions.yml).
+Now the new snapshots will be created in your computer and you can review them to make sure they look correct. If you're happy with them, you can commit them to GitHub, and any further tests will use these images as the expectation.
+
+On GitHub, the visual tests are run against a few {ggplot2} versions that are defined in [the GitHub Action workflow](.github/workflows/test-ggplot2-versions.yml).
